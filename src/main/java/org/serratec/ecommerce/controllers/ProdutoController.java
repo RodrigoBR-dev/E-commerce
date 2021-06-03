@@ -2,6 +2,7 @@ package org.serratec.ecommerce.controllers;
 
 import java.util.List;
 
+import org.serratec.ecommerce.dto.ProdutoDTO;
 import org.serratec.ecommerce.entities.ProdutoEntity;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
 import org.serratec.ecommerce.services.ProdutoService;
@@ -46,5 +47,10 @@ public class ProdutoController {
 		service.delete(id);
 		return new ResponseEntity<String>("Deletado com sucesso",HttpStatus.OK);
 	}
+	@GetMapping("/cliente")
+	public ResponseEntity<List<ProdutoDTO>> findAllDTO(){
+		return new ResponseEntity<List<ProdutoDTO>>(service.findAllDTO(),HttpStatus.OK);
+	}
+	
 	
 }

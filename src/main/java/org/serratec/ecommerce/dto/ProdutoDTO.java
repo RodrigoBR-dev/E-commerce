@@ -1,43 +1,19 @@
-package org.serratec.ecommerce.entities;
+package org.serratec.ecommerce.dto;
 
 import java.time.LocalDate;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import org.serratec.ecommerce.entities.CategoriaEntity;
 
-@Entity
-@Table(name="produto")
-
-public class ProdutoEntity {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+public class ProdutoDTO {
 	private String nome;
 	private String descricao;
 	private Double preco;
 	private Integer quantEstoque;
 	private LocalDate dataCadastro;
-	private String imagem;	
-	
-	@ManyToOne
-	@JoinColumn(name="categoria_id")
+	private String imagem;
 	private CategoriaEntity categoria;
 	
-	private Boolean ativo;
 	
-	
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
 	public String getNome() {
 		return nome;
 	}
@@ -79,13 +55,7 @@ public class ProdutoEntity {
 	}
 	public void setCategoria(CategoriaEntity categoria) {
 		this.categoria = categoria;
-	}
-	//Exclusão lógica
-	public Boolean getAtivo() {
-		return ativo;
-	}
-	public void setAtivo(Boolean ativo) {
-		this.ativo = ativo;
-	}
-		
+	}	
+	
+	
 }

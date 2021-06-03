@@ -1,11 +1,14 @@
 package org.serratec.ecommerce.services;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.serratec.ecommerce.dto.ProdutoDTO;
 import org.serratec.ecommerce.entities.ProdutoEntity;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
+import org.serratec.ecommerce.mapper.ProdutoMapper;
 import org.serratec.ecommerce.repositories.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,8 @@ public class ProdutoService {
 
 	@Autowired
 	ProdutoRepository repository;
+	@Autowired
+	ProdutoMapper mapper;
 
 	public void create(ProdutoEntity produto) {
 		produto.setAtivo(true);
@@ -63,8 +68,20 @@ public class ProdutoService {
 
 	public void delete(Long id) throws ProdutoNotFoundException {
 		ProdutoEntity produto = findById(id);
-		produto.setAtivo(true);		
+		produto.setAtivo(false);
+		repository.save(produto);
 	}
+
+	public List<ProdutoDTO> findAllDTO() {
+		List<ProdutoEntity> lista = repository.findAll();
+		List<ProdutoDTO> listaDTO = new ArrayList<ProdutoDTO>();
+		for (ProdutoEntity listaEntity : lista) {
+			listaDTO.add(mapper.toProdutoDTOSimples(listaEntity));
+		}
+		return listaDTO;
+		
+	}
+	
 	
 
 }
