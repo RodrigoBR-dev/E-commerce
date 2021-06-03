@@ -11,8 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="produto")
-
+@Table(name = "produto")
 public class ProdutoEntity {
 
 	@Id
@@ -23,67 +22,84 @@ public class ProdutoEntity {
 	private Double preco;
 	private Integer quantEstoque;
 	private LocalDate dataCadastro;
-	private String imagem;	
-	
+	private String imagem;
+
 	@ManyToOne
-	@JoinColumn(name="categoria_id")
+	@JoinColumn(name = "categoria_id")
 	private CategoriaEntity categoria;
-	
+
 	private Boolean ativo;
-	
-	
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public String getNome() {
 		return nome;
 	}
+
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+
 	public String getDescricao() {
 		return descricao;
 	}
+
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
+
 	public Double getPreco() {
 		return preco;
 	}
+
 	public void setPreco(Double preco) {
 		this.preco = preco;
 	}
+
 	public Integer getQuantEstoque() {
 		return quantEstoque;
 	}
+
 	public void setQuantEstoque(Integer quantEstoque) {
 		this.quantEstoque = quantEstoque;
 	}
+
 	public LocalDate getDataCadastro() {
 		return dataCadastro;
 	}
+
 	public void setDataCadastro(LocalDate dataCadastro) {
 		this.dataCadastro = dataCadastro;
 	}
+
 	public String getImagem() {
 		return imagem;
 	}
+
 	public void setImagem(String imagem) {
 		this.imagem = imagem;
 	}
+
 	public CategoriaEntity getCategoria() {
 		return categoria;
 	}
+
 	public void setCategoria(CategoriaEntity categoria) {
 		this.categoria = categoria;
 	}
-	//Exclusão lógica
+
+	// Exclusão lógica
 	public Boolean getAtivo() {
 		return ativo;
 	}
+
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
+}
