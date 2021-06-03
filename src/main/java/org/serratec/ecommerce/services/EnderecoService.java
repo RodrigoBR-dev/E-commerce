@@ -49,6 +49,7 @@ public class EnderecoService {
 	public String delete(Long id) throws EnderecoNotFoundException {
 		EnderecoEntity endereco = this.findById(id);
 		endereco.setAtivo(false);
+		repository.save(endereco);
 		return "Endereço deletado com sucesso!";
 	}
 }
