@@ -22,7 +22,7 @@ public class PedidoEntity {
 	@NotNull
 	private Long numeroDoPedido;
 	
-	List<ProdutoEntity> listaDeProdutos = new ArrayList<>();
+//	List<ProdutoEntity> listaDeProdutos = new ArrayList<>();
 
 	@NotNull
 	private Double valorTotalDoPedido;
@@ -51,13 +51,13 @@ public class PedidoEntity {
 		this.numeroDoPedido = numeroDoPedido;
 	}
 	
-	public List<ProdutoEntity> getListaDeProdutos() {
-		return listaDeProdutos;
-	}
-
-	public void setListaDeProdutos(List<ProdutoEntity> listaDeProdutos) {
-		this.listaDeProdutos = listaDeProdutos;
-	}
+//	public List<ProdutoEntity> getListaDeProdutos() {
+//		return listaDeProdutos;
+//	}
+//
+//	public void setListaDeProdutos(List<ProdutoEntity> listaDeProdutos) {
+//		this.listaDeProdutos = listaDeProdutos;
+//	}
 
 	public Double getValorTotalDoPedido() {
 		return valorTotalDoPedido;

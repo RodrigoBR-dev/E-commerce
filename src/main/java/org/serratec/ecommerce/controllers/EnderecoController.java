@@ -2,6 +2,7 @@ package org.serratec.ecommerce.controllers;
 
 import java.util.List;
 
+import org.serratec.ecommerce.dto.EnderecoDTO;
 import org.serratec.ecommerce.entities.EnderecoEntity;
 import org.serratec.ecommerce.exceptions.EnderecoNotFoundException;
 import org.serratec.ecommerce.services.EnderecoService;
@@ -35,8 +36,8 @@ public class EnderecoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<EnderecoEntity> create(@RequestBody EnderecoEntity entity) {
-		return new ResponseEntity<>(service.create(entity), HttpStatus.CREATED);
+	public ResponseEntity<EnderecoEntity> create(@RequestBody EnderecoDTO dto) {
+		return new ResponseEntity<>(service.create(dto), HttpStatus.CREATED);
 	}
 	
 	@PutMapping

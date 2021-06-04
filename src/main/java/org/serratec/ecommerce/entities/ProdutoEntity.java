@@ -24,9 +24,9 @@ public class ProdutoEntity {
 	private LocalDate dataCadastro;
 	private String imagem;
 
-	@ManyToOne
-	@JoinColumn(name = "categoria_id")
-	private CategoriaEntity categoria;
+//	@ManyToOne
+//	@JoinColumn(name = "categoria_id")
+//	private CategoriaEntity categoria;
 
 	private Boolean ativo;
 
@@ -86,13 +86,13 @@ public class ProdutoEntity {
 		this.imagem = imagem;
 	}
 
-	public CategoriaEntity getCategoria() {
-		return categoria;
-	}
-
-	public void setCategoria(CategoriaEntity categoria) {
-		this.categoria = categoria;
-	}
+//	public CategoriaEntity getCategoria() {
+//		return categoria;
+//	}
+//
+//	public void setCategoria(CategoriaEntity categoria) {
+//		this.categoria = categoria;
+//	}
 
 	// Exclusão lógica
 	public Boolean getAtivo() {

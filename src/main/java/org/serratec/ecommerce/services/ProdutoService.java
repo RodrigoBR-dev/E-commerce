@@ -45,9 +45,9 @@ public class ProdutoService {
 		if(produtoTemp.getNome() != null) {
 			produto.setNome(produtoTemp.getNome());
 		}
-		if(produtoTemp.getCategoria() != null) {
-			produto.setCategoria(produtoTemp.getCategoria());
-		}
+//		if(produtoTemp.getCategoria() != null) {
+//			produto.setCategoria(produtoTemp.getCategoria());
+//		}
 		if(produtoTemp.getDataCadastro() != null) {
 			produto.setDataCadastro(produtoTemp.getDataCadastro());
 		}
