@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import org.serratec.ecommerce.entities.ClienteEntity;
 import org.serratec.ecommerce.exceptions.ClienteNotFoundException;
-import org.serratec.ecommerce.repositorys.ClienteRepository;
+import org.serratec.ecommerce.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,8 +53,8 @@ public class ClienteService {
 		if (novoCliente.getTelefone() != null) {
 			cliente.setTelefone(novoCliente.getTelefone());
 		}
-		if (novoCliente.getData_de_nascimento() != null) {
-			cliente.setData_de_nascimento(novoCliente.getData_de_nascimento());
+		if (novoCliente.getDataNascimento() != null) {
+			cliente.setDataNascimento(novoCliente.getDataNascimento());
 		}
 		return repository.save(cliente);
 	}

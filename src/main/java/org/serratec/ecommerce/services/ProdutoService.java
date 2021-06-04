@@ -25,42 +25,42 @@ public class ProdutoService {
 		produto.setAtivo(true);
 		produto.setDataCadastro(LocalDate.now());
 		repository.save(produto);
-		
+
 	}
 
-	public ProdutoEntity findById(Long id) throws ProdutoNotFoundException {		
+	public ProdutoEntity findById(Long id) throws ProdutoNotFoundException {
 		Optional<ProdutoEntity> produto = repository.findById(id);
-		if(produto.isEmpty()) {
+		if (produto.isEmpty()) {
 			throw new ProdutoNotFoundException("Produto não encontrado com esse id" + id);
 		}
 		return produto.get();
 	}
 
-	public List<ProdutoEntity> findAll() {	
+	public List<ProdutoEntity> findAll() {
 		return repository.findAll();
 	}
 
 	public ProdutoEntity update(Long id, ProdutoEntity produtoTemp) throws ProdutoNotFoundException {
 		ProdutoEntity produto = findById(id);
-		if(produtoTemp.getNome() != null) {
+		if (produtoTemp.getNome() != null) {
 			produto.setNome(produtoTemp.getNome());
 		}
 //		if(produtoTemp.getCategoria() != null) {
 //			produto.setCategoria(produtoTemp.getCategoria());
 //		}
-		if(produtoTemp.getDataCadastro() != null) {
+		if (produtoTemp.getDataCadastro() != null) {
 			produto.setDataCadastro(produtoTemp.getDataCadastro());
 		}
-		if(produtoTemp.getPreco() != null) {
+		if (produtoTemp.getPreco() != null) {
 			produto.setPreco(produtoTemp.getPreco());
 		}
-		if(produtoTemp.getDescricao() != null) {
+		if (produtoTemp.getDescricao() != null) {
 			produto.setDescricao(produtoTemp.getDescricao());
 		}
-		if(produtoTemp.getImagem() != null) {
+		if (produtoTemp.getImagem() != null) {
 			produto.setImagem(produtoTemp.getImagem());
 		}
-		if(produtoTemp.getQuantEstoque() != null) {
+		if (produtoTemp.getQuantEstoque() != null) {
 			produto.setQuantEstoque(produtoTemp.getQuantEstoque());
 		}
 		return repository.save(produto);
@@ -79,9 +79,7 @@ public class ProdutoService {
 			listaDTO.add(mapper.toProdutoDTOSimples(listaEntity));
 		}
 		return listaDTO;
-		
+
 	}
-	
-	
 
 }

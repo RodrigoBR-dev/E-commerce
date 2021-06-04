@@ -8,6 +8,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -21,8 +26,6 @@ public class PedidoEntity {
 	
 	@NotNull
 	private Long numeroDoPedido;
-	
-//	List<ProdutoEntity> listaDeProdutos = new ArrayList<>();
 
 	@NotNull
 	private Double valorTotalDoPedido;
@@ -30,8 +33,17 @@ public class PedidoEntity {
 	@NotNull
 	private LocalDate dataDoPedido;
 	
+	private LocalDate dataEntrega;
+	
 	@NotNull
 	private String status;
+	
+	@ManyToOne
+	@JoinColumn(referencedColumnName = "id")
+	private ClienteEntity cliente;
+	
+//	@OneToMany(mappedBy = "pedido")
+//	private List<ProdutoEntity> produtos = new ArrayList<>();
 	
 	private Boolean ativo;
 
@@ -51,14 +63,6 @@ public class PedidoEntity {
 		this.numeroDoPedido = numeroDoPedido;
 	}
 	
-//	public List<ProdutoEntity> getListaDeProdutos() {
-//		return listaDeProdutos;
-//	}
-//
-//	public void setListaDeProdutos(List<ProdutoEntity> listaDeProdutos) {
-//		this.listaDeProdutos = listaDeProdutos;
-//	}
-
 	public Double getValorTotalDoPedido() {
 		return valorTotalDoPedido;
 	}
@@ -74,6 +78,30 @@ public class PedidoEntity {
 	public void setDataDoPedido(LocalDate dataDoPedido) {
 		this.dataDoPedido = dataDoPedido;
 	}
+
+	public LocalDate getDataEntrega() {
+		return dataEntrega;
+	}
+
+	public void setDataEntrega(LocalDate dataEntrega) {
+		this.dataEntrega = dataEntrega;
+	}
+
+	public ClienteEntity getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(ClienteEntity cliente) {
+		this.cliente = cliente;
+	}
+
+//	public List<ProdutoEntity> getProdutos() {
+//		return produtos;
+//	}
+//
+//	public void setProdutos(List<ProdutoEntity> produtos) {
+//		this.produtos = produtos;
+//	}
 
 	public String getStatus() {
 		return status;

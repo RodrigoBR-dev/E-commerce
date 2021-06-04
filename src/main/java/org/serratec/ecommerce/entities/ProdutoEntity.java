@@ -1,13 +1,17 @@
 package org.serratec.ecommerce.entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -24,9 +28,12 @@ public class ProdutoEntity {
 	private LocalDate dataCadastro;
 	private String imagem;
 
-//	@ManyToOne
-//	@JoinColumn(name = "categoria_id")
-//	private CategoriaEntity categoria;
+	@ManyToOne
+	@JoinColumn(name = "categoria_id")
+	private CategoriaEntity categoria;
+	
+//	@OneToMany(mappedBy = "produtos")
+//	private List<PedidoEntity> pedidos = new ArrayList<>();
 
 	private Boolean ativo;
 
@@ -86,13 +93,13 @@ public class ProdutoEntity {
 		this.imagem = imagem;
 	}
 
-//	public CategoriaEntity getCategoria() {
-//		return categoria;
-//	}
-//
-//	public void setCategoria(CategoriaEntity categoria) {
-//		this.categoria = categoria;
-//	}
+	public CategoriaEntity getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(CategoriaEntity categoria) {
+		this.categoria = categoria;
+	}
 
 	// Exclusão lógica
 	public Boolean getAtivo() {
@@ -102,4 +109,12 @@ public class ProdutoEntity {
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
+
+//	public List<PedidoEntity> getPedidos() {
+//		return pedidos;
+//	}
+//
+//	public void setPedidos(List<PedidoEntity> pedidos) {
+//		this.pedidos = pedidos;
+//	}
 }

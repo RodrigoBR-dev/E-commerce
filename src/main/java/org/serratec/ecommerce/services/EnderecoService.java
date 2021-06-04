@@ -7,7 +7,8 @@ import org.serratec.ecommerce.dto.EnderecoDTO;
 import org.serratec.ecommerce.dto.EnderecoViaCEPDTO;
 import org.serratec.ecommerce.entities.EnderecoEntity;
 import org.serratec.ecommerce.exceptions.EnderecoNotFoundException;
-import org.serratec.ecommerce.mapper.ProdutoMapper;
+import org.serratec.ecommerce.exceptions.ViaCEPUnreachableException;
+import org.serratec.ecommerce.mapper.EnderecoMapper;
 import org.serratec.ecommerce.repositories.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,14 +32,14 @@ public class EnderecoService {
 		throw new EnderecoNotFoundException("Endereço não encontrado!");
 	}
 	
-	public EnderecoEntity create(EnderecoDTO enderecoDTO) {
+	public EnderecoEntity create(EnderecoDTO enderecoDTO) throws ViaCEPUnreachableException {
 		var viaCEP = this.getViaCEP(enderecoDTO.getCep());
-		EnderecoEntity endereco = ProdutoMapper.enderecoViaDTOToEntity(enderecoDTO, viaCEP);
+		EnderecoEntity endereco = EnderecoMapper.enderecoViaDTOToEntity(enderecoDTO, viaCEP);
 		endereco.setAtivo(true);
 		return repository.save(endereco);
 	}
 	
-	public EnderecoEntity update(EnderecoEntity novoEnd) throws EnderecoNotFoundException {
+	public EnderecoEntity update(EnderecoEntity novoEnd) throws EnderecoNotFoundException, ViaCEPUnreachableException {
 		EnderecoEntity endereco = this.findById(novoEnd.getId());
 		if (novoEnd.getCep() != null) {
 			endereco.setCep(novoEnd.getCep());
@@ -64,8 +65,10 @@ public class EnderecoService {
 		return "Endereço deletado com sucesso!";
 	}
 	
-	public EnderecoViaCEPDTO getViaCEP(String cep) {
+	public EnderecoViaCEPDTO getViaCEP(String cep) throws ViaCEPUnreachableException {
 		var restTemplate = new RestTemplate();
-		return restTemplate.getForObject("http://viacep.com.br/ws/" + cep + "/json/", EnderecoViaCEPDTO.class);
+		var viaCEP = restTemplate.getForObject("http://viacep.com.br/ws/" + cep + "/json/", EnderecoViaCEPDTO.class);
+		if (viaCEP.getCep() != null) return viaCEP;
+		throw new ViaCEPUnreachableException("CEP não encontrado.");
 	}
 }

@@ -27,16 +27,4 @@ public class ProdutoMapper {
 		entity.setQuantEstoque(dto.getQuantEstoque());
 		return entity;
 	}
-	
-	public static EnderecoEntity enderecoViaDTOToEntity(EnderecoDTO enderecoDTO, EnderecoViaCEPDTO viaCEP) {
-		var endereco = new EnderecoEntity();
-		endereco.setCep(enderecoDTO.getCep());
-		endereco.setRua(viaCEP.getLogradouro());
-		endereco.setNumero(enderecoDTO.getNumero());
-		endereco.setComplemento(enderecoDTO.getComplemento());
-		endereco.setBairro(viaCEP.getBairro());
-		endereco.setCidade(viaCEP.getLocalidade());
-		endereco.setEstado(viaCEP.getUf());
-		return endereco;
-	}
 }
