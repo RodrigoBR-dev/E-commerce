@@ -23,7 +23,10 @@ public class CategoriaEntity {
 	@OneToMany
 	@JoinColumn(name="categoria")
 	private List<ProdutoEntity> produto = new ArrayList<>();
-	
+
+	@OneToMany(mappedBy = "categoria")
+	private List<ProdutoEntity> produtos = new ArrayList<>();
+
 	public Long getId() {
 		return id;
 	}
@@ -48,4 +51,11 @@ public class CategoriaEntity {
 		this.descricao = descricao;
 	}
 
+	public List<ProdutoEntity> getProdutos() {
+		return produtos;
+	}
+
+	public void setProdutos(List<ProdutoEntity> produtos) {
+		this.produtos = produtos;
+	}
 }

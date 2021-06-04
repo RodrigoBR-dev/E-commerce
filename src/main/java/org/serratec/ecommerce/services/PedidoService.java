@@ -38,6 +38,10 @@ public class PedidoService {
 		if (pedido.getNumeroDoPedido() != null) {
 			pedidoEntity.setNumeroDoPedido(pedido.getNumeroDoPedido());
 		}
+//		if (pedido.getListaDeProdutos() != null) {
+//			pedidoEntity.setListaDeProdutos(pedido.getListaDeProdutos());
+//		}
+		
 		if (pedido.getValorTotalDoPedido() != null) {
 			pedidoEntity.setValorTotalDoPedido(pedido.getValorTotalDoPedido());
 		}

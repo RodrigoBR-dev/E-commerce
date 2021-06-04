@@ -1,11 +1,14 @@
 package org.serratec.ecommerce.entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -22,7 +25,7 @@ public class ClienteEntity {
 	private String email;
 	
 	@NotNull
-	private String username;
+	private String userName;
 	
 	@NotNull
 	private String senha;
@@ -37,7 +40,13 @@ public class ClienteEntity {
 	private String telefone;
 	
 	@Past
-	private LocalDate data_de_nascimento;
+	private LocalDate dataNascimento;
+	
+	@OneToMany(mappedBy = "cliente")
+	private List<EnderecoEntity> endereco = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "cliente")
+	private List<PedidoEntity> pedidos = new ArrayList<>();
 	
 	private boolean ativo;
 
@@ -59,11 +68,11 @@ public class ClienteEntity {
 	}
 
 	public String getUsername() {
-		return username;
+		return userName;
 	}
 
 	public void setUsername(String username) {
-		this.username = username;
+		this.userName = username;
 	}
 
 	public String getSenha() {
@@ -86,6 +95,14 @@ public class ClienteEntity {
 		return cpf;
 	}
 
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
@@ -98,12 +115,12 @@ public class ClienteEntity {
 		this.telefone = telefone;
 	}
 
-	public LocalDate getData_de_nascimento() {
-		return data_de_nascimento;
+	public LocalDate getDataNascimento() {
+		return dataNascimento;
 	}
 
-	public void setData_de_nascimento(LocalDate data_de_nascimento) {
-		this.data_de_nascimento = data_de_nascimento;
+	public void setDataNascimento(LocalDate dataNascimento) {
+		this.dataNascimento = dataNascimento;
 	}
 
 	public boolean isAtivo() {
@@ -112,6 +129,21 @@ public class ClienteEntity {
 
 	public void setAtivo(boolean ativo) {
 		this.ativo = ativo;
-	}	
-	
+	}
+
+	public List<EnderecoEntity> getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(List<EnderecoEntity> endereco) {
+		this.endereco = endereco;
+	}
+
+	public List<PedidoEntity> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<PedidoEntity> pedidos) {
+		this.pedidos = pedidos;
+	}
 }

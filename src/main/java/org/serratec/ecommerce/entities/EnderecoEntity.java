@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -23,6 +25,10 @@ public class EnderecoEntity {
 	private String numero;
 	private String complemento;
 	private String estado;
+	
+	@ManyToOne
+	@JoinColumn(referencedColumnName = "id")
+	private ClienteEntity cliente;
 	private boolean ativo;
 
 	public Long getId() {
@@ -91,6 +97,14 @@ public class EnderecoEntity {
 
 	public boolean isAtivo() {
 		return ativo;
+	}
+
+	public ClienteEntity getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(ClienteEntity cliente) {
+		this.cliente = cliente;
 	}
 
 	public void setAtivo(boolean ativo) {
