@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.serratec.ecommerce.dto.ProdutoDTO;
 import org.serratec.ecommerce.entities.ProdutoEntity;
+import org.serratec.ecommerce.exceptions.EstoqueInsuficienteException;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
 import org.serratec.ecommerce.mapper.ProdutoMapper;
 import org.serratec.ecommerce.repositories.ProdutoRepository;
@@ -78,7 +79,22 @@ public class ProdutoService {
 		for (ProdutoEntity listaEntity : lista) {
 			listaDTO.add(mapper.toProdutoDTOSimples(listaEntity));
 		}
-		return listaDTO;
+		return listaDTO;		
+	}
+	
+	public void retornaEstoque(Long id,Integer estoque) throws ProdutoNotFoundException {
+		ProdutoEntity produto = findById(id);
+		produto.setQuantEstoque(produto.getQuantEstoque()+estoque);
+	}
+	
+	public void vender(Long id,Integer estoque) throws EstoqueInsuficienteException, ProdutoNotFoundException {
+		ProdutoEntity produto = findById(id);
+		if(produto.getQuantEstoque() >= estoque) {
+			produto.setQuantEstoque(produto.getQuantEstoque()-estoque);
+			repository.save(produto);			
+		}else {
+			throw new EstoqueInsuficienteException("Estoque insuficiente");
+		}
 		
 	}
 	

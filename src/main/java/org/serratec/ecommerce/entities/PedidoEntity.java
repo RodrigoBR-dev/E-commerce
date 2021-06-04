@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -20,15 +21,16 @@ public class PedidoEntity {
 	private Long id;
 	
 	@NotNull
-	private Long numeroDoPedido;
-	
-	List<ProdutoEntity> listaDeProdutos = new ArrayList<>();
+	private Long numeroDoPedido;	
 
 	@NotNull
 	private Double valorTotalDoPedido;
 	
 	@NotNull
 	private LocalDate dataDoPedido;
+	
+	@OneToMany
+	private List<ProdutosPedidos> produtosPedidos = new ArrayList<>();
 	
 	@NotNull
 	private String status;
@@ -49,14 +51,6 @@ public class PedidoEntity {
 
 	public void setNumeroDoPedido(Long numeroDoPedido) {
 		this.numeroDoPedido = numeroDoPedido;
-	}
-	
-	public List<ProdutoEntity> getListaDeProdutos() {
-		return listaDeProdutos;
-	}
-
-	public void setListaDeProdutos(List<ProdutoEntity> listaDeProdutos) {
-		this.listaDeProdutos = listaDeProdutos;
 	}
 
 	public Double getValorTotalDoPedido() {
