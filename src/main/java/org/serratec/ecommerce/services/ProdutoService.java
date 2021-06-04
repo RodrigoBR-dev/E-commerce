@@ -95,7 +95,6 @@ public class ProdutoService {
 		}else {
 			throw new EstoqueInsuficienteException("Estoque insuficiente");
 		}
-		return listaDTO;
 	}
 
 }
