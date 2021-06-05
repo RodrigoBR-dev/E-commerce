@@ -1,6 +1,8 @@
 package org.serratec.ecommerce.util;
 
 import org.serratec.ecommerce.exceptions.EnderecoNotFoundException;
+import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
+import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -16,4 +18,17 @@ public class ExceptionController {
 				.header(MSG, exception.getMessage())
 				.build();
 	}
+	@ExceptionHandler(ValorNegativoException.class)
+	public ResponseEntity<String> valorNegativo(ValorNegativoException exception) {
+		return ResponseEntity.badRequest()
+				.header(MSG, exception.getMessage())
+				.build();
+	}
+	@ExceptionHandler(ProdutoNotFoundException.class)
+	public ResponseEntity<String> produtoNotFound(ProdutoNotFoundException exception) {
+		return ResponseEntity.notFound()
+				.header(MSG, exception.getMessage())
+				.build();
+	}
+	
 }

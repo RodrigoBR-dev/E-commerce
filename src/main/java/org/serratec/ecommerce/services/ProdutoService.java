@@ -9,6 +9,7 @@ import org.serratec.ecommerce.dto.ProdutoDTO;
 import org.serratec.ecommerce.entities.ProdutoEntity;
 import org.serratec.ecommerce.exceptions.EstoqueInsuficienteException;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
+import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.serratec.ecommerce.mapper.ProdutoMapper;
 import org.serratec.ecommerce.repositories.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class ProdutoService {
 		return repository.findAll();
 	}
 
-	public ProdutoEntity update(Long id, ProdutoEntity produtoTemp) throws ProdutoNotFoundException {
+	public ProdutoEntity update(Long id, ProdutoEntity produtoTemp) throws ProdutoNotFoundException, ValorNegativoException {
 		ProdutoEntity produto = findById(id);
 		if(produtoTemp.getNome() != null) {
 			produto.setNome(produtoTemp.getNome());
@@ -87,12 +88,12 @@ public class ProdutoService {
 		return listaDTO;		
 	}
 	
-	public void retornaEstoque(Long id,Integer estoque) throws ProdutoNotFoundException {
+	public void retornaEstoque(Long id,Integer estoque) throws ProdutoNotFoundException, ValorNegativoException {
 		ProdutoEntity produto = findById(id);
 		produto.setQuantEstoque(produto.getQuantEstoque()+estoque);
 	}
 	
-	public void vender(Long id,Integer estoque) throws EstoqueInsuficienteException, ProdutoNotFoundException {
+	public void vender(Long id,Integer estoque) throws EstoqueInsuficienteException, ProdutoNotFoundException, ValorNegativoException {
 		ProdutoEntity produto = findById(id);
 		if(produto.getQuantEstoque() >= estoque) {
 			produto.setQuantEstoque(produto.getQuantEstoque()-estoque);
