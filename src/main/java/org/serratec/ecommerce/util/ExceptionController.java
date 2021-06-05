@@ -6,6 +6,8 @@ import org.serratec.ecommerce.exceptions.EnderecoClienteNotAssociatedException;
 import org.serratec.ecommerce.exceptions.EnderecoNotFoundException;
 import org.serratec.ecommerce.exceptions.PedidoNotFoundException;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
+import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
+import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -21,6 +23,7 @@ public class ExceptionController {
 				.header(MSG, exception.getMessage())
 				.build();
 	}
+
 	@ExceptionHandler(CategoriaNotFoundException.class)
 	public ResponseEntity<String> tratarLivroNotFoundException(CategoriaNotFoundException exception) {
 		return ResponseEntity.notFound()
@@ -33,19 +36,28 @@ public class ExceptionController {
 				.header(MSG, exception.getMessage())
 				.build();
 	}
+
 	@ExceptionHandler(PedidoNotFoundException.class)
 	public ResponseEntity<String> tratarLivroNotFoundException(PedidoNotFoundException exception) {
 		return ResponseEntity.notFound()
 				.header(MSG, exception.getMessage())
 				.build();
 	}
+
+	@ExceptionHandler(ValorNegativoException.class)
+	public ResponseEntity<String> valorNegativo(ValorNegativoException exception) {
+		return ResponseEntity.badRequest()
+				.header(MSG, exception.getMessage())
+				.build();
+	}
+
 	@ExceptionHandler(ProdutoNotFoundException.class)
-	public ResponseEntity<String> tratarLivroNotFoundException(ProdutoNotFoundException exception) {
+	public ResponseEntity<String> produtoNotFound(ProdutoNotFoundException exception) {
 		return ResponseEntity.notFound()
 				.header(MSG, exception.getMessage())
 				.build();
 	}
-	
+
 	@ExceptionHandler(EnderecoClienteNotAssociatedException.class)
 	public ResponseEntity<String> tratarLivroNotFoundException(EnderecoClienteNotAssociatedException exception) {
 		return ResponseEntity.notFound()

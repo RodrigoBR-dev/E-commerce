@@ -1,10 +1,8 @@
 package org.serratec.ecommerce.mapper;
 
-import org.serratec.ecommerce.dto.EnderecoDTONovo;
-import org.serratec.ecommerce.dto.EnderecoViaCEPDTO;
 import org.serratec.ecommerce.dto.ProdutoDTO;
-import org.serratec.ecommerce.entities.EnderecoEntity;
 import org.serratec.ecommerce.entities.ProdutoEntity;
+import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,15 +14,11 @@ public class ProdutoMapper {
 		dto.setPreco(entity.getPreco());
 		return dto;
 	}
-	public ProdutoEntity toEntity(ProdutoDTO dto) {
+	public ProdutoEntity toEntity(ProdutoDTO dto) throws ValorNegativoException {
 		ProdutoEntity entity = new ProdutoEntity();
 		entity.setNome(dto.getNome());
 		entity.setPreco(dto.getPreco());
-		entity.setDataCadastro(dto.getDataCadastro());
-//		entity.setCategoria(dto.getCategoria());
-		entity.setDescricao(dto.getDescricao());
-		entity.setImagem(dto.getImagem());
-		entity.setQuantEstoque(dto.getQuantEstoque());
+
 		return entity;
 	}
 }

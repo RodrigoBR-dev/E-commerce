@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.serratec.ecommerce.exceptions.ValorNegativoException;
+
 @Entity
 @Table(name = "produto")
 public class ProdutoEntity {
@@ -67,7 +69,10 @@ public class ProdutoEntity {
 		return preco;
 	}
 
-	public void setPreco(Double preco) {
+	public void setPreco(Double preco) throws ValorNegativoException {
+		if(preco < 0) {
+			throw new ValorNegativoException("Não deverá informar um valor negativo para estoque! ");
+		}
 		this.preco = preco;
 	}
 
@@ -75,7 +80,10 @@ public class ProdutoEntity {
 		return quantEstoque;
 	}
 
-	public void setQuantEstoque(Integer quantEstoque) {
+	public void setQuantEstoque(Integer quantEstoque) throws ValorNegativoException {
+		if(quantEstoque < 0) {
+			throw new ValorNegativoException("Não deverá informar um valor negativo para estoque!");
+		}
 		this.quantEstoque = quantEstoque;
 	}
 
