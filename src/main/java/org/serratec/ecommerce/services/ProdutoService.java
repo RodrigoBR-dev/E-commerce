@@ -3,7 +3,6 @@ package org.serratec.ecommerce.services;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.serratec.ecommerce.dto.ProdutoDTO;
 import org.serratec.ecommerce.entities.ProdutoEntity;
@@ -29,26 +28,26 @@ public class ProdutoService {
 		repository.save(produto);
 		
 	}
-
-	public ProdutoEntity findById(Long id) throws ProdutoNotFoundException {		
-		Optional<ProdutoEntity> produto = repository.findById(id);
-		if(produto.isEmpty()) {
-			throw new ProdutoNotFoundException("Produto não encontrado com esse id" + id);
-		}
-		return produto.get();
-	}
+//
+//	public ProdutoEntity findById(Long id) throws ProdutoNotFoundException {		
+//		Optional<ProdutoEntity> produto = repository.findById(id);
+//		if(produto.isEmpty()) {
+//			throw new ProdutoNotFoundException("Produto não encontrado com esse id" + id);
+//		}
+//		return produto.get();
+//	}
 	
-	public List<ProdutoEntity> findByNome(String nome){		
-		List<ProdutoEntity> produtos = repository.findByNome(nome);				
-		return produtos;
+	public ProdutoEntity findByNome(String nome){		
+		ProdutoEntity produto = repository.findByNome(nome);				
+		return produto;
 	}
 
 	public List<ProdutoEntity> findAll() {	
 		return repository.findAll();
 	}
 
-	public ProdutoEntity update(Long id, ProdutoEntity produtoTemp) throws ProdutoNotFoundException, ValorNegativoException {
-		ProdutoEntity produto = findById(id);
+	public ProdutoEntity update(String nome, ProdutoEntity produtoTemp) throws ProdutoNotFoundException, ValorNegativoException {
+		ProdutoEntity produto = findByNome(nome);
 		if(produtoTemp.getNome() != null) {
 			produto.setNome(produtoTemp.getNome());
 		}
@@ -73,10 +72,10 @@ public class ProdutoService {
 		return repository.save(produto);
 	}
 
-	public void delete(Long id) throws ProdutoNotFoundException {
-		ProdutoEntity produto = findById(id);
-		produto.setAtivo(false);
-		repository.save(produto);
+	public void delete(String nome) throws ProdutoNotFoundException {
+		ProdutoEntity produto = findByNome(nome);
+//		produto.setAtivo(false);
+		repository.delete(produto);
 	}
 
 	public List<ProdutoDTO> findAllDTO() {
@@ -88,13 +87,13 @@ public class ProdutoService {
 		return listaDTO;		
 	}
 	
-	public void retornaEstoque(Long id,Integer estoque) throws ProdutoNotFoundException, ValorNegativoException {
-		ProdutoEntity produto = findById(id);
+	public void retornaEstoque(String nome,Integer estoque) throws ProdutoNotFoundException, ValorNegativoException {
+		ProdutoEntity produto = findByNome(nome);
 		produto.setQuantEstoque(produto.getQuantEstoque()+estoque);
 	}
 	
-	public void vender(Long id,Integer estoque) throws EstoqueInsuficienteException, ProdutoNotFoundException, ValorNegativoException {
-		ProdutoEntity produto = findById(id);
+	public void vender(String nome,Integer estoque) throws EstoqueInsuficienteException, ProdutoNotFoundException, ValorNegativoException {
+		ProdutoEntity produto = findByNome(nome);
 		if(produto.getQuantEstoque() >= estoque) {
 			produto.setQuantEstoque(produto.getQuantEstoque()-estoque);
 			repository.save(produto);			

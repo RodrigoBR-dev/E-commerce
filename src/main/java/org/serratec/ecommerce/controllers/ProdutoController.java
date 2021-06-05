@@ -33,25 +33,26 @@ public class ProdutoController {
 		return new ResponseEntity<String>("Criado com sucesso",HttpStatus.CREATED);
 	}
 	//Revisar: produto não deverá ser acessado pelo id pelo usuário
-	@GetMapping("/{id}")
-	public ResponseEntity<ProdutoEntity> findById(@PathVariable Long id) throws ProdutoNotFoundException{
-		return new ResponseEntity<ProdutoEntity>(service.findById(id),HttpStatus.OK);
-	}
+	/*
+	 * @GetMapping("/{id}") public ResponseEntity<ProdutoEntity>
+	 * findById(@PathVariable Long id) throws ProdutoNotFoundException{ return new
+	 * ResponseEntity<ProdutoEntity>(service.findById(id),HttpStatus.OK); }
+	 */
 	@GetMapping
 	public ResponseEntity<List<ProdutoEntity>> findAll(){
 		return new ResponseEntity<List<ProdutoEntity>>(service.findAll(),HttpStatus.OK);
 	}
 	@GetMapping("/nome")
-	public ResponseEntity<List<ProdutoEntity>> findByNome(@RequestParam String nome){
-		return new ResponseEntity<List<ProdutoEntity>>(service.findByNome(nome),HttpStatus.OK);
+	public ResponseEntity <ProdutoEntity> findByNome(@RequestParam String nome){
+		return new ResponseEntity<ProdutoEntity>(service.findByNome(nome),HttpStatus.OK);
 	}
-	@PutMapping("/{id}")
-	public ResponseEntity<ProdutoEntity> update(@PathVariable Long id,@RequestBody ProdutoEntity produto) throws ProdutoNotFoundException, ValorNegativoException{
-		return new ResponseEntity<ProdutoEntity>(service.update(id,produto),HttpStatus.OK);
+	@PutMapping("/{nome}")
+	public ResponseEntity<ProdutoEntity> update(@PathVariable String nome,@RequestBody ProdutoEntity produto) throws ProdutoNotFoundException, ValorNegativoException{
+		return new ResponseEntity<ProdutoEntity>(service.update(nome,produto),HttpStatus.OK);
 	}
-	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable Long id) throws ProdutoNotFoundException{
-		service.delete(id);
+	@DeleteMapping("/{nome}")
+	public ResponseEntity<String> delete(@PathVariable String nome) throws ProdutoNotFoundException{
+		service.delete(nome);
 		return new ResponseEntity<String>("Deletado com sucesso",HttpStatus.OK);
 	}
 	//DTO apenas com os campos nome,descricao e preço

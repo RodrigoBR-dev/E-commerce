@@ -22,7 +22,7 @@ public class ProdutosPedidosService {
 	
 	public ProdutosPedidos create(ProdutoEntity produto,PedidoEntity pedido,Integer quantidade) throws EstoqueInsuficienteException, ProdutoNotFoundException, ValorNegativoException {
 		ProdutosPedidos prodPedido = new ProdutosPedidos();
-		prodService.vender(produto.getId(), quantidade);
+		prodService.vender(produto.getNome(), quantidade);
 		prodPedido.setPedido(pedido);
 		prodPedido.setProduto(produto);
 		prodPedido.setPreco(produto.getPreco() * quantidade);
