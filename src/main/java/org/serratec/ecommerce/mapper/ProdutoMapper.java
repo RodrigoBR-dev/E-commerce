@@ -17,11 +17,7 @@ public class ProdutoMapper {
 		ProdutoEntity entity = new ProdutoEntity();
 		entity.setNome(dto.getNome());
 		entity.setPreco(dto.getPreco());
-		entity.setDataCadastro(dto.getDataCadastro());
-		entity.setCategoria(dto.getCategoria());
-		entity.setDescricao(dto.getDescricao());
-		entity.setImagem(dto.getImagem());
-		entity.setQuantEstoque(dto.getQuantEstoque());
+
 		return entity;
 	}
 }

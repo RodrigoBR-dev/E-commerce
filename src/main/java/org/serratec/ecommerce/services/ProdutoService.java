@@ -36,6 +36,11 @@ public class ProdutoService {
 		}
 		return produto.get();
 	}
+	
+	public List<ProdutoEntity> findByNome(String nome){		
+		List<ProdutoEntity> produtos = repository.findByNome(nome);				
+		return produtos;
+	}
 
 	public List<ProdutoEntity> findAll() {	
 		return repository.findAll();
@@ -74,10 +79,10 @@ public class ProdutoService {
 	}
 
 	public List<ProdutoDTO> findAllDTO() {
-		List<ProdutoEntity> lista = repository.findAll();
-		List<ProdutoDTO> listaDTO = new ArrayList<ProdutoDTO>();
-		for (ProdutoEntity listaEntity : lista) {
-			listaDTO.add(mapper.toProdutoDTOSimples(listaEntity));
+		List<ProdutoEntity> listaEntity = repository.findAll();
+		List<ProdutoDTO> listaDTO = new ArrayList<>();
+		for (ProdutoEntity elemento : listaEntity) {
+			listaDTO.add(mapper.toProdutoDTOSimples(elemento));
 		}
 		return listaDTO;		
 	}

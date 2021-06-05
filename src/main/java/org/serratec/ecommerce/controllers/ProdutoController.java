@@ -38,6 +38,10 @@ public class ProdutoController {
 	public ResponseEntity<List<ProdutoEntity>> findAll(){
 		return new ResponseEntity<List<ProdutoEntity>>(service.findAll(),HttpStatus.OK);
 	}
+	@GetMapping("/{nome}")
+	public ResponseEntity<List<ProdutoEntity>> findByNome(@PathVariable String nome){
+		return new ResponseEntity<List<ProdutoEntity>>(service.findByNome(nome),HttpStatus.OK);
+	}
 	@PutMapping("/{id}")
 	public ResponseEntity<ProdutoEntity> update(@PathVariable Long id,@RequestBody ProdutoEntity produto) throws ProdutoNotFoundException{
 		return new ResponseEntity<ProdutoEntity>(service.update(id,produto),HttpStatus.OK);
