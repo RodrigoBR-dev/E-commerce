@@ -2,7 +2,7 @@ package org.serratec.ecommerce.dto;
 
 import javax.validation.constraints.NotNull;
 
-public class EnderecoEntradaDTO {
+public class EnderecoDTONovo {
 
 	@NotNull
 	private String cep;
@@ -13,7 +13,10 @@ public class EnderecoEntradaDTO {
 	private String complemento;
 	
 	@NotNull
-	private Long cliente;
+	private String cliente;
+	
+	@NotNull
+	private String nome;
 
 	public String getCep() {
 		return cep;
@@ -39,11 +42,19 @@ public class EnderecoEntradaDTO {
 		this.complemento = complemento;
 	}
 
-	public Long getCliente() {
+	public String getCliente() {
 		return cliente;
 	}
 
-	public void setCliente(Long cliente) {
+	public void setCliente(String cliente) {
 		this.cliente = cliente;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 }

@@ -9,4 +9,6 @@ public interface EnderecoRepository extends JpaRepository<EnderecoEntity, Long>{
 
 	
 	List<EnderecoEntity> findAllByAtivoTrue();
+	
+	EnderecoEntity findByNomeAndCliente(String nome, String cliente);
 }

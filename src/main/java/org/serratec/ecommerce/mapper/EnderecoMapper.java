@@ -1,7 +1,7 @@
 package org.serratec.ecommerce.mapper;
 
-import org.serratec.ecommerce.dto.EnderecoEntradaDTO;
-import org.serratec.ecommerce.dto.EnderecoRetornoDTO;
+import org.serratec.ecommerce.dto.EnderecoDTONovo;
+import org.serratec.ecommerce.dto.EnderecoDTOComp;
 import org.serratec.ecommerce.dto.EnderecoViaCEPDTO;
 import org.serratec.ecommerce.entities.EnderecoEntity;
 import org.springframework.stereotype.Component;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class EnderecoMapper {
 
-	public EnderecoEntity enderecoViaDTOToEntity(EnderecoEntradaDTO enderecoDTO, EnderecoViaCEPDTO viaCEP) {
+	public EnderecoEntity enderecoViaDTOToEntity(EnderecoDTONovo enderecoDTO, EnderecoViaCEPDTO viaCEP) {
 		var endereco = new EnderecoEntity();
 		endereco.setCep(enderecoDTO.getCep());
 		endereco.setRua(viaCEP.getLogradouro());
@@ -21,8 +21,8 @@ public class EnderecoMapper {
 		return endereco;
 	}
 	
-	public EnderecoRetornoDTO entityToEnderecoRetornoDTO(EnderecoEntity entity) {
-			var dto = new EnderecoRetornoDTO();
+	public EnderecoDTOComp entityToEnderecoDTOComp(EnderecoEntity entity) {
+			var dto = new EnderecoDTOComp();
 			if (entity.getCliente() == null) return dto;
 			dto.setCep(entity.getCep());
 			dto.setRua(entity.getRua());

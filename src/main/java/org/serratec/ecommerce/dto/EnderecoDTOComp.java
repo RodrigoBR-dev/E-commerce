@@ -1,6 +1,6 @@
 package org.serratec.ecommerce.dto;
 
-public class EnderecoRetornoDTO {
+public class EnderecoDTOComp {
 
 	private String cep;
 	private String rua;
@@ -10,6 +10,7 @@ public class EnderecoRetornoDTO {
 	private String complemento;
 	private String estado;
 	private String cliente;
+	private String nome;
 
 	public String getCep() {
 		return cep;
@@ -73,5 +74,13 @@ public class EnderecoRetornoDTO {
 
 	public void setCliente(String cliente) {
 		this.cliente = cliente;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 }

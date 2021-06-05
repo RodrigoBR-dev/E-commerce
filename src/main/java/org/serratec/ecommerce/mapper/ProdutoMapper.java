@@ -1,6 +1,6 @@
 package org.serratec.ecommerce.mapper;
 
-import org.serratec.ecommerce.dto.EnderecoEntradaDTO;
+import org.serratec.ecommerce.dto.EnderecoDTONovo;
 import org.serratec.ecommerce.dto.EnderecoViaCEPDTO;
 import org.serratec.ecommerce.dto.ProdutoDTO;
 import org.serratec.ecommerce.entities.EnderecoEntity;

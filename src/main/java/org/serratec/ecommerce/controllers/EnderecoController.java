@@ -2,8 +2,10 @@ package org.serratec.ecommerce.controllers;
 
 import java.util.List;
 
-import org.serratec.ecommerce.dto.EnderecoEntradaDTO;
-import org.serratec.ecommerce.dto.EnderecoRetornoDTO;
+import javax.websocket.server.PathParam;
+
+import org.serratec.ecommerce.dto.EnderecoDTONovo;
+import org.serratec.ecommerce.dto.EnderecoDTOComp;
 import org.serratec.ecommerce.entities.EnderecoEntity;
 import org.serratec.ecommerce.exceptions.ClienteNotFoundException;
 import org.serratec.ecommerce.exceptions.EnderecoNotFoundException;
@@ -29,27 +31,27 @@ public class EnderecoController {
 	EnderecoService service;
 	
 	@GetMapping
-	public ResponseEntity<List<EnderecoRetornoDTO>> getAll() {
+	public ResponseEntity<List<EnderecoDTOComp>> getAll() {
 		return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
 	}
 	
-	@GetMapping("/{id}")
-	public ResponseEntity<EnderecoEntity> findById(@PathVariable Long id) throws EnderecoNotFoundException {
-		return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
+	@GetMapping
+	public ResponseEntity<EnderecoDTOComp> findByNomeAndClienteDTO(@PathParam(value = "nome") String nome, String cliente) throws EnderecoNotFoundException {
+		return new ResponseEntity<>(service.findByNomeAndClienteDTO(nome, cliente), HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public ResponseEntity<EnderecoEntity> create(@RequestBody EnderecoEntradaDTO dto) throws ViaCEPUnreachableException, ClienteNotFoundException {
+	public ResponseEntity<EnderecoDTOComp> create(@RequestBody EnderecoDTONovo dto) throws ViaCEPUnreachableException, ClienteNotFoundException {
 		return new ResponseEntity<>(service.create(dto), HttpStatus.CREATED);
 	}
 	
 	@PutMapping
-	public ResponseEntity<EnderecoEntity> update(@RequestBody EnderecoEntity entity) throws EnderecoNotFoundException, ViaCEPUnreachableException {
-		return new ResponseEntity<>(service.update(entity), HttpStatus.OK);
+	public ResponseEntity<EnderecoDTOComp> update(@RequestBody EnderecoDTONovo dto) throws EnderecoNotFoundException, ViaCEPUnreachableException {
+		return new ResponseEntity<>(service.update(dto), HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable Long id) throws EnderecoNotFoundException {
-		return new ResponseEntity<>(service.delete(id), HttpStatus.OK);
+	@DeleteMapping
+	public ResponseEntity<String> delete(@PathParam(value = "nome") String nome, String cliente) throws EnderecoNotFoundException {
+		return new ResponseEntity<>(service.delete(nome, cliente), HttpStatus.OK);
 	}
 }
