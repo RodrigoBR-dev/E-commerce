@@ -50,7 +50,6 @@ public class ClienteEntity {
 	
 	private boolean ativo;
 
-
 	public Long getId() {
 		return id;
 	}

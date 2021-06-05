@@ -2,6 +2,7 @@ package org.serratec.ecommerce.controllers;
 
 import java.util.List;
 
+import org.serratec.ecommerce.dto.ClienteDTO;
 import org.serratec.ecommerce.entities.ClienteEntity;
 import org.serratec.ecommerce.exceptions.ClienteNotFoundException;
 import org.serratec.ecommerce.services.ClienteService;
@@ -23,29 +24,29 @@ public class ClienteController {
 
 	@Autowired
 	ClienteService service;
-	
+
 	@GetMapping
-	public ResponseEntity<List<ClienteEntity>> getAll() {
+	public ResponseEntity<List<ClienteDTO>> getAll() {
 		return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
 	}
-	
-	@GetMapping("/{id}")
-	public ResponseEntity<ClienteEntity> findById(@PathVariable Long id) throws ClienteNotFoundException {
-		return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
+
+	@GetMapping("/{userNameOrEmail}")
+	public ResponseEntity<ClienteDTO> findByUserNameOrEmail(@PathVariable String userNameOrEmail) throws ClienteNotFoundException {
+		return new ResponseEntity<>(service.findByUserNameOrEmailDTO(userNameOrEmail), HttpStatus.OK);
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<ClienteEntity> create(@RequestBody ClienteEntity entity) {
+	public ResponseEntity<ClienteDTO> create(@RequestBody ClienteDTO entity) {
 		return new ResponseEntity<>(service.create(entity), HttpStatus.CREATED);
 	}
-	
+
 	@PutMapping
-	public ResponseEntity<ClienteEntity> update(@RequestBody ClienteEntity entity) throws ClienteNotFoundException {
+	public ResponseEntity<ClienteDTO> update(@RequestBody ClienteDTO entity) throws ClienteNotFoundException {
 		return new ResponseEntity<>(service.update(entity), HttpStatus.OK);
 	}
-	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable Long id) throws ClienteNotFoundException {
-		return new ResponseEntity<>(service.delete(id), HttpStatus.OK);
+
+	@DeleteMapping("/{userName}")
+	public ResponseEntity<String> delete(@PathVariable String userName) throws ClienteNotFoundException {
+		return new ResponseEntity<>(service.delete(userName), HttpStatus.OK);
 	}
 }
