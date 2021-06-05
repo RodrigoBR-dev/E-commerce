@@ -1,11 +1,14 @@
 package org.serratec.ecommerce.services;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.serratec.ecommerce.dto.ClienteDTO;
 import org.serratec.ecommerce.entities.ClienteEntity;
 import org.serratec.ecommerce.exceptions.ClienteNotFoundException;
+import org.serratec.ecommerce.mapper.ClienteMapper;
 import org.serratec.ecommerce.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,39 +19,49 @@ public class ClienteService {
 	@Autowired
 	ClienteRepository repository;
 	
-	public List<ClienteEntity> getAll() {
-		return repository.findAll();
-	}
+	@Autowired
+	ClienteMapper mapper;
 	
-	public ClienteEntity findById(Long id) throws ClienteNotFoundException {
-		Optional<ClienteEntity> cliente = repository.findById(id);
-		if (cliente.isPresent()) {
-			return cliente.get();
+	public List<ClienteDTO> getAll() {
+		List<ClienteEntity> listaCliente = repository.findAllByAtivoTrue();
+		List<ClienteDTO> listaDTO = new ArrayList<>();
+		for (ClienteEntity clienteEntity : listaCliente) {
+			listaDTO.add(mapper.entityToDTO(clienteEntity));
 		}
-		throw new ClienteNotFoundException("Cliente não encontrado!");
+		return listaDTO;
 	}
 	
-	public ClienteEntity create(ClienteEntity novoCliente) {
-		novoCliente.setAtivo(true);
-		return repository.save(novoCliente);
-	}
 	
-	public ClienteEntity update(ClienteEntity novoCliente) throws ClienteNotFoundException {
-		ClienteEntity cliente = this.findById(novoCliente.getId());
-		if (novoCliente.getEmail() != null) {
-			cliente.setEmail(novoCliente.getEmail());
+	public ClienteEntity findByUserNameOrEmail(String userNameOrEmail) throws ClienteNotFoundException { 
+		Optional<ClienteEntity> cliente = repository.findByUserNameOrEmail(userNameOrEmail, userNameOrEmail); 
+		if (cliente.isPresent()) { 
+			return cliente.get(); 
 		}
+		throw new ClienteNotFoundException("Cliente não encontrado!"); 
+	}
+	
+	public ClienteDTO findByUserNameOrEmailDTO(String userNameOrEmail) throws ClienteNotFoundException { 
+		Optional<ClienteEntity> cliente = repository.findByUserNameOrEmail(userNameOrEmail, userNameOrEmail); 
+		if (cliente.isPresent()) { 
+			return mapper.entityToDTO(cliente.get());
+		}
+		throw new ClienteNotFoundException("Cliente não encontrado!"); 
+	}
+	 
+	
+	public ClienteDTO create(ClienteDTO novoCliente) {
+		ClienteEntity entity = mapper.DTOToEntity(novoCliente);		
+		entity.setAtivo(true);
+		return mapper.entityToDTO(repository.save(entity));
+	}
+	
+	public ClienteDTO update(ClienteDTO novoCliente) throws ClienteNotFoundException {		
+		ClienteEntity cliente = this.findByUserNameOrEmail(novoCliente.getUserName());
 		if (novoCliente.getUserName() != null) {
-			cliente.setUserName(novoCliente.getUserName());
-		}
-		if (novoCliente.getSenha() != null) {
-			cliente.setSenha(novoCliente.getSenha());
+			cliente.setUsername(novoCliente.getUserName());
 		}
 		if (novoCliente.getNome() != null) {
 			cliente.setNome(novoCliente.getNome());
-		}
-		if (novoCliente.getCpf() != null) {
-			cliente.setCpf(novoCliente.getCpf());
 		}
 		if (novoCliente.getTelefone() != null) {
 			cliente.setTelefone(novoCliente.getTelefone());
@@ -56,11 +69,11 @@ public class ClienteService {
 		if (novoCliente.getDataNascimento() != null) {
 			cliente.setDataNascimento(novoCliente.getDataNascimento());
 		}
-		return repository.save(cliente);
+		return mapper.entityToDTO(repository.save(cliente));
 	}
 	
-	public String delete(Long id) throws ClienteNotFoundException {
-		ClienteEntity cliente = this.findById(id);
+	public String delete(String userName) throws ClienteNotFoundException {
+		ClienteEntity cliente = this.findByUserNameOrEmail(userName);
 		cliente.setAtivo(false);
 		System.out.println(cliente.isAtivo());
 		repository.save(cliente);
