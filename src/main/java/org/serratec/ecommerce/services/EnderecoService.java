@@ -1,11 +1,15 @@
 package org.serratec.ecommerce.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.serratec.ecommerce.dto.EnderecoDTO;
+import org.serratec.ecommerce.dto.EnderecoEntradaDTO;
+import org.serratec.ecommerce.dto.EnderecoRetornoDTO;
 import org.serratec.ecommerce.dto.EnderecoViaCEPDTO;
+import org.serratec.ecommerce.entities.ClienteEntity;
 import org.serratec.ecommerce.entities.EnderecoEntity;
+import org.serratec.ecommerce.exceptions.ClienteNotFoundException;
 import org.serratec.ecommerce.exceptions.EnderecoNotFoundException;
 import org.serratec.ecommerce.exceptions.ViaCEPUnreachableException;
 import org.serratec.ecommerce.mapper.EnderecoMapper;
@@ -20,8 +24,19 @@ public class EnderecoService {
 	@Autowired
 	EnderecoRepository repository;
 	
-	public List<EnderecoEntity> getAll() {
-		return repository.findAll();
+	@Autowired
+	EnderecoMapper mapper;
+	
+	@Autowired
+	ClienteService clienteService;
+	
+	public List<EnderecoRetornoDTO> getAll() {
+		List<EnderecoEntity> listaEndereco = repository.findAllByAtivoTrue();
+		List<EnderecoRetornoDTO> listaDTO = new ArrayList<>();
+		for (EnderecoEntity enderecoEntity : listaEndereco) {
+			listaDTO.add(mapper.entityToEnderecoRetornoDTO(enderecoEntity));
+		}
+		return listaDTO;
 	}
 	
 	public EnderecoEntity findById(Long id) throws EnderecoNotFoundException {
@@ -31,10 +46,12 @@ public class EnderecoService {
 		}
 		throw new EnderecoNotFoundException("Endereço não encontrado!");
 	}
-	
-	public EnderecoEntity create(EnderecoDTO enderecoDTO) throws ViaCEPUnreachableException {
+
+	public EnderecoEntity create(EnderecoEntradaDTO enderecoDTO) throws ViaCEPUnreachableException, ClienteNotFoundException {
+		ClienteEntity cliente = clienteService.findById(enderecoDTO.getCliente());
 		var viaCEP = this.getViaCEP(enderecoDTO.getCep());
-		EnderecoEntity endereco = EnderecoMapper.enderecoViaDTOToEntity(enderecoDTO, viaCEP);
+		EnderecoEntity endereco = mapper.enderecoViaDTOToEntity(enderecoDTO, viaCEP);
+		endereco.setCliente(cliente);
 		endereco.setAtivo(true);
 		return repository.save(endereco);
 	}

@@ -2,8 +2,10 @@ package org.serratec.ecommerce.controllers;
 
 import java.util.List;
 
-import org.serratec.ecommerce.dto.EnderecoDTO;
+import org.serratec.ecommerce.dto.EnderecoEntradaDTO;
+import org.serratec.ecommerce.dto.EnderecoRetornoDTO;
 import org.serratec.ecommerce.entities.EnderecoEntity;
+import org.serratec.ecommerce.exceptions.ClienteNotFoundException;
 import org.serratec.ecommerce.exceptions.EnderecoNotFoundException;
 import org.serratec.ecommerce.exceptions.ViaCEPUnreachableException;
 import org.serratec.ecommerce.services.EnderecoService;
@@ -27,7 +29,7 @@ public class EnderecoController {
 	EnderecoService service;
 	
 	@GetMapping
-	public ResponseEntity<List<EnderecoEntity>> getAll() {
+	public ResponseEntity<List<EnderecoRetornoDTO>> getAll() {
 		return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
 	}
 	
@@ -37,7 +39,7 @@ public class EnderecoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<EnderecoEntity> create(@RequestBody EnderecoDTO dto) throws ViaCEPUnreachableException {
+	public ResponseEntity<EnderecoEntity> create(@RequestBody EnderecoEntradaDTO dto) throws ViaCEPUnreachableException, ClienteNotFoundException {
 		return new ResponseEntity<>(service.create(dto), HttpStatus.CREATED);
 	}
 	

@@ -38,8 +38,8 @@ public class ClienteService {
 		if (novoCliente.getEmail() != null) {
 			cliente.setEmail(novoCliente.getEmail());
 		}
-		if (novoCliente.getUsername() != null) {
-			cliente.setUsername(novoCliente.getUsername());
+		if (novoCliente.getUserName() != null) {
+			cliente.setUserName(novoCliente.getUserName());
 		}
 		if (novoCliente.getSenha() != null) {
 			cliente.setSenha(novoCliente.getSenha());

@@ -67,14 +67,6 @@ public class ClienteEntity {
 		this.email = email;
 	}
 
-	public String getUsername() {
-		return userName;
-	}
-
-	public void setUsername(String username) {
-		this.userName = username;
-	}
-
 	public String getSenha() {
 		return senha;
 	}
