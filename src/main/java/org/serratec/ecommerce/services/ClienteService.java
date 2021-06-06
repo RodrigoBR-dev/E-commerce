@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.serratec.ecommerce.dto.ClienteDTO;
+import org.serratec.ecommerce.dto.ClienteDTONovo;
 import org.serratec.ecommerce.entities.ClienteEntity;
 import org.serratec.ecommerce.exceptions.ClienteNotFoundException;
 import org.serratec.ecommerce.mapper.ClienteMapper;
@@ -47,10 +48,9 @@ public class ClienteService {
 		}
 		throw new ClienteNotFoundException("Cliente não encontrado!"); 
 	}
-	 
-	
-	public ClienteDTO create(ClienteDTO novoCliente) {
-		ClienteEntity entity = mapper.DTOToEntity(novoCliente);		
+
+	public ClienteDTO create(ClienteDTONovo novoCliente) {
+		ClienteEntity entity = mapper.clienteDTOnovoToEntity(novoCliente);		
 		entity.setAtivo(true);
 		return mapper.entityToDTO(repository.save(entity));
 	}
@@ -58,7 +58,7 @@ public class ClienteService {
 	public ClienteDTO update(ClienteDTO novoCliente) throws ClienteNotFoundException {		
 		ClienteEntity cliente = this.findByUserNameOrEmail(novoCliente.getUserName());
 		if (novoCliente.getUserName() != null) {
-			cliente.setUsername(novoCliente.getUserName());
+			cliente.setUserName(novoCliente.getUserName());
 		}
 		if (novoCliente.getNome() != null) {
 			cliente.setNome(novoCliente.getNome());
@@ -75,7 +75,6 @@ public class ClienteService {
 	public String delete(String userName) throws ClienteNotFoundException {
 		ClienteEntity cliente = this.findByUserNameOrEmail(userName);
 		cliente.setAtivo(false);
-		System.out.println(cliente.isAtivo());
 		repository.save(cliente);
 		return "Cliente deletado com sucesso!";
 	}

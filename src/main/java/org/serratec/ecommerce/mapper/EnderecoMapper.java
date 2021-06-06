@@ -18,6 +18,7 @@ public class EnderecoMapper {
 		endereco.setBairro(viaCEP.getBairro());
 		endereco.setCidade(viaCEP.getLocalidade());
 		endereco.setEstado(viaCEP.getUf());
+		endereco.setNome(enderecoDTO.getNome());
 		return endereco;
 	}
 	
@@ -32,8 +33,7 @@ public class EnderecoMapper {
 			dto.setCidade(entity.getCidade());
 			dto.setEstado(entity.getEstado());
 			dto.setCliente(entity.getCliente().getUserName());
+			dto.setNome(entity.getNome());
 			return dto;
 	}
-	
-
 }

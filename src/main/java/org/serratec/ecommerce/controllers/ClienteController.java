@@ -3,7 +3,7 @@ package org.serratec.ecommerce.controllers;
 import java.util.List;
 
 import org.serratec.ecommerce.dto.ClienteDTO;
-import org.serratec.ecommerce.entities.ClienteEntity;
+import org.serratec.ecommerce.dto.ClienteDTONovo;
 import org.serratec.ecommerce.exceptions.ClienteNotFoundException;
 import org.serratec.ecommerce.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class ClienteController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ClienteDTO> create(@RequestBody ClienteDTO entity) {
+	public ResponseEntity<ClienteDTO> create(@RequestBody ClienteDTONovo entity) {
 		return new ResponseEntity<>(service.create(entity), HttpStatus.CREATED);
 	}
 

@@ -30,8 +30,8 @@ public class EnderecoService {
 	@Autowired
 	ClienteService clienteService;
 	
-	public List<EnderecoDTOComp> getAll() {
-		List<EnderecoEntity> listaEndereco = repository.findAllByAtivoTrue();
+	public List<EnderecoDTOComp> getAll(String cliente) throws ClienteNotFoundException {
+		List<EnderecoEntity> listaEndereco = repository.findAllByAtivoTrueAndCliente(clienteService.findByUserNameOrEmail(cliente));
 		List<EnderecoDTOComp> listaDTO = new ArrayList<>();
 		for (EnderecoEntity enderecoEntity : listaEndereco) {
 			listaDTO.add(mapper.entityToEnderecoDTOComp(enderecoEntity));
@@ -39,16 +39,16 @@ public class EnderecoService {
 		return listaDTO;
 	}
 	
-	public EnderecoEntity findByNomeAndCliente(String nome, String cliente) throws EnderecoNotFoundException {
-		Optional<EnderecoEntity> endereco = Optional.of(repository.findByNomeAndCliente(nome, cliente));
+	public EnderecoEntity findByNomeAndCliente(String nome, ClienteEntity cliente) throws EnderecoNotFoundException {
+		Optional<EnderecoEntity> endereco = repository.findByNomeAndCliente(nome, cliente);
 		if (endereco.isPresent()) {
 			return endereco.get();
 		}
 		throw new EnderecoNotFoundException("Endereço não encontrado!");
 	}
 	
-	public EnderecoDTOComp findByNomeAndClienteDTO(String nome, String cliente) throws EnderecoNotFoundException {
-		EnderecoEntity endereco = this.findByNomeAndCliente(nome, cliente);
+	public EnderecoDTOComp findByNomeAndClienteDTO(String nome, String cliente) throws EnderecoNotFoundException, ClienteNotFoundException {
+		EnderecoEntity endereco = this.findByNomeAndCliente(nome, clienteService.findByUserNameOrEmail(cliente));
 		return mapper.entityToEnderecoDTOComp(endereco);
 	}
 
@@ -61,8 +61,8 @@ public class EnderecoService {
 		return mapper.entityToEnderecoDTOComp(repository.save(endereco));
 	}
 	
-	public EnderecoDTOComp update(EnderecoDTONovo novoEnd) throws ViaCEPUnreachableException, EnderecoNotFoundException {
-		EnderecoEntity endereco = this.findByNomeAndCliente(novoEnd.getNome(), novoEnd.getCliente());
+	public EnderecoDTOComp update(EnderecoDTONovo novoEnd) throws ViaCEPUnreachableException, EnderecoNotFoundException, ClienteNotFoundException {
+		EnderecoEntity endereco = this.findByNomeAndCliente(novoEnd.getNome(), clienteService.findByUserNameOrEmail(novoEnd.getCliente()));
 		if (novoEnd.getCep() != null) {
 			endereco.setCep(novoEnd.getCep());
 			var viaCEP = this.getViaCEP(novoEnd.getCep());
@@ -80,8 +80,8 @@ public class EnderecoService {
 		return mapper.entityToEnderecoDTOComp(repository.save(endereco));
 	}
 	
-	public String delete(String nome, String cliente) throws EnderecoNotFoundException {
-		EnderecoEntity endereco = this.findByNomeAndCliente(nome, cliente);
+	public String delete(String cliente, String nome) throws EnderecoNotFoundException, ClienteNotFoundException {
+		EnderecoEntity endereco = this.findByNomeAndCliente(nome, clienteService.findByUserNameOrEmail(cliente));
 		endereco.setAtivo(false);
 		repository.save(endereco);
 		return "Endereço deletado com sucesso!";

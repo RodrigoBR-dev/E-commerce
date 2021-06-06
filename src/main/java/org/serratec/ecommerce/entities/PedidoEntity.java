@@ -31,7 +31,7 @@ public class PedidoEntity {
 	@NotNull
 	private LocalDate dataDoPedido;
 	
-	@OneToMany
+	@OneToMany(mappedBy = "pedido")
 	private List<ProdutosPedidos> produtosPedidos = new ArrayList<>();
 
 	private LocalDate dataEntrega;

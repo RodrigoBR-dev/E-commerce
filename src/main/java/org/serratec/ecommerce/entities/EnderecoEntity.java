@@ -25,10 +25,12 @@ public class EnderecoEntity {
 	private String numero;
 	private String complemento;
 	private String estado;
+	private String nome;
 	
 	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private ClienteEntity cliente;
+	
 	private boolean ativo;
 
 	public Long getId() {
@@ -95,8 +97,12 @@ public class EnderecoEntity {
 		this.estado = estado;
 	}
 
-	public boolean isAtivo() {
-		return ativo;
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	public ClienteEntity getCliente() {
@@ -105,6 +111,10 @@ public class EnderecoEntity {
 
 	public void setCliente(ClienteEntity cliente) {
 		this.cliente = cliente;
+	}
+
+	public boolean isAtivo() {
+		return ativo;
 	}
 
 	public void setAtivo(boolean ativo) {

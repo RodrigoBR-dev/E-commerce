@@ -29,15 +29,12 @@ public class ProdutoEntity {
 	private LocalDate dataCadastro;
 	private String imagem;
 	
-	@OneToMany
+	@OneToMany(mappedBy = "produto")
 	private List<ProdutosPedidos> produtosPedidos = new ArrayList<>();
 
 	@ManyToOne
 	@JoinColumn(name = "categoria_id")
 	private CategoriaEntity categoria;
-	
-//	@OneToMany(mappedBy = "produtos")
-//	private List<PedidoEntity> pedidos = new ArrayList<>();
 
 	private Boolean ativo;
 
