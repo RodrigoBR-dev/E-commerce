@@ -2,7 +2,8 @@ package org.serratec.ecommerce.controllers;
 
 import java.util.List;
 
-import org.serratec.ecommerce.entities.CategoriaEntity;
+import org.serratec.ecommerce.dto.CategoriaDTO;
+import org.serratec.ecommerce.dto.CategoriaDTOAll;
 import org.serratec.ecommerce.exceptions.CategoriaNotFoundException;
 import org.serratec.ecommerce.services.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,27 +26,27 @@ public class CategoriaController {
 	CategoriaService service;
 	
 	@GetMapping
-	public ResponseEntity<List<CategoriaEntity>> getAll() {
+	public ResponseEntity<List<CategoriaDTOAll>> getAll() {
 		return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
 	}
 	
-	@GetMapping("/{id}")
-	public ResponseEntity<CategoriaEntity> getById(@PathVariable Long id) throws CategoriaNotFoundException {
-		return new ResponseEntity<>(service.getById(id), HttpStatus.OK);	
+	@GetMapping("/{nome}")
+	public ResponseEntity<CategoriaDTO> findByNome(@PathVariable String nome) throws CategoriaNotFoundException {
+		return new ResponseEntity<>(service.findByNomeDTO(nome), HttpStatus.OK);	
 	}
 	
 	@PostMapping
-	public ResponseEntity<CategoriaEntity> create(@RequestBody CategoriaEntity categoria){
+	public ResponseEntity<CategoriaDTO> create(@RequestBody CategoriaDTO categoria){
 		return new ResponseEntity<>(service.create(categoria), HttpStatus.CREATED);
 	}
 	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable Long id) throws CategoriaNotFoundException {
-		return new ResponseEntity<>(service.delete(id), HttpStatus.OK);
+	@DeleteMapping("/{nome}")
+	public ResponseEntity<String> delete(@PathVariable String nome) throws CategoriaNotFoundException {
+		return new ResponseEntity<>(service.delete(nome), HttpStatus.OK);
 	}
 	
 	@PutMapping
-	public ResponseEntity<CategoriaEntity> update(@RequestBody CategoriaEntity categoria) throws CategoriaNotFoundException{
+	public ResponseEntity<CategoriaDTO> update(@RequestBody CategoriaDTO categoria) throws CategoriaNotFoundException{
 		return new ResponseEntity<>(service.update(categoria), HttpStatus.OK);
 	}
 }

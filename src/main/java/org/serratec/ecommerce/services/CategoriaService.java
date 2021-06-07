@@ -2,9 +2,13 @@ package org.serratec.ecommerce.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.serratec.ecommerce.dto.CategoriaDTO;
+import org.serratec.ecommerce.dto.CategoriaDTOAll;
 import org.serratec.ecommerce.entities.CategoriaEntity;
 import org.serratec.ecommerce.exceptions.CategoriaNotFoundException;
+import org.serratec.ecommerce.mapper.CategoriaMapper;
 import org.serratec.ecommerce.repositories.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,16 +19,11 @@ public class CategoriaService {
 	@Autowired
 	CategoriaRepository repository;
 	
-	public List<CategoriaEntity> getAll(){
-		return repository.findAll();
-	}
+	@Autowired
+	CategoriaMapper  mapper;
 	
-	public CategoriaEntity getById(Long id) throws CategoriaNotFoundException {
-		Optional<CategoriaEntity> categoria = repository.findById(id);
-		if (categoria.isPresent()) {
-			return categoria.get();
-		}
-		throw new CategoriaNotFoundException("Categoria não encontrada!");
+	public List<CategoriaDTOAll> getAll(){
+		return repository.findAll().stream().map(mapper::entityToDTOAll).collect(Collectors.toList());
 	}
 	
 	public CategoriaEntity findByNome(String nome) throws CategoriaNotFoundException {
@@ -35,25 +34,33 @@ public class CategoriaService {
 		throw new CategoriaNotFoundException("Categoria não encontrada!");
 	}
 	
-	public CategoriaEntity create(CategoriaEntity categoria) {
-		return repository.save(categoria);
+	public CategoriaDTO findByNomeDTO(String nome) throws CategoriaNotFoundException {
+		Optional<CategoriaEntity> entity = repository.findByNome(nome);
+		if (entity.isPresent()) {
+			return mapper.entityToDTO(entity.get());
+		}
+		throw new CategoriaNotFoundException("Categoria não encontrada!");
 	}
 	
-	public String delete(Long id) throws CategoriaNotFoundException {
-		CategoriaEntity categoria = getById(id);
+	public CategoriaDTO create(CategoriaDTO categoriaDto) {
+		return mapper.entityToDTO(repository.save(mapper.dtoToEntity(categoriaDto)));
+	}
+	
+	public String delete(String nome) throws CategoriaNotFoundException {
+		CategoriaEntity categoria = findByNome(nome);
 		repository.delete(categoria);
 		return "Categoria deletada com sucesso!";
 	}
 
-	public CategoriaEntity update(CategoriaEntity categoriaNew) throws CategoriaNotFoundException {
-		CategoriaEntity categoria = getById(categoriaNew.getId());
-		if (categoriaNew.getNome() != null) {
-			categoria.setNome(categoriaNew.getNome());
+	public CategoriaDTO update(CategoriaDTO categoriaNew) throws CategoriaNotFoundException {
+		CategoriaEntity categoria = findByNome(categoriaNew.getNome());
+		if (categoriaNew.getNovoNome() != null) {
+			categoria.setNome(categoriaNew.getNovoNome());
 		}
 		if (categoriaNew.getDescricao() != null) {
 			categoria.setDescricao(categoriaNew.getDescricao());
 		}
 		
-		return repository.save(categoria);
+		return mapper.entityToDTO(repository.save(categoria));
 	}
 }
