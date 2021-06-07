@@ -89,7 +89,7 @@ public class ProdutoEntity {
 	}
 
 	public void setDataCadastro(LocalDate dataCadastro) {
-		this.dataCadastro = dataCadastro;
+		this.dataCadastro = LocalDate.now();
 	}
 
 	public String getImagem() {
@@ -116,12 +116,6 @@ public class ProdutoEntity {
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
-
-//	public List<PedidoEntity> getPedidos() {
-//		return pedidos;
-//	}
-//
-//	public void setPedidos(List<PedidoEntity> pedidos) {
-//		this.pedidos = pedidos;
-//	}
 }
+
+
