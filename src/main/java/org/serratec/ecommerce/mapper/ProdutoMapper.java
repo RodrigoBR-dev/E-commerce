@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProdutoMapper {
+	
 	public ProdutoDTOCliente toProdutoDTOSimples(ProdutoEntity entity) {
 		ProdutoDTOCliente dto = new ProdutoDTOCliente();
 		dto.setNome(entity.getNome());
@@ -31,9 +32,10 @@ public class ProdutoMapper {
 		usuario.setQuantEstoque(entity.getQuantEstoque());
 		usuario.setPreco(entity.getPreco());
 		usuario.setImagem(entity.getImagem());
+		usuario.setCategoria(entity.getCategoria().getNome());
 		return usuario;
 	}
-	public ProdutoEntity entityToDTOUsuario(ProdutoDTOUsuario usuario) throws ValorNegativoException {
+	public ProdutoEntity usuarioToEntity(ProdutoDTOUsuario usuario) throws ValorNegativoException {
 		ProdutoEntity entity = new ProdutoEntity ();
 		entity.setNome(usuario.getNome());
 		entity.setDescricao(usuario.getDescricao());
