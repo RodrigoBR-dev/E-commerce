@@ -9,7 +9,7 @@ public class ProdutoDTOUsuario {
 	private LocalDate dataCadastro;
 	private Integer quantEstoque;
 	private String imagem;
-	
+	private String categoria;
 	
 	public String getNome() {
 		return nome;
@@ -46,6 +46,12 @@ public class ProdutoDTOUsuario {
 	}
 	public void setImagem(String imagem) {
 		this.imagem = imagem;
+	}
+	public String getCategoria() {
+		return categoria;
+	}
+	public void setCategoria(String categoria) {
+		this.categoria = categoria;
 	}
 	
 }
