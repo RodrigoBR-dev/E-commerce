@@ -11,6 +11,7 @@ public class ClienteMapper {
 	public ClienteDTO entityToDTO(ClienteEntity entity) {
 		var dto = new ClienteDTO();
 		dto.setUserName(entity.getUserName());
+		dto.setEmail(entity.getEmail());
 		dto.setNome(entity.getNome());
 		dto.setCpf(entity.getCpf());
 		dto.setTelefone(entity.getTelefone());
@@ -21,6 +22,7 @@ public class ClienteMapper {
 	public ClienteEntity clienteDTOToEntity(ClienteDTO dto) {
 		var entity = new ClienteEntity();
 		entity.setUserName(dto.getUserName());
+		entity.setEmail(dto.getEmail());
 		entity.setNome(dto.getNome());
 		entity.setCpf(dto.getCpf());
 		entity.setTelefone(dto.getTelefone());
