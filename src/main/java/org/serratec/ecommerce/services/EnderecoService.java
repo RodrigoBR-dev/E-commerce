@@ -90,7 +90,7 @@ public class EnderecoService {
 	public EnderecoViaCEPDTO getViaCEP(String cep) throws ViaCEPUnreachableException {
 		var restTemplate = new RestTemplate();
 		var viaCEP = restTemplate.getForObject("http://viacep.com.br/ws/" + cep + "/json/", EnderecoViaCEPDTO.class);
-		if (viaCEP != null) return viaCEP;
+		if (viaCEP.getBairro() != null) return viaCEP;
 		throw new ViaCEPUnreachableException("CEP não encontrado.");
 	}
 }

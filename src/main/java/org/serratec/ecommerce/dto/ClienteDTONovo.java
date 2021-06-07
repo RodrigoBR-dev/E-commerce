@@ -2,13 +2,25 @@ package org.serratec.ecommerce.dto;
 
 import java.time.LocalDate;
 
+import javax.validation.constraints.NotNull;
+
 public class ClienteDTONovo {
 
+	@NotNull
 	private String email;
+	
+	@NotNull
 	private String senha;
+	
+	@NotNull
 	private String userName;
+	
+	@NotNull
 	private String nome;
+	
+	@NotNull
 	private String cpf;
+	
 	private String telefone;
 	private LocalDate dataNascimento;
 

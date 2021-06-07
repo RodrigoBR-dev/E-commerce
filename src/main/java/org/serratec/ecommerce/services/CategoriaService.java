@@ -27,6 +27,14 @@ public class CategoriaService {
 		throw new CategoriaNotFoundException("Categoria não encontrada!");
 	}
 	
+	public CategoriaEntity findByNome(String nome) throws CategoriaNotFoundException {
+		Optional<CategoriaEntity> entity = repository.findByNome(nome);
+		if (entity.isPresent()) {
+			return entity.get();
+		}
+		throw new CategoriaNotFoundException("Categoria não encontrada!");
+	}
+	
 	public CategoriaEntity create(CategoriaEntity categoria) {
 		return repository.save(categoria);
 	}

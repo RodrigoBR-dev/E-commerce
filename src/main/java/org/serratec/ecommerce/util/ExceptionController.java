@@ -6,8 +6,8 @@ import org.serratec.ecommerce.exceptions.EnderecoClienteNotAssociatedException;
 import org.serratec.ecommerce.exceptions.EnderecoNotFoundException;
 import org.serratec.ecommerce.exceptions.PedidoNotFoundException;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
-import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
 import org.serratec.ecommerce.exceptions.ValorNegativoException;
+import org.serratec.ecommerce.exceptions.ViaCEPUnreachableException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -60,6 +60,13 @@ public class ExceptionController {
 
 	@ExceptionHandler(EnderecoClienteNotAssociatedException.class)
 	public ResponseEntity<String> tratarLivroNotFoundException(EnderecoClienteNotAssociatedException exception) {
+		return ResponseEntity.notFound()
+				.header(MSG, exception.getMessage())
+				.build();
+	}
+	
+	@ExceptionHandler(ViaCEPUnreachableException.class)
+	public ResponseEntity<String> tratarLivroNotFoundException(ViaCEPUnreachableException exception) {
 		return ResponseEntity.notFound()
 				.header(MSG, exception.getMessage())
 				.build();

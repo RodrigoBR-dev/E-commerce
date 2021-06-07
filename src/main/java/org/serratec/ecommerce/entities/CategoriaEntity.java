@@ -18,7 +18,8 @@ public class CategoriaEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String nome, descricao;
+	private String nome;
+	private String descricao;
 	
 	@OneToMany
 	@JoinColumn(name="categoria")
