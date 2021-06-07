@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.serratec.ecommerce.dto.ProdutoDTO;
+import org.serratec.ecommerce.dto.ProdutoDTOCliente;
 import org.serratec.ecommerce.entities.ProdutoEntity;
 import org.serratec.ecommerce.exceptions.EstoqueInsuficienteException;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
@@ -78,9 +78,9 @@ public class ProdutoService {
 		repository.delete(produto);
 	}
 
-	public List<ProdutoDTO> findAllDTO() {
+	public List<ProdutoDTOCliente> findAllDTO() {
 		List<ProdutoEntity> listaEntity = repository.findAll();
-		List<ProdutoDTO> listaDTO = new ArrayList<>();
+		List<ProdutoDTOCliente> listaDTO = new ArrayList<>();
 		for (ProdutoEntity elemento : listaEntity) {
 			listaDTO.add(mapper.toProdutoDTOSimples(elemento));
 		}

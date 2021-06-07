@@ -2,7 +2,7 @@ package org.serratec.ecommerce.controllers;
 
 import java.util.List;
 
-import org.serratec.ecommerce.dto.ProdutoDTO;
+import org.serratec.ecommerce.dto.ProdutoDTOCliente;
 import org.serratec.ecommerce.entities.ProdutoEntity;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
 import org.serratec.ecommerce.exceptions.ValorNegativoException;
@@ -57,8 +57,8 @@ public class ProdutoController {
 	}
 	//DTO apenas com os campos nome,descricao e preço
 	@GetMapping("/cliente")
-	public ResponseEntity<List<ProdutoDTO>> findAllDTO(){
-		return new ResponseEntity<List<ProdutoDTO>>(service.findAllDTO(),HttpStatus.OK);
+	public ResponseEntity<List<ProdutoDTOCliente>> findAllDTO(){
+		return new ResponseEntity<List<ProdutoDTOCliente>>(service.findAllDTO(),HttpStatus.OK);
 	}
 	
 }

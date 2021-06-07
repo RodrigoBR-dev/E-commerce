@@ -1,9 +1,11 @@
 package org.serratec.ecommerce.dto;
 
-public class ProdutoDTO {
+public class ProdutoDTOCliente {
 	private String nome;
 	private String descricao;
 	private Double preco;
+	
+	
 	public String getNome() {
 		return nome;
 	}
