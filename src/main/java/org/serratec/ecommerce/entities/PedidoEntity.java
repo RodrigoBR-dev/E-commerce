@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.serratec.ecommerce.enums.StatusEnum;
+
 @Entity
 @Table(name = "Pedido")
 public class PedidoEntity {
@@ -24,7 +26,7 @@ public class PedidoEntity {
 	
 	@NotNull
 	private Long numeroDoPedido;
-
+	
 	@NotNull
 	private Double valorTotalDoPedido;
 	
@@ -33,11 +35,12 @@ public class PedidoEntity {
 	
 	@OneToMany(mappedBy = "pedido")
 	private List<ProdutosPedidos> produtosPedidos = new ArrayList<>();
-
+	
+	@NotNull
 	private LocalDate dataEntrega;
 	
 	@NotNull
-	private String status;
+	private StatusEnum status;
 	
 	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
@@ -46,7 +49,6 @@ public class PedidoEntity {
 //	@OneToMany(mappedBy = "pedido")
 //	private List<ProdutoEntity> produtos = new ArrayList<>();
 	
-	private Boolean ativo;
 
 	public Long getId() {
 		return id;
@@ -104,19 +106,12 @@ public class PedidoEntity {
 		this.produtosPedidos = produtosPedidos;
 	}
 
-	public String getStatus() {
+	public StatusEnum getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(StatusEnum status) {
 		this.status = status;
 	}
 
-	public Boolean getAtivo() {
-		return ativo;
-	}
-
-	public void setAtivo(Boolean ativo) {
-		this.ativo = ativo;
-	}
 }

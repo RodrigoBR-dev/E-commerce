@@ -1,27 +1,24 @@
 package org.serratec.ecommerce.dto;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import javax.validation.constraints.NotNull;
 
-import org.serratec.ecommerce.entities.ProdutoEntity;
+import org.serratec.ecommerce.entities.ClienteEntity;
 
 public class PedidoDTO {
 	
-	@NotNull
 	private Long numeroDoPedido;
 	
 	private String produto;
 
-	@NotNull
 	private Double valorTotalDoPedido;
 	
-	@NotNull
 	private LocalDate dataDoPedido;
 	
-	@NotNull
+	private LocalDate dataEntrega;
+	
 	private String status;
+	
+	private ClienteEntity cliente;
 
 	public Long getNumeroDoPedido() {
 		return numeroDoPedido;
@@ -54,6 +51,30 @@ public class PedidoDTO {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getProduto() {
+		return produto;
+	}
+
+	public void setProduto(String produto) {
+		this.produto = produto;
+	}
+
+	public LocalDate getDataEntrega() {
+		return dataEntrega;
+	}
+
+	public void setDataEntrega(LocalDate dataEntrega) {
+		this.dataEntrega = dataEntrega;
+	}
+
+	public ClienteEntity getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(ClienteEntity cliente) {
+		this.cliente = cliente;
 	}
 	
 	
