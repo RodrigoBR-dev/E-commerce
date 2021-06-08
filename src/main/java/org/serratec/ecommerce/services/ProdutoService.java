@@ -125,4 +125,9 @@ public class ProdutoService {
 		produto.setQuantEstoque(produto.getQuantEstoque() + estoque);
 		repository.save(produto);
 	}
+
+	public List<ProdutoDTOUsuario> findAllByCategoriaDTO(String categoriaNome) throws CategoriaNotFoundException {
+		CategoriaEntity categoria = categoriaService.findByNome(categoriaNome);
+		return findAllByCategoria(categoria).stream().map(mapper::toDTOUsuario).collect(Collectors.toList());
+	}
 }

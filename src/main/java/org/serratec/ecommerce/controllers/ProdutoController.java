@@ -54,5 +54,9 @@ public class ProdutoController {
 	public ResponseEntity<List<ProdutoDTOCliente>> findAllDTO(){
 		return new ResponseEntity<List<ProdutoDTOCliente>>(service.findAllDTO(),HttpStatus.OK);
 	}
+	@GetMapping("/categoria/{categoria}")
+	public ResponseEntity <List<ProdutoDTOUsuario>> findByCategoria(@PathVariable String categoria) throws CategoriaNotFoundException{
+		return new ResponseEntity<List<ProdutoDTOUsuario>>(service.findAllByCategoriaDTO(categoria),HttpStatus.OK);
+	}
 	
 }
