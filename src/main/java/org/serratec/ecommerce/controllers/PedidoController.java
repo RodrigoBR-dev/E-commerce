@@ -4,8 +4,12 @@ import java.util.List;
 
 import org.serratec.ecommerce.dto.PedidoDTO;
 import org.serratec.ecommerce.entities.PedidoEntity;
+import org.serratec.ecommerce.exceptions.EstoqueInsuficienteException;
 import org.serratec.ecommerce.exceptions.PedidoFinalizadoException;
 import org.serratec.ecommerce.exceptions.PedidoNotFoundException;
+import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
+import org.serratec.ecommerce.exceptions.QuantityException;
+import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.serratec.ecommerce.services.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,13 +41,13 @@ public class PedidoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<String> create(@RequestBody PedidoDTO pedido) {
+	public ResponseEntity<String> create(@RequestBody PedidoDTO pedido) throws ProdutoNotFoundException {
 		return new ResponseEntity<String>(service.create(pedido), HttpStatus.CREATED);
 	}
 	
-	@PutMapping("/{id}")
-	public ResponseEntity<PedidoEntity> update(@PathVariable Long id) throws PedidoNotFoundException{
-		return new ResponseEntity<PedidoEntity>(service.update(id, null) , HttpStatus.OK);
+	@PutMapping
+	public void acrescentarPedido(@RequestBody PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, ValorNegativoException, QuantityException{
+		service.acrescentarProduto(pedido);
 	}
 	
 	@PutMapping("/pagamento/{numeroDoPedido}")

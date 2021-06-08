@@ -19,6 +19,9 @@ public class PedidoDTO {
 	private String status;
 	
 	private ClienteEntity cliente;
+	
+	private Integer quantidade;
+	
 
 	public Long getNumeroDoPedido() {
 		return numeroDoPedido;
@@ -75,6 +78,14 @@ public class PedidoDTO {
 
 	public void setCliente(ClienteEntity cliente) {
 		this.cliente = cliente;
+	}
+
+	public Integer getQuantidade() {
+		return quantidade;
+	}
+
+	public void setQuantidade(Integer quantidade) {
+		this.quantidade = quantidade;
 	}
 	
 	
