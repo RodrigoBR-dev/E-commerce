@@ -22,7 +22,7 @@ public class CategoriaService {
 	CategoriaRepository repository;
 	
 	@Autowired
-	CategoriaMapper  mapper;
+	CategoriaMapper mapper;
 	
 	@Autowired
 	ProdutoService prodService;
