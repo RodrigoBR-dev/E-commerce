@@ -28,6 +28,14 @@ public class PedidoService {
 		return pedido.get();
 	}
 	
+	public PedidoEntity getByNumero(Long numeroDoPedido) throws PedidoNotFoundException {
+		Optional<PedidoEntity> pedido = repository.findById(numeroDoPedido);
+		if (pedido.isEmpty()) {
+			throw new PedidoNotFoundException("Não existe pedido com esse Id.");
+		}
+		return pedido.get();
+	}
+	
 	public void create(PedidoEntity pedido) {
 		pedido.setAtivo(true);
 		repository.save(pedido);

@@ -96,13 +96,13 @@ public class PedidoEntity {
 		this.cliente = cliente;
 	}
 
-//	public List<ProdutoEntity> getProdutos() {
-//		return produtos;
-//	}
-//
-//	public void setProdutos(List<ProdutoEntity> produtos) {
-//		this.produtos = produtos;
-//	}
+	public List<ProdutosPedidos> getProdutos() {
+		return produtosPedidos;
+	}
+
+	public void setProdutos(List<ProdutosPedidos> produtosPedidos) {
+		this.produtosPedidos = produtosPedidos;
+	}
 
 	public String getStatus() {
 		return status;
