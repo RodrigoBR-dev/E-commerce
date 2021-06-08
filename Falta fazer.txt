@@ -1,6 +1,7 @@
-Novo dto para retorno da categoria, sem atributos novo nome e sem listagem para o metodo update;
+Novo dto para retorno da categoria, sem atributos novo nome e sem listagem para o método update;
 Em pedido, fazer o tratamento de venda e cancelamento;
 Em pedido criar metodo para alterar o status do pedido;
 Finalizar envio de email na criação e na alteração de cadastro de cliente e para recuperação de senha e para alteração do status do pedido;
 Recepção e tratamento de imagem do produto;
 Sistema de login.
+Criar método no produtoscontroller para fazer uso do método de busca por categoria. 

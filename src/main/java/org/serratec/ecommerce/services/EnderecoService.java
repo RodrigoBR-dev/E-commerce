@@ -31,7 +31,7 @@ public class EnderecoService {
 	ClienteService clienteService;
 	
 	public List<EnderecoDTOComp> getAll(String cliente) throws ClienteNotFoundException {
-		List<EnderecoEntity> listaEndereco = repository.findAllByAtivoTrueAndCliente(clienteService.findByUserNameOrEmail(cliente));
+		List<EnderecoEntity> listaEndereco = repository.findAllByCliente(clienteService.findByUserNameOrEmail(cliente));
 		List<EnderecoDTOComp> listaDTO = new ArrayList<>();
 		for (EnderecoEntity enderecoEntity : listaEndereco) {
 			listaDTO.add(mapper.entityToEnderecoDTOComp(enderecoEntity));
@@ -57,7 +57,6 @@ public class EnderecoService {
 		var viaCEP = this.getViaCEP(enderecoDTO.getCep());
 		EnderecoEntity endereco = mapper.enderecoViaDTOToEntity(enderecoDTO, viaCEP);
 		endereco.setCliente(cliente);
-		endereco.setAtivo(true);
 		return mapper.entityToEnderecoDTOComp(repository.save(endereco));
 	}
 	
@@ -82,8 +81,7 @@ public class EnderecoService {
 	
 	public String delete(String cliente, String nome) throws EnderecoNotFoundException, ClienteNotFoundException {
 		EnderecoEntity endereco = this.findByNomeAndCliente(nome, clienteService.findByUserNameOrEmail(cliente));
-		endereco.setAtivo(false);
-		repository.save(endereco);
+		repository.delete(endereco);
 		return "Endereço deletado com sucesso!";
 	}
 	

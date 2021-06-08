@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface EnderecoRepository extends JpaRepository<EnderecoEntity, Long>{
 
 	
-	List<EnderecoEntity> findAllByAtivoTrueAndCliente(ClienteEntity cliente);
+	List<EnderecoEntity> findAllByCliente(ClienteEntity cliente);
 	
 	Optional<EnderecoEntity> findByNomeAndCliente(String nome, ClienteEntity cliente);
 }
