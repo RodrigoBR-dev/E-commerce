@@ -28,8 +28,6 @@ public class EnderecoEntity {
 	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private ClienteEntity cliente;
-	
-	private boolean ativo;
 
 	public Long getId() {
 		return id;
@@ -109,13 +107,5 @@ public class EnderecoEntity {
 
 	public void setCliente(ClienteEntity cliente) {
 		this.cliente = cliente;
-	}
-
-	public boolean isAtivo() {
-		return ativo;
-	}
-
-	public void setAtivo(boolean ativo) {
-		this.ativo = ativo;
 	}
 }
