@@ -34,7 +34,7 @@ public class ClienteService {
 	
 	
 	public ClienteEntity findByUserNameOrEmail(String userNameOrEmail) throws ClienteNotFoundException { 
-		Optional<ClienteEntity> cliente = repository.findByUserNameOrEmail(userNameOrEmail, userNameOrEmail); 
+		Optional<ClienteEntity> cliente = repository.findByAtivoTrueAndUserNameOrEmail(userNameOrEmail, userNameOrEmail); 
 		if (cliente.isPresent()) { 
 			return cliente.get(); 
 		}
@@ -42,7 +42,7 @@ public class ClienteService {
 	}
 	
 	public ClienteDTO findByUserNameOrEmailDTO(String userNameOrEmail) throws ClienteNotFoundException { 
-		Optional<ClienteEntity> cliente = repository.findByUserNameOrEmail(userNameOrEmail, userNameOrEmail); 
+		Optional<ClienteEntity> cliente = repository.findByAtivoTrueAndUserNameOrEmail(userNameOrEmail, userNameOrEmail); 
 		if (cliente.isPresent()) { 
 			return mapper.entityToDTO(cliente.get());
 		}

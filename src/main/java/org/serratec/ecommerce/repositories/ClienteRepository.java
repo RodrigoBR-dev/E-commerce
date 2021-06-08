@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ClienteRepository extends JpaRepository<ClienteEntity, Long>{
 
-	Optional<ClienteEntity> findByUserNameOrEmail(String userName, String email);
+	Optional<ClienteEntity> findByAtivoTrueAndUserNameOrEmail(String userName, String email);
 	
 	List<ClienteEntity> findAllByAtivoTrue();
 

@@ -42,7 +42,7 @@ public class CategoriaDTO {
 		return produtos;
 	}
 
-	public void setProdutos(String produtos) {
-		this.produtos.add(produtos);
+	public void setProdutos(List<String> produtos) {
+		this.produtos = produtos;
 	}
 }

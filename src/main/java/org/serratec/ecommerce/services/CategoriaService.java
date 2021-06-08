@@ -1,5 +1,6 @@
 package org.serratec.ecommerce.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -7,6 +8,7 @@ import java.util.stream.Collectors;
 import org.serratec.ecommerce.dto.CategoriaDTO;
 import org.serratec.ecommerce.dto.CategoriaDTOAll;
 import org.serratec.ecommerce.entities.CategoriaEntity;
+import org.serratec.ecommerce.entities.ProdutoEntity;
 import org.serratec.ecommerce.exceptions.CategoriaNotFoundException;
 import org.serratec.ecommerce.mapper.CategoriaMapper;
 import org.serratec.ecommerce.repositories.CategoriaRepository;
@@ -22,6 +24,9 @@ public class CategoriaService {
 	@Autowired
 	CategoriaMapper  mapper;
 	
+	@Autowired
+	ProdutoService prodService;
+	
 	public List<CategoriaDTOAll> getAll(){
 		return repository.findAll().stream().map(mapper::entityToDTOAll).collect(Collectors.toList());
 	}
@@ -36,20 +41,23 @@ public class CategoriaService {
 	
 	public CategoriaDTO findByNomeDTO(String nome) throws CategoriaNotFoundException {
 		Optional<CategoriaEntity> entity = repository.findByNome(nome);
-		if (entity.isPresent()) {
-			return mapper.entityToDTO(entity.get());
+		System.out.println(entity.get().getNome());
+		if (entity.isEmpty()) throw new CategoriaNotFoundException("Categoria não encontrada!");
+		List<ProdutoEntity> produto = prodService.findAllByCategoria(entity.get());
+		
+		System.out.println(produto);
+// .stream().map(ProdutoEntity::getNome).collect(Collectors.toList());
+		List<String> nomeProdutos = new ArrayList<>(); 
+		for (ProdutoEntity produtoEntity : produto) {
+			nomeProdutos.add(produtoEntity.getNome());
 		}
-		throw new CategoriaNotFoundException("Categoria não encontrada!");
+		CategoriaDTO dto = mapper.entityToDTO(entity.get());
+		dto.setProdutos(nomeProdutos);
+		return dto;
 	}
 	
 	public CategoriaDTO create(CategoriaDTO categoriaDto) {
 		return mapper.entityToDTO(repository.save(mapper.dtoToEntity(categoriaDto)));
-	}
-	
-	public String delete(String nome) throws CategoriaNotFoundException {
-		CategoriaEntity categoria = findByNome(nome);
-		repository.delete(categoria);
-		return "Categoria deletada com sucesso!";
 	}
 
 	public CategoriaDTO update(CategoriaDTO categoriaNew) throws CategoriaNotFoundException {
@@ -62,5 +70,11 @@ public class CategoriaService {
 		}
 		
 		return mapper.entityToDTO(repository.save(categoria));
+	}
+	
+	public String delete(String nome) throws CategoriaNotFoundException {
+		CategoriaEntity categoria = findByNome(nome);
+		repository.delete(categoria);
+		return "Categoria deletada com sucesso!";
 	}
 }

@@ -25,66 +25,74 @@ public class ProdutoService {
 	ProdutoRepository repository;
 	@Autowired
 	ProdutoMapper mapper;
-	@Autowired 
+	@Autowired
 	CategoriaService categoriaService;
+
+	public List<ProdutoDTOUsuario> findAll() {
+		return repository.findAll().stream().map(mapper::toDTOUsuario).collect(Collectors.toList());
+	}
+
+	public List<ProdutoDTOCliente> findAllDTO() {
+		List<ProdutoEntity> listaEntity = repository.findAllByAtivoTrue();
+		List<ProdutoDTOCliente> listaDTO = new ArrayList<>();
+		for (ProdutoEntity elemento : listaEntity) {
+			listaDTO.add(mapper.toProdutoDTOSimples(elemento));
+		}
+		return listaDTO;
+	}
+
+	public ProdutoEntity findByNome(String nome) throws ProdutoNotFoundException {
+		ProdutoEntity produto = repository.findByAtivoTrueAndNome(nome);
+		if (produto.getNome() != null) return produto;
+		throw new ProdutoNotFoundException("Produto não encontrado!");
+	}
+
+	public ProdutoDTOUsuario findByNomeDTO(String nome) {
+		ProdutoEntity produto = repository.findByAtivoTrueAndNome(nome);
+		return mapper.toDTOUsuario(produto);
+	}
+
+	public List<ProdutoEntity> findAllByCategoria(CategoriaEntity categoria) {
+		return repository.findAllByAtivoTrueAndCategoria(categoria);
+	}
 
 	public void create(ProdutoDTOUsuario produto) throws CategoriaNotFoundException, ValorNegativoException {
 		CategoriaEntity categoria = categoriaService.findByNome(produto.getCategoria());
-		ProdutoEntity prodEntity = mapper.usuarioToEntity(produto);		
+		ProdutoEntity prodEntity = mapper.usuarioToEntity(produto);
 		prodEntity.setAtivo(true);
 		prodEntity.setDataCadastro(LocalDate.now());
 		prodEntity.setCategoria(categoria);
 		repository.save(prodEntity);
-		
-	}
-//
-//	public ProdutoEntity findById(Long id) throws ProdutoNotFoundException {		
-//		Optional<ProdutoEntity> produto = repository.findById(id);
-//		if(produto.isEmpty()) {
-//			throw new ProdutoNotFoundException("Produto não encontrado com esse id" + id);
-//		}
-//		return produto.get();
-//	}
-	
-	public ProdutoEntity findByNome(String nome){		
-		ProdutoEntity produto = repository.findByNome(nome);				
-		return produto;
-	}
-	public ProdutoDTOUsuario findByNomeDTO(String nome){		
-		ProdutoEntity produto = repository.findByNome(nome);				
-		return mapper.toDTOUsuario(produto);
+
 	}
 
-	public List<ProdutoDTOUsuario> findAll() {	
-		return repository.findAll().stream().map(mapper::toDTOUsuario).collect(Collectors.toList());
-	}
-
-	public ProdutoDTOUsuario update(ProdutoDTOUsuario produtoTemp) throws ProdutoNotFoundException, ValorNegativoException, CategoriaNotFoundException {
+	public ProdutoDTOUsuario update(ProdutoDTOUsuario produtoTemp)
+			throws ProdutoNotFoundException, ValorNegativoException, CategoriaNotFoundException {
 		ProdutoEntity produto = findByNome(produtoTemp.getNome());
-		
-		if(produtoTemp.getNome() != null) {
+
+		if (produtoTemp.getNome() != null) {
 			produto.setNome(produtoTemp.getNome());
 		}
-		if(produtoTemp.getCategoria() != null) {
+		if (produtoTemp.getCategoria() != null) {
 			CategoriaEntity categoria = categoriaService.findByNome(produtoTemp.getCategoria());
 			produto.setCategoria(categoria);
 		}
-		if(produtoTemp.getDataCadastro() != null) {
+		if (produtoTemp.getDataCadastro() != null) {
 			produto.setDataCadastro(produtoTemp.getDataCadastro());
 		}
-		if(produtoTemp.getPreco() != null) {
+		if (produtoTemp.getPreco() != null) {
 			produto.setPreco(produtoTemp.getPreco());
 		}
-		if(produtoTemp.getDescricao() != null) {
+		if (produtoTemp.getDescricao() != null) {
 			produto.setDescricao(produtoTemp.getDescricao());
 		}
-		if(produtoTemp.getImagem() != null) {
+		if (produtoTemp.getImagem() != null) {
 			produto.setImagem(produtoTemp.getImagem());
 		}
-		if(produtoTemp.getQuantEstoque() != null) {
+		if (produtoTemp.getQuantEstoque() != null) {
 			produto.setQuantEstoque(produtoTemp.getQuantEstoque());
 		}
-		
+
 		return mapper.toDTOUsuario(repository.save(produto));
 	}
 
@@ -93,39 +101,28 @@ public class ProdutoService {
 		produto.setAtivo(false);
 		repository.save(produto);
 		return "Deletado com sucesso";
-//		repository.delete(produto);
 	}
 
-	public List<ProdutoDTOCliente> findAllDTO() {
-		List<ProdutoEntity> listaEntity = repository.findAll();
-		List<ProdutoDTOCliente> listaDTO = new ArrayList<>();
-		for (ProdutoEntity elemento : listaEntity) {
-			listaDTO.add(mapper.toProdutoDTOSimples(elemento));
-		}
-		return listaDTO;		
-	}
-	
-	public void retornaEstoque(String nome,Integer estoque) throws ProdutoNotFoundException, ValorNegativoException {
+	public void retornaEstoque(String nome, Integer estoque) throws ValorNegativoException, ProdutoNotFoundException {
 		ProdutoEntity produto = findByNome(nome);
-		produto.setQuantEstoque(produto.getQuantEstoque()+estoque);
+		produto.setQuantEstoque(produto.getQuantEstoque() + estoque);
 	}
-	
-	public void vender(String nome,Integer estoque) throws EstoqueInsuficienteException, ProdutoNotFoundException, ValorNegativoException {
+
+	public void vender(String nome, Integer estoque)
+			throws EstoqueInsuficienteException, ValorNegativoException, ProdutoNotFoundException {
 		ProdutoEntity produto = findByNome(nome);
-		if(produto.getQuantEstoque() >= estoque) {
-			produto.setQuantEstoque(produto.getQuantEstoque()-estoque);
-			repository.save(produto);			
-		}else {
+		if (produto.getQuantEstoque() >= estoque) {
+			produto.setQuantEstoque(produto.getQuantEstoque() - estoque);
+			repository.save(produto);
+		} else {
 			throw new EstoqueInsuficienteException("Estoque insuficiente");
 		}
-		
-	}
-	public void cancelar(String nome, Integer estoque) throws ValorNegativoException {
-		ProdutoEntity produto  = findByNome(nome);		
-		produto.setQuantEstoque(produto.getQuantEstoque()+estoque);
-		repository.save(produto);			
-	}
-	
-	
 
+	}
+
+	public void cancelar(String nome, Integer estoque) throws ValorNegativoException, ProdutoNotFoundException {
+		ProdutoEntity produto = findByNome(nome);
+		produto.setQuantEstoque(produto.getQuantEstoque() + estoque);
+		repository.save(produto);
+	}
 }
