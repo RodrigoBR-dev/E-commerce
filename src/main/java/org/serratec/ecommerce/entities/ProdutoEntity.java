@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.serratec.ecommerce.exceptions.ValorNegativoException;
 
@@ -22,9 +24,14 @@ public class ProdutoEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@NotNull
+	@Column(unique=true)
 	private String nome;
+	@NotNull
 	private String descricao;
+	@NotNull
 	private Double preco;
+	@NotNull
 	private Integer quantEstoque;
 	private LocalDate dataCadastro;
 	private String imagem;
