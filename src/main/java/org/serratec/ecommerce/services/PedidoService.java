@@ -7,14 +7,13 @@ import java.util.stream.Collectors;
 
 import org.serratec.ecommerce.dto.PedidoDTO;
 import org.serratec.ecommerce.entities.PedidoEntity;
-import org.serratec.ecommerce.entities.ProdutoEntity;
 import org.serratec.ecommerce.entities.ProdutosPedidosEntity;
 import org.serratec.ecommerce.enums.StatusEnum;
 import org.serratec.ecommerce.exceptions.EstoqueInsuficienteException;
+import org.serratec.ecommerce.exceptions.NotclosedPedidoException;
 import org.serratec.ecommerce.exceptions.PedidoFinalizadoException;
 import org.serratec.ecommerce.exceptions.PedidoNotFoundException;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
-import org.serratec.ecommerce.exceptions.QuantityException;
 import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.serratec.ecommerce.mapper.PedidoMapper;
 import org.serratec.ecommerce.repositories.PedidoRepository;
@@ -54,43 +53,55 @@ public class PedidoService {
 		pedido.setDataDoPedido(LocalDate.now());
 		pedido.setStatus(StatusEnum.RECEBIDO);
 		pedido = repository.save(pedido);
-		produtosPedidosService.create(pedido, pedidoNovo);
+		var produtosPedidos = produtosPedidosService.create(pedido, pedidoNovo);
+		pedido.setValorTotalDoPedido(produtosPedidos.getPreco() * produtosPedidos.getQuantidade());
+		repository.save(pedido);
 		return "Criado com sucesso";
 	}
 	
-	public PedidoDTO acrescentarProduto(PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, ValorNegativoException, QuantityException {
-		PedidoEntity pedidoEntity = getByNumero(pedido.getNumeroDoPedido());
-		ProdutoEntity produtoEntity = produtoService.findByNome(pedido.getProduto());
+	public PedidoDTO update(PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException {
+		var pedidoEntity = getByNumero(pedido.getNumeroDoPedido());
+		var produtoEntity = produtoService.findByNome(pedido.getProduto());
 		Optional<ProdutosPedidosEntity> produtosPedidos = Optional.ofNullable(produtosPedidosService.findByPedidoAndProduto(pedidoEntity, produtoEntity));
 		if (produtosPedidos.isPresent()) {
-			ProdutosPedidosEntity produtosPedidosEntity  = produtosPedidos.get();
-			if(produtosPedidosEntity.getQuantidade() < pedido.getQuantidade()) {
-				produtosPedidosEntity.setQuantidade(pedido.getQuantidade());
-				Integer quantidade = produtosPedidosEntity.getQuantidade() - pedido.getQuantidade();
-				produtoService.vender(pedido.getProduto(), quantidade);
-			} else {
-				throw new QuantityException("A quantidade nova eh inferior a quantidade existente!");
-			}
+			if (pedido.getQuantidade() <= produtoEntity.getQuantEstoque()) {
+				produtosPedidosService.update(produtosPedidos.get(), pedido.getQuantidade());				
+			} else throw new EstoqueInsuficienteException("Estoque insuficiente!");
+		} else if (pedido.getQuantidade() <= produtoEntity.getQuantEstoque()) {
+			produtosPedidosService.create(pedidoEntity, pedido);
 		}
 		return pedido;
 	}
 	
-	public String pagamento(Long numeroDoPedido) throws PedidoNotFoundException {
-		PedidoEntity pedido = this.getByNumero(numeroDoPedido);
-		pedido.setDataDoPedido(LocalDate.now());
-		pedido.setStatus(StatusEnum.PAGO);
+	public void fechar(long numeroPedido) throws PedidoNotFoundException, EstoqueInsuficienteException, ValorNegativoException, ProdutoNotFoundException {
+		PedidoEntity pedido = this.getByNumero(numeroPedido);
+		List<ProdutosPedidosEntity> listaProdutosPedidos = produtosPedidosService.findByPedido(pedido);
+		for (ProdutosPedidosEntity produtosPedidosEntity : listaProdutosPedidos) {
+			produtoService.vender(produtosPedidosEntity.getProduto(), produtosPedidosEntity.getQuantidade());
+		}
+		pedido.setStatus(StatusEnum.FECHADO);
 		repository.save(pedido);
-		return "Pagamento Recebido!";
 	}
 	
-	public String transporte(Long numeroDoPedido) throws PedidoNotFoundException {
+	public String pagar(Long numeroDoPedido) throws PedidoNotFoundException, NotclosedPedidoException {
+		PedidoEntity pedido = this.getByNumero(numeroDoPedido);
+		if (pedido.getStatus() == StatusEnum.FECHADO) {
+			pedido.setDataDoPedido(LocalDate.now());
+			pedido.setStatus(StatusEnum.PAGO);
+			repository.save(pedido);
+			return "Pagamento Recebido!";
+		}
+		throw new NotclosedPedidoException("Favor fechar o pedido antes de efetuar pagamento!"); 
+	}
+	
+	public String transportar(Long numeroDoPedido) throws PedidoNotFoundException {
 		PedidoEntity pedido = this.getByNumero(numeroDoPedido);
 		pedido.setStatus(StatusEnum.TRANSPORTE);
 		repository.save(pedido);
 		return "Pedido em transporte!";
 	}
 	
-	public String entrega(Long numeroDoPedido) throws PedidoNotFoundException {
+	public String entregar(Long numeroDoPedido) throws PedidoNotFoundException {
 		PedidoEntity pedido = this.getByNumero(numeroDoPedido);
 		pedido.setStatus(StatusEnum.ENTREGUE);
 		repository.save(pedido);

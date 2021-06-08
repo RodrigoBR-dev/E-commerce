@@ -27,13 +27,18 @@ public class ProdutosPedidosService {
 		return repository.findByPedidoAndProduto(pedido, produto);
 	}
 	
-	public void create(PedidoEntity pedido, PedidoDTO dto) throws ProdutoNotFoundException {
-		ProdutosPedidosEntity produtosPedidos = new ProdutosPedidosEntity();
+	public ProdutosPedidosEntity create(PedidoEntity pedido, PedidoDTO dto) throws ProdutoNotFoundException {
+		var produtosPedidos = new ProdutosPedidosEntity();
 		produtosPedidos.setPedido(pedido);
 		produtosPedidos.setQuantidade(dto.getQuantidade());
 		ProdutoEntity produto = produtoService.findByNome(dto.getProduto());
 		produtosPedidos.setProduto(produto);
 		produtosPedidos.setPreco(produto.getPreco());
-		repository.save(produtosPedidos);
+		return repository.save(produtosPedidos);
+	}
+	
+	public ProdutosPedidosEntity update(ProdutosPedidosEntity entity, Integer quantidade) {
+		entity.setQuantidade(quantidade);
+		return repository.save(entity);	
 	}
 }
