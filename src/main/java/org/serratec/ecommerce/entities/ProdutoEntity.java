@@ -37,7 +37,7 @@ public class ProdutoEntity {
 	private String imagem;
 	
 	@OneToMany(mappedBy = "produto")
-	private List<ProdutosPedidos> produtosPedidos = new ArrayList<>();
+	private List<ProdutosPedidosEntity> produtosPedidos = new ArrayList<>();
 
 	@ManyToOne
 	@JoinColumn(name = "categoria_id")

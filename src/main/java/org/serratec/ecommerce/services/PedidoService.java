@@ -7,9 +7,15 @@ import java.util.stream.Collectors;
 
 import org.serratec.ecommerce.dto.PedidoDTO;
 import org.serratec.ecommerce.entities.PedidoEntity;
+import org.serratec.ecommerce.entities.ProdutoEntity;
+import org.serratec.ecommerce.entities.ProdutosPedidosEntity;
 import org.serratec.ecommerce.enums.StatusEnum;
+import org.serratec.ecommerce.exceptions.EstoqueInsuficienteException;
 import org.serratec.ecommerce.exceptions.PedidoFinalizadoException;
 import org.serratec.ecommerce.exceptions.PedidoNotFoundException;
+import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
+import org.serratec.ecommerce.exceptions.QuantityException;
+import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.serratec.ecommerce.mapper.PedidoMapper;
 import org.serratec.ecommerce.repositories.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +31,12 @@ public class PedidoService {
 	@Autowired
 	PedidoMapper mapper;
 	
+	@Autowired
+	ProdutoService produtoService;
+	
+	@Autowired
+	ProdutosPedidosService produtosPedidosService;
+	
 	public List<PedidoDTO> getAll() {
 		return repository.findAll(Sort.by("dataDoPedido")).stream().map(mapper::toDTO).collect(Collectors.toList());
 	}
@@ -37,37 +49,35 @@ public class PedidoService {
 		return pedido.get();
 	}
 	
-	public String create(PedidoDTO pedidoNovo) {
+	public String create(PedidoDTO pedidoNovo) throws ProdutoNotFoundException {
 		PedidoEntity pedido = mapper.toEntity(pedidoNovo);
 		pedido.setDataDoPedido(LocalDate.now());
 		pedido.setStatus(StatusEnum.RECEBIDO);
-		repository.save(pedido);
+		pedido = repository.save(pedido);
+		produtosPedidosService.create(pedido, pedidoNovo);
 		return "Criado com sucesso";
 	}
 	
-	public PedidoEntity update(Long numeroDoPedido, PedidoEntity pedido) throws PedidoNotFoundException {
-		PedidoEntity pedidoEntity = getByNumero(numeroDoPedido);
-		if (pedido.getNumeroDoPedido() != null) {
-			pedidoEntity.setNumeroDoPedido(pedido.getNumeroDoPedido());
+	public PedidoDTO acrescentarProduto(PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, ValorNegativoException, QuantityException {
+		PedidoEntity pedidoEntity = getByNumero(pedido.getNumeroDoPedido());
+		ProdutoEntity produtoEntity = produtoService.findByNome(pedido.getProduto());
+		Optional<ProdutosPedidosEntity> produtosPedidos = Optional.ofNullable(produtosPedidosService.findByPedidoAndProduto(pedidoEntity, produtoEntity));
+		if (produtosPedidos.isPresent()) {
+			ProdutosPedidosEntity produtosPedidosEntity  = produtosPedidos.get();
+			if(produtosPedidosEntity.getQuantidade() < pedido.getQuantidade()) {
+				produtosPedidosEntity.setQuantidade(pedido.getQuantidade());
+				Integer quantidade = produtosPedidosEntity.getQuantidade() - pedido.getQuantidade();
+				produtoService.vender(pedido.getProduto(), quantidade);
+			} else {
+				throw new QuantityException("A quantidade nova eh inferior a quantidade existente!");
+			}
 		}
-//		if (pedido.getListaDeProdutos() != null) {
-//			pedidoEntity.setListaDeProdutos(pedido.getListaDeProdutos());
-//		}
-		
-		if (pedido.getValorTotalDoPedido() != null) {
-			pedidoEntity.setValorTotalDoPedido(pedido.getValorTotalDoPedido());
-		}
-		if (pedido.getDataDoPedido() != null) {
-			pedidoEntity.setDataDoPedido(pedido.getDataDoPedido());
-		}
-		if (pedido.getStatus() != null) {
-			pedidoEntity.setStatus(pedido.getStatus());
-		}
-		return repository.save(pedidoEntity);
+		return pedido;
 	}
 	
 	public String pagamento(Long numeroDoPedido) throws PedidoNotFoundException {
 		PedidoEntity pedido = this.getByNumero(numeroDoPedido);
+		pedido.setDataDoPedido(LocalDate.now());
 		pedido.setStatus(StatusEnum.PAGO);
 		repository.save(pedido);
 		return "Pagamento Recebido!";

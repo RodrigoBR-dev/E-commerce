@@ -34,7 +34,7 @@ public class PedidoEntity {
 	private LocalDate dataDoPedido;
 	
 	@OneToMany(mappedBy = "pedido")
-	private List<ProdutosPedidos> produtosPedidos = new ArrayList<>();
+	private List<ProdutosPedidosEntity> produtosPedidos = new ArrayList<>();
 	
 	@NotNull
 	private LocalDate dataEntrega;
@@ -46,10 +46,6 @@ public class PedidoEntity {
 	@JoinColumn(referencedColumnName = "id")
 	private ClienteEntity cliente;
 	
-//	@OneToMany(mappedBy = "pedido")
-//	private List<ProdutoEntity> produtos = new ArrayList<>();
-	
-
 	public Long getId() {
 		return id;
 	}
@@ -98,11 +94,11 @@ public class PedidoEntity {
 		this.cliente = cliente;
 	}
 
-	public List<ProdutosPedidos> getProdutos() {
+	public List<ProdutosPedidosEntity> getProdutos() {
 		return produtosPedidos;
 	}
 
-	public void setProdutos(List<ProdutosPedidos> produtosPedidos) {
+	public void setProdutos(List<ProdutosPedidosEntity> produtosPedidos) {
 		this.produtosPedidos = produtosPedidos;
 	}
 
