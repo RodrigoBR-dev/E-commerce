@@ -28,9 +28,8 @@ public class ProdutoController {
 	ProdutoService service;
 	
 	@PostMapping
-	public ResponseEntity<String> create(@RequestBody ProdutoDTOUsuario produto) throws CategoriaNotFoundException, ValorNegativoException{
-		service.create(produto);
-		return new ResponseEntity<String>("Criado com sucesso",HttpStatus.CREATED);
+	public ResponseEntity<String> create(@RequestBody ProdutoDTOUsuario produto) throws CategoriaNotFoundException, ValorNegativoException, ProdutoNotFoundException{
+		return new ResponseEntity<>(service.create(produto),HttpStatus.CREATED);
 	}
 
 	@GetMapping

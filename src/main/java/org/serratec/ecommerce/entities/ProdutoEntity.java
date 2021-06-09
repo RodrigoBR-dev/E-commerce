@@ -43,7 +43,7 @@ public class ProdutoEntity {
 	@JoinColumn(name = "categoria_id")
 	private CategoriaEntity categoria;
 
-	private Boolean ativo;
+	private Boolean ativo = true;
 
 	public Long getId() {
 		return id;

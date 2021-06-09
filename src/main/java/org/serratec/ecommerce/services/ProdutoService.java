@@ -48,7 +48,7 @@ public class ProdutoService {
 	}
 
 	public ProdutoDTOUsuario findByNomeDTO(String nome) {
-		ProdutoEntity produto = repository.findByAtivoTrueAndNome(nome);
+		ProdutoEntity produto = repository.findByAtivoTrueAndNome(nome.toLowerCase());
 		return mapper.toDTOUsuario(produto);
 	}
 
@@ -56,13 +56,13 @@ public class ProdutoService {
 		return repository.findAllByAtivoTrueAndCategoria(categoria);
 	}
 
-	public void create(ProdutoDTOUsuario produto) throws CategoriaNotFoundException, ValorNegativoException {
+	public String create(ProdutoDTOUsuario produto) throws CategoriaNotFoundException, ValorNegativoException {
 		CategoriaEntity categoria = categoriaService.findByNome(produto.getCategoria());
 		ProdutoEntity prodEntity = mapper.usuarioToEntity(produto);
-		prodEntity.setAtivo(true);
-		prodEntity.setDataCadastro(LocalDate.now());
 		prodEntity.setCategoria(categoria);
+		prodEntity.setNome(prodEntity.getNome().toLowerCase());
 		repository.save(prodEntity);
+		return "Criado com sucesso";
 
 	}
 
