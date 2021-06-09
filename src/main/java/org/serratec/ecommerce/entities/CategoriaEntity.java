@@ -19,7 +19,7 @@ public class CategoriaEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name="name", unique=true)
+	@Column(name="nome", unique=true)
 	private String nome;
 	
 	private String descricao;

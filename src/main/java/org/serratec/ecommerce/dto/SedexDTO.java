@@ -2,22 +2,22 @@ package org.serratec.ecommerce.dto;
 
 public class SedexDTO {
 
-	private Double Valor;
-	private Integer PrazoEntrega;
+	private Double valor;
+	private Integer prazoEntrega;
 
 	public Double getValor() {
-		return Valor;
+		return valor;
 	}
 
 	public void setValor(Double valor) {
-		this.Valor = valor;
+		this.valor = valor;
 	}
 
 	public Integer getPrazoEntrega() {
-		return PrazoEntrega;
+		return prazoEntrega;
 	}
 
 	public void setPrazoEntrega(Integer prazoEntrega) {
-		this.PrazoEntrega = prazoEntrega;
+		this.prazoEntrega = prazoEntrega;
 	}
 }

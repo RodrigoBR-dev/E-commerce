@@ -10,6 +10,7 @@ import org.serratec.ecommerce.dto.CategoriaDTOAll;
 import org.serratec.ecommerce.entities.CategoriaEntity;
 import org.serratec.ecommerce.entities.ProdutoEntity;
 import org.serratec.ecommerce.exceptions.CategoriaNotFoundException;
+import org.serratec.ecommerce.exceptions.UsedCategoriaException;
 import org.serratec.ecommerce.mapper.CategoriaMapper;
 import org.serratec.ecommerce.repositories.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,11 +57,11 @@ public class CategoriaService {
 		return dto;
 	}
 	
-	public CategoriaDTO create(CategoriaDTO categoriaDto) {
-		return mapper.entityToDTO(repository.save(mapper.dtoToEntity(categoriaDto)));
+	public CategoriaDTOAll create(CategoriaDTO categoriaDto) {
+		return mapper.entityToDTOAll(repository.save(mapper.dtoToEntity(categoriaDto)));
 	}
 
-	public CategoriaDTO update(CategoriaDTO categoriaNew) throws CategoriaNotFoundException {
+	public CategoriaDTOAll update(CategoriaDTO categoriaNew) throws CategoriaNotFoundException {
 		CategoriaEntity categoria = findByNome(categoriaNew.getNome());
 		if (categoriaNew.getNovoNome() != null) {
 			categoria.setNome(categoriaNew.getNovoNome());
@@ -69,12 +70,15 @@ public class CategoriaService {
 			categoria.setDescricao(categoriaNew.getDescricao());
 		}
 		
-		return mapper.entityToDTO(repository.save(categoria));
+		return mapper.entityToDTOAll(repository.save(categoria));
 	}
 	
-	public String delete(String nome) throws CategoriaNotFoundException {
+	public String delete(String nome) throws CategoriaNotFoundException, UsedCategoriaException {
 		CategoriaEntity categoria = findByNome(nome);
-		repository.delete(categoria);
-		return "Categoria deletada com sucesso!";
+		if (prodService.findAllByCategoria(categoria) == null) {
+			repository.delete(categoria);
+			return "Categoria deletada com sucesso!";
+		}
+		throw new UsedCategoriaException("Está categoria contém itens e não pode ser deletada!");
 	}
 }

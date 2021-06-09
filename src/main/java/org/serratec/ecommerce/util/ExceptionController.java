@@ -6,6 +6,7 @@ import org.serratec.ecommerce.exceptions.EnderecoClienteNotAssociatedException;
 import org.serratec.ecommerce.exceptions.EnderecoNotFoundException;
 import org.serratec.ecommerce.exceptions.PedidoNotFoundException;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
+import org.serratec.ecommerce.exceptions.UsedCategoriaException;
 import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.serratec.ecommerce.exceptions.ViaCEPUnreachableException;
 import org.springframework.http.ResponseEntity;
@@ -18,27 +19,27 @@ public class ExceptionController {
 	private static final String MSG = "x-error-msg";
 	
 	@ExceptionHandler(EnderecoNotFoundException.class)
-	public ResponseEntity<String> tratarLivroNotFoundException(EnderecoNotFoundException exception) {
+	public ResponseEntity<String> tratarEnderecoNotFoundException(EnderecoNotFoundException exception) {
 		return ResponseEntity.notFound()
 				.header(MSG, exception.getMessage())
 				.build();
 	}
 
 	@ExceptionHandler(CategoriaNotFoundException.class)
-	public ResponseEntity<String> tratarLivroNotFoundException(CategoriaNotFoundException exception) {
+	public ResponseEntity<String> tratarCategoriaNotFoundException(CategoriaNotFoundException exception) {
 		return ResponseEntity.notFound()
 				.header(MSG, exception.getMessage())
 				.build();
 	}
 	@ExceptionHandler(ClienteNotFoundException.class)
-	public ResponseEntity<String> tratarLivroNotFoundException(ClienteNotFoundException exception) {
+	public ResponseEntity<String> tratarClienteNotFoundException(ClienteNotFoundException exception) {
 		return ResponseEntity.notFound()
 				.header(MSG, exception.getMessage())
 				.build();
 	}
 
 	@ExceptionHandler(PedidoNotFoundException.class)
-	public ResponseEntity<String> tratarLivroNotFoundException(PedidoNotFoundException exception) {
+	public ResponseEntity<String> tratarPedidoNotFoundException(PedidoNotFoundException exception) {
 		return ResponseEntity.notFound()
 				.header(MSG, exception.getMessage())
 				.build();
@@ -59,14 +60,21 @@ public class ExceptionController {
 	}
 
 	@ExceptionHandler(EnderecoClienteNotAssociatedException.class)
-	public ResponseEntity<String> tratarLivroNotFoundException(EnderecoClienteNotAssociatedException exception) {
+	public ResponseEntity<String> tratarEnderecoClienteNotAssociatedException(EnderecoClienteNotAssociatedException exception) {
 		return ResponseEntity.notFound()
 				.header(MSG, exception.getMessage())
 				.build();
 	}
 	
 	@ExceptionHandler(ViaCEPUnreachableException.class)
-	public ResponseEntity<String> tratarLivroNotFoundException(ViaCEPUnreachableException exception) {
+	public ResponseEntity<String> tratarviaCEPUnreachebleException(ViaCEPUnreachableException exception) {
+		return ResponseEntity.notFound()
+				.header(MSG, exception.getMessage())
+				.build();
+	}
+	
+	@ExceptionHandler(UsedCategoriaException.class)
+	public ResponseEntity<String> tratarUsedCategoriaException(UsedCategoriaException exception) {
 		return ResponseEntity.notFound()
 				.header(MSG, exception.getMessage())
 				.build();

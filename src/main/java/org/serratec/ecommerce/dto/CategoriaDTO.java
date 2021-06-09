@@ -5,12 +5,16 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 public class CategoriaDTO {
 
 	@NotNull
 	private String nome;
 	
+	@JsonBackReference
 	private String novoNome;
+	
 	private String descricao;
 	private List<String> produtos = new ArrayList<>();
 
