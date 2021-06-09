@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.serratec.ecommerce.dto.PedidoDTO;
+import org.serratec.ecommerce.dto.PedidoDTOAll;
+import org.serratec.ecommerce.dto.PedidoDTOComp;
 import org.serratec.ecommerce.entities.PedidoEntity;
 import org.serratec.ecommerce.entities.ProdutosPedidosEntity;
 import org.serratec.ecommerce.enums.StatusEnum;
@@ -36,16 +38,18 @@ public class PedidoService {
 	@Autowired
 	ProdutosPedidosService produtosPedidosService;
 	
-	public List<PedidoDTO> getAll() {
-		return repository.findAll(Sort.by("dataDoPedido")).stream().map(mapper::toDTO).collect(Collectors.toList());
+	public List<PedidoDTOAll> getAll() {
+		return repository.findAll(Sort.by("dataDoPedido")).stream().map(mapper::EntityToAll).collect(Collectors.toList());
 	}
 	
-	public PedidoEntity getByNumero(Long numeroDoPedido) throws PedidoNotFoundException {
-		Optional<PedidoEntity> pedido = repository.findById(numeroDoPedido);
+	public PedidoDTOComp getByNumero(Long numeroDoPedido) throws PedidoNotFoundException {
+		Optional<PedidoEntity> pedido = repository.findByNumeroDoPedido(numeroDoPedido);
 		if (pedido.isEmpty()) {
 			throw new PedidoNotFoundException("Não existe pedido com esse numero.");
 		}
-		return pedido.get();
+		PedidoDTOComp comp = mapper.EntityToDTOComp(pedido.get());
+		
+		return comp;
 	}
 	
 	public String create(PedidoDTO pedidoNovo) throws ProdutoNotFoundException {
@@ -112,9 +116,11 @@ public class PedidoService {
 	public String delete(Long numeroDoPedido) throws PedidoNotFoundException, PedidoFinalizadoException {
 		PedidoEntity pedido = this.getByNumero(numeroDoPedido);
 		if(pedido.getStatus() == StatusEnum.ENTREGUE) throw new PedidoFinalizadoException("Pedidos finalizados nao podem ser deletados");
-		List<ProdutosPedidosEntity> listaPedProd = produtosPedidosService.findByPedido(pedido);
-		for (ProdutosPedidosEntity produtosPedidosEntity : listaPedProd) {
-			produtoService.retornaEstoque(produtosPedidosEntity.getProduto(), produtosPedidosEntity.getQuantidade());
+		if (pedido.getStatus() != StatusEnum.RECEBIDO) {
+			List<ProdutosPedidosEntity> listaPedProd = produtosPedidosService.findByPedido(pedido);
+			for (ProdutosPedidosEntity produtosPedidosEntity : listaPedProd) {
+				produtoService.retornaEstoque(produtosPedidosEntity.getProduto(), produtosPedidosEntity.getQuantidade());
+			}
 		}
 		repository.delete(pedido);
 		return "Pedido deletado com sucesso!";

@@ -4,3 +4,7 @@ Finalizar envio de email na criação e na alteração de cadastro de cliente e 
 Recepção e tratamento de imagem do produto;
 Sistema de login.
 Criar método no produtoscontroller para fazer uso do método de busca por categoria. 
+
+Fazer uma busca por produtosPedidos com base em pedido. (retorna uma lista que intera para obter os pro
+dutos em cada um desses)
+Mapear cada um dos produtos para retornar um ProdutoDTO.

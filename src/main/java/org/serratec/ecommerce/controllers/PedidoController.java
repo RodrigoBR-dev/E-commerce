@@ -3,6 +3,7 @@ package org.serratec.ecommerce.controllers;
 import java.util.List;
 
 import org.serratec.ecommerce.dto.PedidoDTO;
+import org.serratec.ecommerce.dto.PedidoDTOAll;
 import org.serratec.ecommerce.entities.PedidoEntity;
 import org.serratec.ecommerce.exceptions.EstoqueInsuficienteException;
 import org.serratec.ecommerce.exceptions.NotclosedPedidoException;
@@ -30,7 +31,7 @@ public class PedidoController {
 	PedidoService service;
 	
 	@GetMapping
-	public ResponseEntity<List<PedidoDTO>> findAll() {
+	public ResponseEntity<List<PedidoDTOAll>> findAll() {
 		return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
 	}
 	

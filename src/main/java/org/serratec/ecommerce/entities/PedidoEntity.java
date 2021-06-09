@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 import org.serratec.ecommerce.enums.StatusEnum;
 
 @Entity
-@Table(name = "Pedido")
+@Table(name = "pedido")
 public class PedidoEntity {
 	
 	@Id
@@ -27,19 +27,15 @@ public class PedidoEntity {
 	@NotNull
 	private Long numeroDoPedido;
 	
-	@NotNull
 	private Double valorTotalDoPedido;
 	
-	@NotNull
 	private LocalDate dataDoPedido;
 	
 	@OneToMany(mappedBy = "pedido")
 	private List<ProdutosPedidosEntity> produtosPedidos = new ArrayList<>();
 	
-	@NotNull
 	private LocalDate dataEntrega;
 	
-	@NotNull
 	private StatusEnum status;
 	
 	@ManyToOne
