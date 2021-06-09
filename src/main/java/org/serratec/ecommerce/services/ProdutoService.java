@@ -103,7 +103,7 @@ public class ProdutoService {
 		return "Deletado com sucesso";
 	}
 
-	public void vender(ProdutoEntity produto, Integer estoque) throws EstoqueInsuficienteException, ValorNegativoException, ProdutoNotFoundException {
+	public void vender(ProdutoEntity produto, Integer estoque) throws EstoqueInsuficienteException {
 		if (produto.getQuantEstoque() >= estoque) {
 			produto.setQuantEstoque(produto.getQuantEstoque() - estoque);
 			repository.save(produto);
@@ -112,13 +112,7 @@ public class ProdutoService {
 		}
 	}
 
-	public void retornaEstoque(ProdutoEntity produto, Integer estoque) throws ValorNegativoException, ProdutoNotFoundException {
-		produto.setQuantEstoque(produto.getQuantEstoque() + estoque);
-		repository.save(produto);
-	}
-
-	public void cancelar(String nome, Integer estoque) throws ValorNegativoException, ProdutoNotFoundException {
-		ProdutoEntity produto = findByNome(nome);
+	public void retornaEstoque(ProdutoEntity produto, Integer estoque) {
 		produto.setQuantEstoque(produto.getQuantEstoque() + estoque);
 		repository.save(produto);
 	}

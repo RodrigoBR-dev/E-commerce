@@ -88,6 +88,7 @@ public class PedidoService {
 		if (pedido.getStatus() == StatusEnum.FECHADO) {
 			pedido.setDataDoPedido(LocalDate.now());
 			pedido.setStatus(StatusEnum.PAGO);
+			pedido.setDataEntrega(LocalDate.now().plusDays(3));
 			repository.save(pedido);
 			return "Pagamento Recebido!";
 		}
@@ -110,7 +111,11 @@ public class PedidoService {
 	
 	public String delete(Long numeroDoPedido) throws PedidoNotFoundException, PedidoFinalizadoException {
 		PedidoEntity pedido = this.getByNumero(numeroDoPedido);
-		if(pedido.getStatus() == StatusEnum.ENTREGUE) throw new PedidoFinalizadoException("Pedidos finalizados nao podem ser deletados"); 
+		if(pedido.getStatus() == StatusEnum.ENTREGUE) throw new PedidoFinalizadoException("Pedidos finalizados nao podem ser deletados");
+		List<ProdutosPedidosEntity> listaPedProd = produtosPedidosService.findByPedido(pedido);
+		for (ProdutosPedidosEntity produtosPedidosEntity : listaPedProd) {
+			produtoService.retornaEstoque(produtosPedidosEntity.getProduto(), produtosPedidosEntity.getQuantidade());
+		}
 		repository.delete(pedido);
 		return "Pedido deletado com sucesso!";
 	}

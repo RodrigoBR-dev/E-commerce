@@ -84,10 +84,7 @@ public class ProdutoEntity {
 		return quantEstoque;
 	}
 
-	public void setQuantEstoque(Integer quantEstoque) throws ValorNegativoException {
-		if(quantEstoque < 0) {
-			throw new ValorNegativoException("Não deverá informar um valor negativo para estoque!");
-		}
+	public void setQuantEstoque(Integer quantEstoque) {
 		this.quantEstoque = quantEstoque;
 	}
 

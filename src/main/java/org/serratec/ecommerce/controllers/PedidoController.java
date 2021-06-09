@@ -9,8 +9,6 @@ import org.serratec.ecommerce.exceptions.NotclosedPedidoException;
 import org.serratec.ecommerce.exceptions.PedidoFinalizadoException;
 import org.serratec.ecommerce.exceptions.PedidoNotFoundException;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
-import org.serratec.ecommerce.exceptions.QuantityException;
-import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.serratec.ecommerce.services.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,7 +45,7 @@ public class PedidoController {
 	}
 	
 	@PutMapping
-	public void update(@RequestBody PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, ValorNegativoException, QuantityException{
+	public void update(@RequestBody PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException {
 		service.update(pedido);
 	}
 	
