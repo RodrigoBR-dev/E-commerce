@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "endereco")
@@ -15,14 +16,23 @@ public class EnderecoEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	
+	@NotNull
 	private String cep;
+	
 	private String rua;
 	private String bairro;
 	private String cidade;
+	
+	@NotNull
 	private String numero;
+	
+	@NotNull
 	private String complemento;
+	
 	private String estado;
+	
+	@NotNull
 	private String nome;
 	
 	@ManyToOne

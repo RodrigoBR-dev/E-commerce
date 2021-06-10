@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "categoria")
@@ -19,7 +20,8 @@ public class CategoriaEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name="nome", unique=true)
+	@NotNull
+	@Column(unique=true)
 	private String nome;
 	
 	private String descricao;
