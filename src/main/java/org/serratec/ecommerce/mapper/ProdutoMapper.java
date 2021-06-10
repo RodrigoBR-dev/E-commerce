@@ -1,10 +1,13 @@
 package org.serratec.ecommerce.mapper;
 
+import java.net.URI;
+
 import org.serratec.ecommerce.dto.ProdutoDTOSimples;
 import org.serratec.ecommerce.dto.ProdutoDTOUsuario;
 import org.serratec.ecommerce.entities.ProdutoEntity;
 import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Component
 public class ProdutoMapper {
@@ -21,19 +24,24 @@ public class ProdutoMapper {
 		entity.setNome(dto.getNome());
 		entity.setPreco(dto.getPreco());
 		entity.setQuantEstoque(dto.getQuantEstoque());
-		entity.setImagem(dto.getImagem());
+
 		entity.setDescricao(dto.getDescricao());
 		return entity;
 	}
 	
 	public ProdutoDTOUsuario entityToDTOUsuario(ProdutoEntity entity) {
 		ProdutoDTOUsuario usuario = new ProdutoDTOUsuario();
+		URI uri = ServletUriComponentsBuilder
+				.fromCurrentContextPath()
+				.path("produto/{produtoNome}/imagem")
+				.buildAndExpand(entity.getNome())
+				.toUri();
 		usuario.setNome(entity.getNome());
 		usuario.setDescricao(entity.getDescricao());
 		usuario.setDataCadastro(entity.getDataCadastro());
 		usuario.setQuantEstoque(entity.getQuantEstoque());
 		usuario.setPreco(entity.getPreco());
-		usuario.setImagem(entity.getImagem());
+		usuario.setUrl(uri.toString());
 		usuario.setCategoria(entity.getCategoria().getNome());
 		return usuario;
 	}
@@ -44,7 +52,7 @@ public class ProdutoMapper {
 		entity.setDataCadastro(usuario.getDataCadastro());
 		entity.setQuantEstoque(usuario.getQuantEstoque());
 		entity.setPreco(usuario.getPreco());
-		entity.setImagem(usuario.getImagem());
+
 		return entity;
 	}
 }

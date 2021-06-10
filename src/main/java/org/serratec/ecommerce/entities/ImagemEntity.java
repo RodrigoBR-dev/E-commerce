@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToOne;
 
 @Entity
 public class ImagemEntity {
@@ -18,6 +19,15 @@ public class ImagemEntity {
 	@Lob
 	private byte[] data;
 	
+	@OneToOne
+	private ProdutoEntity produto;
+	
+	public ProdutoEntity getProduto() {
+		return produto;
+	}
+	public void setProduto(ProdutoEntity produto) {
+		this.produto = produto;
+	}
 	
 	public Long getId() {
 		return id;

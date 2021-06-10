@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -34,7 +35,6 @@ public class ProdutoEntity {
 	@NotNull
 	private Integer quantEstoque;
 	private LocalDate dataCadastro;
-	private String imagem;
 	
 	@OneToMany(mappedBy = "produto")
 	private List<ProdutosPedidosEntity> produtosPedidos = new ArrayList<>();
@@ -44,6 +44,9 @@ public class ProdutoEntity {
 	private CategoriaEntity categoria;
 
 	private Boolean ativo = true;
+	
+	@OneToOne
+	private ImagemEntity imagem;
 
 	public Long getId() {
 		return id;
@@ -96,11 +99,11 @@ public class ProdutoEntity {
 		this.dataCadastro = LocalDate.now();
 	}
 
-	public String getImagem() {
+	public ImagemEntity getImagem() {
 		return imagem;
 	}
 
-	public void setImagem(String imagem) {
+	public void setImagem(ImagemEntity imagem) {
 		this.imagem = imagem;
 	}
 
