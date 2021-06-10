@@ -1,6 +1,6 @@
 package org.serratec.ecommerce.mapper;
 
-import org.serratec.ecommerce.dto.ProdutoDTOCliente;
+import org.serratec.ecommerce.dto.ProdutoDTOSimples;
 import org.serratec.ecommerce.dto.ProdutoDTOUsuario;
 import org.serratec.ecommerce.entities.ProdutoEntity;
 import org.serratec.ecommerce.exceptions.ValorNegativoException;
@@ -9,22 +9,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProdutoMapper {
 	
-	public ProdutoDTOCliente toProdutoDTOSimples(ProdutoEntity entity) {
-		ProdutoDTOCliente dto = new ProdutoDTOCliente();
+	public ProdutoDTOSimples entityToProdDTOSimples(ProdutoEntity entity) {
+		ProdutoDTOSimples dto = new ProdutoDTOSimples();
 		dto.setNome(entity.getNome());
 		dto.setDescricao(entity.getDescricao());
 		dto.setPreco(entity.getPreco());
 		return dto;
 	}
-	public ProdutoEntity dtoClienteToEntity(ProdutoDTOCliente dto) throws ValorNegativoException {
+	public ProdutoEntity dtoSimplesToEntity(ProdutoDTOSimples dto) throws ValorNegativoException {
 		ProdutoEntity entity = new ProdutoEntity();
 		entity.setNome(dto.getNome());
 		entity.setPreco(dto.getPreco());
-
+		entity.setQuantEstoque(dto.getQuantEstoque());
+		entity.setImagem(dto.getImagem());
+		entity.setDescricao(dto.getDescricao());
 		return entity;
 	}
 	
-	public ProdutoDTOUsuario toDTOUsuario(ProdutoEntity entity) {
+	public ProdutoDTOUsuario entityToDTOUsuario(ProdutoEntity entity) {
 		ProdutoDTOUsuario usuario = new ProdutoDTOUsuario();
 		usuario.setNome(entity.getNome());
 		usuario.setDescricao(entity.getDescricao());

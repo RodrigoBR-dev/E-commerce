@@ -1,11 +1,10 @@
 package org.serratec.ecommerce.services;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.serratec.ecommerce.dto.ProdutoDTOCliente;
+import org.serratec.ecommerce.dto.ProdutoDTOSimples;
 import org.serratec.ecommerce.dto.ProdutoDTOUsuario;
 import org.serratec.ecommerce.entities.CategoriaEntity;
 import org.serratec.ecommerce.entities.ProdutoEntity;
@@ -29,46 +28,52 @@ public class ProdutoService {
 	CategoriaService categoriaService;
 
 	public List<ProdutoDTOUsuario> findAll() {
-		return repository.findAll().stream().map(mapper::toDTOUsuario).collect(Collectors.toList());
+		return repository.findAll().stream().map(mapper::entityToDTOUsuario).collect(Collectors.toList());
 	}
 
-	public List<ProdutoDTOCliente> findAllDTO() {
+	public List<ProdutoDTOSimples> findAllDTO() {
 		List<ProdutoEntity> listaEntity = repository.findAllByAtivoTrue();
-		List<ProdutoDTOCliente> listaDTO = new ArrayList<>();
+		List<ProdutoDTOSimples> listaDTO = new ArrayList<>();
 		for (ProdutoEntity elemento : listaEntity) {
-			listaDTO.add(mapper.toProdutoDTOSimples(elemento));
+			listaDTO.add(mapper.entityToProdDTOSimples(elemento));
 		}
 		return listaDTO;
 	}
 
 	public ProdutoEntity findByNome(String nome) throws ProdutoNotFoundException {
 		ProdutoEntity produto = repository.findByAtivoTrueAndNome(nome);
-		if (produto.getNome() != null) return produto;
+		if (produto.getNome() != null)
+			return produto;
 		throw new ProdutoNotFoundException("Produto não encontrado!");
 	}
 
 	public ProdutoDTOUsuario findByNomeDTO(String nome) {
 		ProdutoEntity produto = repository.findByAtivoTrueAndNome(nome.toLowerCase());
-		return mapper.toDTOUsuario(produto);
+		return mapper.entityToDTOUsuario(produto);
 	}
 
 	public List<ProdutoEntity> findAllByCategoria(CategoriaEntity categoria) {
 		return repository.findAllByAtivoTrueAndCategoria(categoria);
 	}
 
-	public String create(ProdutoDTOUsuario produto) throws CategoriaNotFoundException, ValorNegativoException {
+	public ProdutoDTOUsuario create(ProdutoDTOUsuario produto)throws CategoriaNotFoundException, ValorNegativoException, ProdutoNotFoundException {
+		if(findByNome(produto.getNome()) != null) {
+			update(produto);
+			return produto;
+		}else {
+		
 		CategoriaEntity categoria = categoriaService.findByNome(produto.getCategoria());
-		ProdutoEntity prodEntity = mapper.usuarioToEntity(produto);
+		ProdutoEntity prodEntity = mapper.usuarioToEntity(produto);		
 		prodEntity.setCategoria(categoria);
 		prodEntity.setNome(prodEntity.getNome().toLowerCase());
 		repository.save(prodEntity);
-		return "Criado com sucesso";
-
+		return mapper.entityToDTOUsuario(prodEntity);
+		}
 	}
 
-	public ProdutoDTOUsuario update(ProdutoDTOUsuario produtoTemp)
-			throws ProdutoNotFoundException, ValorNegativoException, CategoriaNotFoundException {
+	public ProdutoDTOUsuario update(ProdutoDTOUsuario produtoTemp)throws ProdutoNotFoundException, ValorNegativoException, CategoriaNotFoundException {
 		ProdutoEntity produto = findByNome(produtoTemp.getNome());
+		produto.setAtivo(true);
 
 		if (produtoTemp.getNome() != null) {
 			produto.setNome(produtoTemp.getNome());
@@ -93,7 +98,7 @@ public class ProdutoService {
 			produto.setQuantEstoque(produtoTemp.getQuantEstoque());
 		}
 
-		return mapper.toDTOUsuario(repository.save(produto));
+		return mapper.entityToDTOUsuario(repository.save(produto));
 	}
 
 	public String delete(String nome) throws ProdutoNotFoundException {
@@ -128,6 +133,13 @@ public class ProdutoService {
 
 	public List<ProdutoDTOUsuario> findAllByCategoriaDTO(String categoriaNome) throws CategoriaNotFoundException {
 		CategoriaEntity categoria = categoriaService.findByNome(categoriaNome);
-		return findAllByCategoria(categoria).stream().map(mapper::toDTOUsuario).collect(Collectors.toList());
+		return findAllByCategoria(categoria).stream().map(mapper::entityToDTOUsuario).collect(Collectors.toList());
+	}
+
+	public ProdutoEntity findByNomeAll(String nome) throws ProdutoNotFoundException {
+		ProdutoEntity findByNome = repository.findByNome(nome);
+		if (findByNome.getNome() != null)
+			return findByNome;
+		throw new ProdutoNotFoundException("Produto não encontrado!");
 	}
 }

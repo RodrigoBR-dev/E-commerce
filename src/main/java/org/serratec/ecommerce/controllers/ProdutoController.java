@@ -2,7 +2,7 @@ package org.serratec.ecommerce.controllers;
 
 import java.util.List;
 
-import org.serratec.ecommerce.dto.ProdutoDTOCliente;
+import org.serratec.ecommerce.dto.ProdutoDTOSimples;
 import org.serratec.ecommerce.dto.ProdutoDTOUsuario;
 import org.serratec.ecommerce.exceptions.CategoriaNotFoundException;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
@@ -28,16 +28,15 @@ public class ProdutoController {
 	ProdutoService service;
 	
 	@PostMapping
-	public ResponseEntity<String> create(@RequestBody ProdutoDTOUsuario produto) throws CategoriaNotFoundException, ValorNegativoException, ProdutoNotFoundException{
+	public ResponseEntity<ProdutoDTOUsuario> create(@RequestBody ProdutoDTOUsuario produto) throws CategoriaNotFoundException, ValorNegativoException, ProdutoNotFoundException{
 		return new ResponseEntity<>(service.create(produto),HttpStatus.CREATED);
 	}
-
 	@GetMapping
 	public ResponseEntity<List<ProdutoDTOUsuario>> findAll(){
 		return new ResponseEntity<List<ProdutoDTOUsuario>>(service.findAll(),HttpStatus.OK);
 	}
 	@GetMapping("/{nome}")
-	public ResponseEntity <ProdutoDTOUsuario> findByNome(@PathVariable String nome){
+	public ResponseEntity<ProdutoDTOUsuario> findByNome(@PathVariable String nome){
 		return new ResponseEntity<ProdutoDTOUsuario>(service.findByNomeDTO(nome),HttpStatus.OK);
 	}
 	@PutMapping
@@ -50,11 +49,11 @@ public class ProdutoController {
 	}
 	//DTO apenas com os campos nome,descricao e preço
 	@GetMapping("/cliente")
-	public ResponseEntity<List<ProdutoDTOCliente>> findAllDTO(){
-		return new ResponseEntity<List<ProdutoDTOCliente>>(service.findAllDTO(),HttpStatus.OK);
+	public ResponseEntity<List<ProdutoDTOSimples>> findAllDTO(){
+		return new ResponseEntity<List<ProdutoDTOSimples>>(service.findAllDTO(),HttpStatus.OK);
 	}
 	@GetMapping("/categoria/{categoria}")
-	public ResponseEntity <List<ProdutoDTOUsuario>> findByCategoria(@PathVariable String categoria) throws CategoriaNotFoundException{
+	public ResponseEntity<List<ProdutoDTOUsuario>> findByCategoria(@PathVariable String categoria) throws CategoriaNotFoundException{
 		return new ResponseEntity<List<ProdutoDTOUsuario>>(service.findAllByCategoriaDTO(categoria),HttpStatus.OK);
 	}
 	
