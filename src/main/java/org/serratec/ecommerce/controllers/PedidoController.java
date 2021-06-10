@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.serratec.ecommerce.dto.PedidoDTO;
 import org.serratec.ecommerce.dto.PedidoDTOAll;
-import org.serratec.ecommerce.entities.PedidoEntity;
+import org.serratec.ecommerce.dto.PedidoDTOComp;
 import org.serratec.ecommerce.exceptions.EstoqueInsuficienteException;
 import org.serratec.ecommerce.exceptions.NotclosedPedidoException;
 import org.serratec.ecommerce.exceptions.PedidoFinalizadoException;
@@ -36,8 +36,8 @@ public class PedidoController {
 	}
 	
 	@GetMapping("/{numeroDoPedido}")
-	public ResponseEntity<PedidoEntity> findByNumero(@PathVariable Long numeroDoPedido) throws PedidoNotFoundException  {
-		return new ResponseEntity<>(service.getByNumero(numeroDoPedido), HttpStatus.OK);
+	public ResponseEntity<PedidoDTOComp> findByNumeroDoPedido(@PathVariable Long numeroDoPedido) throws PedidoNotFoundException  {
+		return new ResponseEntity<>(service.getByNumeroDTO(numeroDoPedido), HttpStatus.OK);
 	}
 	
 	@PostMapping

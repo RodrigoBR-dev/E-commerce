@@ -1,6 +1,7 @@
 package org.serratec.ecommerce.services;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -8,6 +9,7 @@ import java.util.stream.Collectors;
 import org.serratec.ecommerce.dto.PedidoDTO;
 import org.serratec.ecommerce.dto.PedidoDTOAll;
 import org.serratec.ecommerce.dto.PedidoDTOComp;
+import org.serratec.ecommerce.dto.ProdutosPedidosDTO;
 import org.serratec.ecommerce.entities.PedidoEntity;
 import org.serratec.ecommerce.entities.ProdutosPedidosEntity;
 import org.serratec.ecommerce.enums.StatusEnum;
@@ -42,14 +44,35 @@ public class PedidoService {
 		return repository.findAll(Sort.by("dataDoPedido")).stream().map(mapper::EntityToAll).collect(Collectors.toList());
 	}
 	
-	public PedidoDTOComp getByNumero(Long numeroDoPedido) throws PedidoNotFoundException {
+	public PedidoDTOComp getByNumeroDTO(Long numeroDoPedido) throws PedidoNotFoundException {
 		Optional<PedidoEntity> pedido = repository.findByNumeroDoPedido(numeroDoPedido);
 		if (pedido.isEmpty()) {
 			throw new PedidoNotFoundException("Não existe pedido com esse numero.");
 		}
 		PedidoDTOComp comp = mapper.EntityToDTOComp(pedido.get());
 		
+		ArrayList<ProdutosPedidosDTO> listaProduto = new ArrayList<>();
+		
+		List<ProdutosPedidosEntity> produtosPedidos = produtosPedidosService.findByPedido(pedido.get());
+		for (ProdutosPedidosEntity produtosPedidosEntity : produtosPedidos) {
+			ProdutosPedidosDTO produtosPedidosDTO = new ProdutosPedidosDTO();
+			produtosPedidosDTO.setNome(produtosPedidosEntity.getProduto().getNome());
+			produtosPedidosDTO.setImagem(produtosPedidosEntity.getProduto().getImagem());
+			produtosPedidosDTO.setValor(produtosPedidosEntity.getPreco());
+			produtosPedidosDTO.setQuantidade(produtosPedidosEntity.getQuantidade());
+			
+			listaProduto.add(produtosPedidosDTO);
+		}
+		comp.setProduto(listaProduto);
 		return comp;
+	}
+	
+	public PedidoEntity getByNumero(Long numeroDoPedido) throws PedidoNotFoundException {
+		Optional<PedidoEntity> pedido = repository.findByNumeroDoPedido(numeroDoPedido);
+		if (pedido.isEmpty()) {
+			throw new PedidoNotFoundException("Não existe pedido com esse numero.");
+		}
+		return pedido.get();
 	}
 	
 	public String create(PedidoDTO pedidoNovo) throws ProdutoNotFoundException {

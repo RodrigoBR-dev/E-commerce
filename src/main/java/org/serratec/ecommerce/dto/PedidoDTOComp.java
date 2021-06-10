@@ -3,14 +3,13 @@ package org.serratec.ecommerce.dto;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.serratec.ecommerce.entities.ProdutoEntity;
 import org.serratec.ecommerce.enums.StatusEnum;
 
 public class PedidoDTOComp {
 	
 	private Long numeroDoPedido;
 	
-	private List<ProdutoEntity> produto;
+	private List<ProdutosPedidosDTO> produto;
 
 	private Double valorTotalDoPedido;
 	
@@ -30,11 +29,11 @@ public class PedidoDTOComp {
 		this.numeroDoPedido = numeroDoPedido;
 	}
 
-	public List<ProdutoEntity> getProduto() {
+	public List<ProdutosPedidosDTO> getProduto() {
 		return produto;
 	}
 
-	public void setProduto(List<ProdutoEntity> produto) {
+	public void setProduto(List<ProdutosPedidosDTO> produto) {
 		this.produto = produto;
 	}
 
