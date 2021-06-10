@@ -2,8 +2,6 @@ package org.serratec.ecommerce.dto;
 
 import java.time.LocalDate;
 
-import org.serratec.ecommerce.entities.ClienteEntity;
-
 public class PedidoDTO {
 	
 	private Long numeroDoPedido;
@@ -18,7 +16,7 @@ public class PedidoDTO {
 	
 	private String status;
 	
-	private ClienteEntity cliente;
+	private String cliente;
 	
 	private Integer quantidade;
 	
@@ -72,11 +70,11 @@ public class PedidoDTO {
 		this.dataEntrega = dataEntrega;
 	}
 
-	public ClienteEntity getCliente() {
+	public String getCliente() {
 		return cliente;
 	}
 
-	public void setCliente(ClienteEntity cliente) {
+	public void setCliente(String cliente) {
 		this.cliente = cliente;
 	}
 
