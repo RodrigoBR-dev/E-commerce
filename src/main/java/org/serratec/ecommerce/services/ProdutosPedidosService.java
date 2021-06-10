@@ -41,4 +41,8 @@ public class ProdutosPedidosService {
 		entity.setQuantidade(quantidade);
 		return repository.save(entity);	
 	}
+	
+	public void delete(ProdutosPedidosEntity entity) {
+		repository.delete(entity);
+	}
 }

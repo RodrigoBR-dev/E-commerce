@@ -1,12 +1,15 @@
 package org.serratec.ecommerce.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
-public class PedidoDTO {
+import org.serratec.ecommerce.enums.StatusEnum;
+
+public class PedidoDTOComp {
 	
 	private Long numeroDoPedido;
 	
-	private String produto;
+	private List<ProdutosPedidosDTO> produto;
 
 	private Double valorTotalDoPedido;
 	
@@ -14,12 +17,9 @@ public class PedidoDTO {
 	
 	private LocalDate dataEntrega;
 	
-	private String status;
+	private StatusEnum status;
 	
-	private String cliente;
-	
-	private Integer quantidade;
-	
+	private ClienteDTO cliente;
 
 	public Long getNumeroDoPedido() {
 		return numeroDoPedido;
@@ -28,7 +28,14 @@ public class PedidoDTO {
 	public void setNumeroDoPedido(Long numeroDoPedido) {
 		this.numeroDoPedido = numeroDoPedido;
 	}
-	
+
+	public List<ProdutosPedidosDTO> getProduto() {
+		return produto;
+	}
+
+	public void setProduto(List<ProdutosPedidosDTO> produto) {
+		this.produto = produto;
+	}
 
 	public Double getValorTotalDoPedido() {
 		return valorTotalDoPedido;
@@ -46,22 +53,6 @@ public class PedidoDTO {
 		this.dataDoPedido = dataDoPedido;
 	}
 
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public String getProduto() {
-		return produto;
-	}
-
-	public void setProduto(String produto) {
-		this.produto = produto;
-	}
-
 	public LocalDate getDataEntrega() {
 		return dataEntrega;
 	}
@@ -70,21 +61,19 @@ public class PedidoDTO {
 		this.dataEntrega = dataEntrega;
 	}
 
-	public String getCliente() {
+	public StatusEnum getStatus() {
+		return status;
+	}
+
+	public void setStatus(StatusEnum status) {
+		this.status = status;
+	}
+
+	public ClienteDTO getCliente() {
 		return cliente;
 	}
 
-	public void setCliente(String cliente) {
-		this.cliente = cliente;
+	public void setCliente(ClienteDTO clienteDTO) {
+		this.cliente = clienteDTO;
 	}
-
-	public Integer getQuantidade() {
-		return quantidade;
-	}
-
-	public void setQuantidade(Integer quantidade) {
-		this.quantidade = quantidade;
-	}
-	
-	
 }

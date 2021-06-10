@@ -3,12 +3,15 @@ package org.serratec.ecommerce.controllers;
 import java.util.List;
 
 import org.serratec.ecommerce.dto.PedidoDTO;
-import org.serratec.ecommerce.entities.PedidoEntity;
+import org.serratec.ecommerce.dto.PedidoDTOAll;
+import org.serratec.ecommerce.dto.PedidoDTOComp;
+import org.serratec.ecommerce.exceptions.ClienteNotFoundException;
 import org.serratec.ecommerce.exceptions.EstoqueInsuficienteException;
-import org.serratec.ecommerce.exceptions.NotclosedPedidoException;
 import org.serratec.ecommerce.exceptions.PedidoFinalizadoException;
 import org.serratec.ecommerce.exceptions.PedidoNotFoundException;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
+import org.serratec.ecommerce.exceptions.StatusUnacceptableException;
+import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.serratec.ecommerce.services.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,42 +33,47 @@ public class PedidoController {
 	PedidoService service;
 	
 	@GetMapping
-	public ResponseEntity<List<PedidoDTO>> findAll() {
+	public ResponseEntity<List<PedidoDTOAll>> findAll() {
 		return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/{numeroDoPedido}")
-	public ResponseEntity<PedidoEntity> findByNumero(@PathVariable Long numeroDoPedido) throws PedidoNotFoundException  {
-		return new ResponseEntity<>(service.getByNumero(numeroDoPedido), HttpStatus.OK);
+	public ResponseEntity<PedidoDTOComp> findByNumeroDoPedido(@PathVariable Long numeroDoPedido) throws PedidoNotFoundException  {
+		return new ResponseEntity<>(service.getByNumeroDTO(numeroDoPedido), HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public ResponseEntity<String> create(@RequestBody PedidoDTO pedido) throws ProdutoNotFoundException {
+	public ResponseEntity<String> create(@RequestBody PedidoDTO pedido) throws ProdutoNotFoundException, ClienteNotFoundException {
 		return new ResponseEntity<>(service.create(pedido), HttpStatus.CREATED);
 	}
 	
 	@PutMapping
-	public void update(@RequestBody PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException {
-		service.update(pedido);
+	public ResponseEntity<String> update(@RequestBody PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, StatusUnacceptableException {
+		return new ResponseEntity<>(service.update(pedido),  HttpStatus.OK);
 	}
 	
 	@PutMapping("/pagamento/{numeroDoPedido}")
-	public ResponseEntity<String> payment(@PathVariable Long numeroDoPedido) throws PedidoNotFoundException, NotclosedPedidoException {
+	public ResponseEntity<String> payment(@PathVariable Long numeroDoPedido) throws PedidoNotFoundException, StatusUnacceptableException {
 		return new ResponseEntity<>(service.pagar(numeroDoPedido), HttpStatus.OK);
 	}
 	
+	@PutMapping("/fechamento/{numeroDoPedido}")
+	public ResponseEntity<String> close(@PathVariable Long numeroDoPedido) throws PedidoNotFoundException, EstoqueInsuficienteException, ValorNegativoException, ProdutoNotFoundException, StatusUnacceptableException {
+		return new ResponseEntity<>(service.fechar(numeroDoPedido), HttpStatus.OK);
+	}
+	
 	@PutMapping("/transporte/{numeroDoPedido}")
-	public ResponseEntity<String> delivery(@PathVariable Long numeroDoPedido) throws PedidoNotFoundException {
+	public ResponseEntity<String> delivery(@PathVariable Long numeroDoPedido) throws PedidoNotFoundException, StatusUnacceptableException {
 		return new ResponseEntity<>(service.transportar(numeroDoPedido), HttpStatus.OK);
 	}
 	
 	@PutMapping("/finalizado/{numeroDoPedido}")
-	public ResponseEntity<String> done(@PathVariable Long numeroDoPedido) throws PedidoNotFoundException {
+	public ResponseEntity<String> done(@PathVariable Long numeroDoPedido) throws PedidoNotFoundException, StatusUnacceptableException {
 		return new ResponseEntity<>(service.entregar(numeroDoPedido), HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable  Long id) throws PedidoNotFoundException, PedidoFinalizadoException {
-		return new ResponseEntity<>(service.delete(id), HttpStatus.OK);
+	@DeleteMapping("/{numeroDoPedido}")
+	public ResponseEntity<String> delete(@PathVariable  Long numeroDoPedido) throws PedidoNotFoundException, PedidoFinalizadoException {
+		return new ResponseEntity<>(service.delete(numeroDoPedido), HttpStatus.OK);
 	}
 }

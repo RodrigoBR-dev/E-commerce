@@ -1,5 +1,8 @@
 package org.serratec.ecommerce.dto;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "Servicos")
 public class SedexDTO {
 
 	private Double valor;

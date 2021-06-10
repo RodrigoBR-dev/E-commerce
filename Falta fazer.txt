@@ -3,4 +3,5 @@ Em pedido, confirmar pedido com status diferente de recebido cancelamento;
 Finalizar envio de email na criação e na alteração de cadastro de cliente e para recuperação de senha e para alteração do status do pedido;
 Recepção e tratamento de imagem do produto;
 Sistema de login.
-Criar método no produtoscontroller para fazer uso do método de busca por categoria. 
+Associar cliente ao pedido, verificar adição e subtração do valor total do pedido
+automatizar numeroPedido
