@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.serratec.ecommerce.dto.ClienteDTO;
 import org.serratec.ecommerce.dto.ClienteDTONovo;
+import org.serratec.ecommerce.exceptions.AtributoEncontradoException;
 import org.serratec.ecommerce.exceptions.ClienteNotFoundException;
 import org.serratec.ecommerce.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +37,18 @@ public class ClienteController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ClienteDTO> create(@RequestBody ClienteDTONovo entity) {
+	public ResponseEntity<ClienteDTO> create(@RequestBody ClienteDTONovo entity) throws AtributoEncontradoException {
 		return new ResponseEntity<>(service.create(entity), HttpStatus.CREATED);
 	}
 
 	@PutMapping
 	public ResponseEntity<ClienteDTO> update(@RequestBody ClienteDTO entity) throws ClienteNotFoundException {
 		return new ResponseEntity<>(service.update(entity), HttpStatus.OK);
+	}
+	
+	@PutMapping("/{cpf}")
+	public ResponseEntity<String> reativaCliente(@PathVariable String cpf) throws ClienteNotFoundException {
+		return new ResponseEntity<>(service.reativaCliente(cpf), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{userName}")
