@@ -27,7 +27,6 @@ public class EnderecoEntity {
 	@NotNull
 	private String numero;
 	
-	@NotNull
 	private String complemento;
 	
 	private String estado;

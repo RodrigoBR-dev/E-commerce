@@ -42,12 +42,8 @@ public class CategoriaService {
 	
 	public CategoriaDTO findByNomeDTO(String nome) throws CategoriaNotFoundException {
 		Optional<CategoriaEntity> entity = repository.findByNome(nome);
-		System.out.println(entity.get().getNome());
 		if (entity.isEmpty()) throw new CategoriaNotFoundException("Categoria não encontrada!");
 		List<ProdutoEntity> produto = prodService.findAllByCategoria(entity.get());
-		
-		System.out.println(produto);
-// .stream().map(ProdutoEntity::getNome).collect(Collectors.toList());
 		List<String> nomeProdutos = new ArrayList<>(); 
 		for (ProdutoEntity produtoEntity : produto) {
 			nomeProdutos.add(produtoEntity.getNome());

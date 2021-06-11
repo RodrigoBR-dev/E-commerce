@@ -4,8 +4,12 @@ import org.serratec.ecommerce.exceptions.CategoriaNotFoundException;
 import org.serratec.ecommerce.exceptions.ClienteNotFoundException;
 import org.serratec.ecommerce.exceptions.EnderecoClienteNotAssociatedException;
 import org.serratec.ecommerce.exceptions.EnderecoNotFoundException;
+import org.serratec.ecommerce.exceptions.EstoqueInsuficienteException;
+import org.serratec.ecommerce.exceptions.NotclosedPedidoException;
+import org.serratec.ecommerce.exceptions.PedidoFinalizadoException;
 import org.serratec.ecommerce.exceptions.PedidoNotFoundException;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
+import org.serratec.ecommerce.exceptions.StatusUnacceptableException;
 import org.serratec.ecommerce.exceptions.UsedCategoriaException;
 import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.serratec.ecommerce.exceptions.ViaCEPUnreachableException;
@@ -75,6 +79,34 @@ public class ExceptionController {
 	
 	@ExceptionHandler(UsedCategoriaException.class)
 	public ResponseEntity<String> tratarUsedCategoriaException(UsedCategoriaException exception) {
+		return ResponseEntity.notFound()
+				.header(MSG, exception.getMessage())
+				.build();
+	}
+
+	@ExceptionHandler(EstoqueInsuficienteException.class)
+	public ResponseEntity<String> tratarEstoqueInsuficienteException(EstoqueInsuficienteException exception) {
+		return ResponseEntity.badRequest()
+				.header(MSG, exception.getMessage())
+				.build();
+	}
+
+	@ExceptionHandler(NotclosedPedidoException.class)
+	public ResponseEntity<String> tratarNotclosedPedidoException(NotclosedPedidoException exception) {
+		return ResponseEntity.notFound()
+				.header(MSG, exception.getMessage())
+				.build();
+	}
+	
+	@ExceptionHandler(PedidoFinalizadoException.class)
+	public ResponseEntity<String> tratarPedidoFinalizadoException(PedidoFinalizadoException exception) {
+		return ResponseEntity.notFound()
+				.header(MSG, exception.getMessage())
+				.build();
+	}
+	
+	@ExceptionHandler(StatusUnacceptableException.class)
+	public ResponseEntity<String> tratarStatusUnacceptableException(StatusUnacceptableException exception) {
 		return ResponseEntity.notFound()
 				.header(MSG, exception.getMessage())
 				.build();

@@ -16,6 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.serratec.ecommerce.exceptions.EstoqueInsuficienteException;
 import org.serratec.ecommerce.exceptions.ValorNegativoException;
 
 @Entity
@@ -87,7 +88,10 @@ public class ProdutoEntity {
 		return quantEstoque;
 	}
 
-	public void setQuantEstoque(Integer quantEstoque) {
+	public void setQuantEstoque(Integer quantEstoque) throws EstoqueInsuficienteException {
+		if(quantEstoque < 0) {
+			throw new EstoqueInsuficienteException("O valor de estoque não pode ser negativo!");
+		}
 		this.quantEstoque = quantEstoque;
 	}
 
@@ -96,7 +100,7 @@ public class ProdutoEntity {
 	}
 
 	public void setDataCadastro(LocalDate dataCadastro) {
-		this.dataCadastro = LocalDate.now();
+		this.dataCadastro = dataCadastro;
 	}
 
 	public ImagemEntity getImagem() {
@@ -115,7 +119,6 @@ public class ProdutoEntity {
 		this.categoria = categoria;
 	}
 
-	// Exclusão lógica
 	public Boolean getAtivo() {
 		return ativo;
 	}

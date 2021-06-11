@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
+import org.hibernate.validator.constraints.br.CPF;
+
 @Entity
 @Table(name = "CLIENTE")
 public class ClienteEntity {
@@ -36,6 +38,7 @@ public class ClienteEntity {
 	@NotNull
 	private String nome;
 	
+	@CPF
 	@NotNull
 	@Column(unique=true)
 	private String cpf;

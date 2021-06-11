@@ -5,7 +5,8 @@ public enum StatusEnum {
 	FECHADO("Pedido fechado"),
 	PAGO("Pedido pago"),
 	TRANSPORTE("Pedido em transporte"),
-	ENTREGUE("Pedido entregue");
+	ENTREGUE("Pedido entregue"),
+	CANCELADO("Pedido cancelado");
 	
 	StatusEnum(String string) {
 	}

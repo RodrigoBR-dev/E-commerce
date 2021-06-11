@@ -7,6 +7,7 @@ import org.serratec.ecommerce.dto.ProdutoDTOSimples;
 import org.serratec.ecommerce.dto.ProdutoDTOUsuario;
 import org.serratec.ecommerce.entities.ImagemEntity;
 import org.serratec.ecommerce.exceptions.CategoriaNotFoundException;
+import org.serratec.ecommerce.exceptions.EstoqueInsuficienteException;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
 import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.serratec.ecommerce.services.ImagemService;
@@ -38,7 +39,7 @@ public class ProdutoController {
 	ImagemService imagemService;
 	
 	@PostMapping
-	public ResponseEntity<ProdutoDTOUsuario> create(@RequestPart ProdutoDTOUsuario produto,@RequestParam MultipartFile file) throws CategoriaNotFoundException, ValorNegativoException, ProdutoNotFoundException, IOException{
+	public ResponseEntity<ProdutoDTOUsuario> create(@RequestPart ProdutoDTOUsuario produto,@RequestParam MultipartFile file) throws CategoriaNotFoundException, ValorNegativoException, ProdutoNotFoundException, IOException, EstoqueInsuficienteException{
 		return new ResponseEntity<>(service.create(produto,file),HttpStatus.CREATED);
 	}
 	
@@ -54,7 +55,7 @@ public class ProdutoController {
 
 	@PutMapping
 	public ResponseEntity<ProdutoDTOUsuario> update(@RequestBody ProdutoDTOUsuario produto )
-			throws ProdutoNotFoundException, ValorNegativoException, CategoriaNotFoundException {
+			throws ProdutoNotFoundException, ValorNegativoException, CategoriaNotFoundException, EstoqueInsuficienteException {
 		return new ResponseEntity<>(service.update(produto), HttpStatus.OK);
 	}
 
@@ -62,24 +63,25 @@ public class ProdutoController {
 	public ResponseEntity<String> delete(@PathVariable String nome) throws ProdutoNotFoundException {
 		return new ResponseEntity<>(service.delete(nome), HttpStatus.OK);
 	}
-
-	@GetMapping("/cliente")
-	public ResponseEntity<List<ProdutoDTOSimples>> findAllDTO(){
-		return new ResponseEntity<List<ProdutoDTOSimples>>(service.findAllDTO(),HttpStatus.OK);
-	}
+//
+//	@GetMapping("/cliente")
+//	public ResponseEntity<List<ProdutoDTOSimples>> findAllDTO(){
+//		return new ResponseEntity<>(service.findAllDTO(),HttpStatus.OK);
+//	}
 	@GetMapping("/categoria/{categoria}")
 	public ResponseEntity<List<ProdutoDTOUsuario>> findByCategoria(@PathVariable String categoria) throws CategoriaNotFoundException{
-		return new ResponseEntity<List<ProdutoDTOUsuario>>(service.findAllByCategoriaDTO(categoria),HttpStatus.OK);
+		return new ResponseEntity<>(service.findAllByCategoriaDTO(categoria),HttpStatus.OK);
 
 	}
-	@GetMapping("/produto/{produtoNome}/imagem")
-	public ResponseEntity<byte[]> getImagem(@PathVariable String produtoNome){
-		ImagemEntity imagem = imagemService.getImagem(produtoNome);
-		HttpHeaders header = new HttpHeaders();
+
+	@GetMapping(path = "/produto/{id}/imagem")
+	public ResponseEntity<byte[]> getImagem(@PathVariable Long id) throws ProdutoNotFoundException{
+		ImagemEntity imagem = imagemService.getImagem(id);
+		var header = new HttpHeaders();
 		header.add("content-length", String.valueOf(imagem.getData().length));
 		header.add("content-type", imagem.getMimeType());
 		
-		return new ResponseEntity<byte[]>(imagem.getData(),header,HttpStatus.OK);
-		
+		return new ResponseEntity<>(imagem.getData(),header,HttpStatus.OK);
+
 	}
 }

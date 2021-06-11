@@ -18,8 +18,12 @@ public class ImagemService {
 
 	@Autowired 
 	ImagemRepository repository;
+	
 	@Autowired
 	ProdutoRepository prodRepository;
+	
+	@Autowired
+	ProdutoService prodService;
 	
 	@Transactional
 	public ImagemEntity create(String nome,MultipartFile file) throws IOException, ProdutoNotFoundException {
@@ -35,9 +39,9 @@ public class ImagemService {
 		return repository.save(imagem);				
 	}
 	@Transactional
-	public ImagemEntity getImagem(String nome) {
-		ImagemEntity imagemProduto = repository.findByProdutoNome(nome);
-		return imagemProduto;
+	public ImagemEntity getImagem(Long id) throws ProdutoNotFoundException {
+//		ProdutoEntity produto = prodService.findByProdutoId(id);
+		return repository.findById(1);
 	}
 	
 }
