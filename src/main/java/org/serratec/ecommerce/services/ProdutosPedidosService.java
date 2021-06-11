@@ -13,20 +13,25 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProdutosPedidosService {
-	
+
 	@Autowired
 	ProdutosPedidosRepository repository;
-	
+
 	@Autowired
 	ProdutoService produtoService;
-	
+
 	public List<ProdutosPedidosEntity> findByPedido(PedidoEntity pedido) {
 		return repository.findByPedido(pedido);
 	}
+
+	public List<ProdutosPedidosEntity> findByProduto(ProdutoEntity prodEntity) {
+		return repository.findByProduto(prodEntity);
+	}
+
 	public ProdutosPedidosEntity findByPedidoAndProduto(PedidoEntity pedido, ProdutoEntity produto) {
 		return repository.findByPedidoAndProduto(pedido, produto);
 	}
-	
+
 	public ProdutosPedidosEntity create(PedidoEntity pedido, PedidoDTO dto) throws ProdutoNotFoundException {
 		var produtosPedidos = new ProdutosPedidosEntity();
 		produtosPedidos.setPedido(pedido);
@@ -36,13 +41,14 @@ public class ProdutosPedidosService {
 		produtosPedidos.setPreco(produto.getPreco());
 		return repository.save(produtosPedidos);
 	}
-	
+
 	public ProdutosPedidosEntity update(ProdutosPedidosEntity entity, Integer quantidade) {
 		entity.setQuantidade(quantidade);
-		return repository.save(entity);	
+		return repository.save(entity);
 	}
-	
+
 	public void delete(ProdutosPedidosEntity entity) {
 		repository.delete(entity);
 	}
+
 }

@@ -19,13 +19,13 @@ public class ImagemEntity {
 	@Lob
 	private byte[] data;
 
+	
 	@OneToOne
 	private ProdutoEntity produto;
-
+	
 	public ProdutoEntity getProduto() {
 		return produto;
 	}
-
 	public void setProduto(ProdutoEntity produto) {
 		this.produto = produto;
 	}

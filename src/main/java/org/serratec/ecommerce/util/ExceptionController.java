@@ -86,7 +86,7 @@ public class ExceptionController {
 
 	@ExceptionHandler(EstoqueInsuficienteException.class)
 	public ResponseEntity<String> tratarEstoqueInsuficienteException(EstoqueInsuficienteException exception) {
-		return ResponseEntity.notFound()
+		return ResponseEntity.badRequest()
 				.header(MSG, exception.getMessage())
 				.build();
 	}

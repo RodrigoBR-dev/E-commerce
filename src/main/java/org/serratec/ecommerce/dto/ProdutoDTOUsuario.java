@@ -2,6 +2,8 @@ package org.serratec.ecommerce.dto;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 public class ProdutoDTOUsuario {
 	private String nome;
 	private String descricao;
@@ -10,6 +12,8 @@ public class ProdutoDTOUsuario {
 	private Integer quantEstoque;
 	private String url;
 	private String categoria;
+	@JsonBackReference
+	private String novoNome;
 	
 	public String getNome() {
 		return nome;
@@ -52,6 +56,12 @@ public class ProdutoDTOUsuario {
 	}
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
+	}
+	public String getNovoNome() {
+		return novoNome;
+	}
+	public void setNovoNome(String novoNome) {
+		this.novoNome = novoNome;
 	}
 	
 }
