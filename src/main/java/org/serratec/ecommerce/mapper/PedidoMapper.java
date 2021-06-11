@@ -15,7 +15,11 @@ public class PedidoMapper {
 	
 	public PedidoEntity toEntity(PedidoDTO dto) {
 		var entity = new PedidoEntity();
-		entity.setNumeroDoPedido(dto.getNumeroDoPedido());
+		var numero = Math.random();
+		while (numero < 10000000) {
+			numero = numero * 10;
+		}
+		entity.setNumeroDoPedido((long) numero);
 		entity.setEndEntrega(dto.getEndEntrega());
 		return entity;
 	}

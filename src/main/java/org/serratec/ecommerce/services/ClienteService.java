@@ -23,6 +23,9 @@ public class ClienteService {
 	@Autowired
 	ClienteMapper mapper;
 	
+	@Autowired
+	EmailSenderService emailSender;
+	
 	public List<ClienteDTO> getAll() {
 		List<ClienteEntity> listaCliente = repository.findAllByAtivoTrue();
 		List<ClienteDTO> listaDTO = new ArrayList<>();
@@ -52,11 +55,13 @@ public class ClienteService {
 	public ClienteDTO create(ClienteDTONovo novoCliente) {
 		ClienteEntity entity = mapper.clienteDTOnovoToEntity(novoCliente);		
 		entity.setAtivo(true);
+		emailSender.sendSimpleMessage(entity.getEmail(), "Bem vindo a nossa loja", "Olá " + entity.getNome() + ", seja bem vindo a nossa loja e boas compras!");
 		return mapper.entityToDTO(repository.save(entity));
 	}
 	
 	public ClienteDTO update(ClienteDTO novoCliente) throws ClienteNotFoundException {		
 		ClienteEntity cliente = this.findByUserNameOrEmail(novoCliente.getUserName());
+		cliente.setAtivo(true);
 		if (novoCliente.getUserName() != null) {
 			cliente.setUserName(novoCliente.getUserName());
 		}
@@ -73,6 +78,7 @@ public class ClienteService {
 		if (novoCliente.getDataNascimento() != null) {
 			cliente.setDataNascimento(novoCliente.getDataNascimento());
 		}
+		emailSender.sendSimpleMessage(cliente.getEmail(), "Dados alterados com sucesso", "Olá " + cliente.getNome() + ", seus dados foram alterados com sucesso!");
 		return mapper.entityToDTO(repository.save(cliente));
 	}
 	

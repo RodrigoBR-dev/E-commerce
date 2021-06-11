@@ -1,4 +1,8 @@
-Finalizar envio de email na criação e na alteração de cadastro de cliente e para recuperação de senha
+Finalizar envio de email para recuperação de senha
 resolver o get de imagem do produto;
 Sistema de login.
-automatizar numeroPedido
+CPF Unico e nome endereco unico por cliente.
+ajuste codigo dos erros
+erro ao deletar categoria.
+buscar pedido por cliente
+quantidade produto = 0, deleta proped
