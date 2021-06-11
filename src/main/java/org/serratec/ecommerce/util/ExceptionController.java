@@ -1,5 +1,7 @@
 package org.serratec.ecommerce.util;
 
+import org.serratec.ecommerce.exceptions.AtributoEncontradoException;
+import org.serratec.ecommerce.exceptions.CategoriaExistenteException;
 import org.serratec.ecommerce.exceptions.CategoriaNotFoundException;
 import org.serratec.ecommerce.exceptions.ClienteNotFoundException;
 import org.serratec.ecommerce.exceptions.EnderecoClienteNotAssociatedException;
@@ -11,10 +13,8 @@ import org.serratec.ecommerce.exceptions.PedidoFinalizadoException;
 import org.serratec.ecommerce.exceptions.PedidoNotFoundException;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
 import org.serratec.ecommerce.exceptions.StatusUnacceptableException;
-import org.serratec.ecommerce.exceptions.UsedCategoriaException;
 import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.serratec.ecommerce.exceptions.ViaCEPUnreachableException;
-import org.serratec.ecommerce.exceptions.AtributoEncontradoException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -67,7 +67,7 @@ public class ExceptionController {
 
 	@ExceptionHandler(EnderecoClienteNotAssociatedException.class)
 	public ResponseEntity<String> tratarEnderecoClienteNotAssociatedException(EnderecoClienteNotAssociatedException exception) {
-		return ResponseEntity.notFound()
+		return ResponseEntity.badRequest()
 				.header(MSG, exception.getMessage())
 				.build();
 	}
@@ -79,13 +79,6 @@ public class ExceptionController {
 				.build();
 	}
 	
-	@ExceptionHandler(UsedCategoriaException.class)
-	public ResponseEntity<String> tratarUsedCategoriaException(UsedCategoriaException exception) {
-		return ResponseEntity.notFound()
-				.header(MSG, exception.getMessage())
-				.build();
-	}
-
 	@ExceptionHandler(EstoqueInsuficienteException.class)
 	public ResponseEntity<String> tratarEstoqueInsuficienteException(EstoqueInsuficienteException exception) {
 		return ResponseEntity.badRequest()
@@ -95,21 +88,21 @@ public class ExceptionController {
 
 	@ExceptionHandler(NotclosedPedidoException.class)
 	public ResponseEntity<String> tratarNotclosedPedidoException(NotclosedPedidoException exception) {
-		return ResponseEntity.notFound()
+		return ResponseEntity.badRequest()
 				.header(MSG, exception.getMessage())
 				.build();
 	}
 	
 	@ExceptionHandler(PedidoFinalizadoException.class)
 	public ResponseEntity<String> tratarPedidoFinalizadoException(PedidoFinalizadoException exception) {
-		return ResponseEntity.notFound()
+		return ResponseEntity.badRequest()
 				.header(MSG, exception.getMessage())
 				.build();
 	}
 	
 	@ExceptionHandler(StatusUnacceptableException.class)
 	public ResponseEntity<String> tratarStatusUnacceptableException(StatusUnacceptableException exception) {
-		return ResponseEntity.notFound()
+		return ResponseEntity.badRequest()
 				.header(MSG, exception.getMessage())
 				.build();
 	}
@@ -123,6 +116,13 @@ public class ExceptionController {
 	
 	@ExceptionHandler(NomeEnderecoExistenteException.class)
 	public ResponseEntity<String> tratarNomeEnderecoExistenteException(NomeEnderecoExistenteException exception) {
+		return ResponseEntity.badRequest()
+				.header(MSG, exception.getMessage())
+				.build();
+	}
+
+	@ExceptionHandler(CategoriaExistenteException.class)
+	public ResponseEntity<String> tratarCategoriaExistenteException(CategoriaExistenteException exception) {
 		return ResponseEntity.badRequest()
 				.header(MSG, exception.getMessage())
 				.build();
