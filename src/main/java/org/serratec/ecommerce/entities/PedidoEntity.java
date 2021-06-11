@@ -27,19 +27,23 @@ public class PedidoEntity {
 	@NotNull
 	private Long numeroDoPedido;
 	
-	@NotNull
+	private Double totalProdutos;
+	
+	private String endEntrega;
+	
+	private Double frete;
+	
 	private Double valorTotalDoPedido;
 	
-	@NotNull
 	private LocalDate dataDoPedido;
 	
 	@OneToMany(mappedBy = "pedido")
 	private List<ProdutosPedidosEntity> produtosPedidos = new ArrayList<>();
 	
-	@NotNull
+	
 	private LocalDate dataEntrega;
 	
-	@NotNull
+	
 	private StatusEnum status;
 	
 	@ManyToOne
@@ -60,6 +64,30 @@ public class PedidoEntity {
 
 	public void setNumeroDoPedido(Long numeroDoPedido) {
 		this.numeroDoPedido = numeroDoPedido;
+	}
+
+	public Double getTotalProdutos() {
+		return totalProdutos;
+	}
+
+	public void setTotalProdutos(Double totalProdutos) {
+		this.totalProdutos = totalProdutos;
+	}
+
+	public String getEndEntrega() {
+		return endEntrega;
+	}
+
+	public void setEndEntrega(String endEntrega) {
+		this.endEntrega = endEntrega;
+	}
+
+	public Double getFrete() {
+		return frete;
+	}
+
+	public void setFrete(Double frete) {
+		this.frete = frete;
 	}
 
 	public Double getValorTotalDoPedido() {

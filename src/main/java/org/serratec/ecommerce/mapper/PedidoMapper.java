@@ -16,19 +16,8 @@ public class PedidoMapper {
 	public PedidoEntity toEntity(PedidoDTO dto) {
 		var entity = new PedidoEntity();
 		entity.setNumeroDoPedido(dto.getNumeroDoPedido());
-		entity.setValorTotalDoPedido(dto.getValorTotalDoPedido());
-		entity.setDataDoPedido(dto.getDataDoPedido());
-		
+		entity.setEndEntrega(dto.getEndEntrega());
 		return entity;
-	}
-	
-	public PedidoDTO toDTO(PedidoEntity entity) {
-		var dto = new PedidoDTO();
-		dto.setNumeroDoPedido(entity.getNumeroDoPedido());
-		dto.setValorTotalDoPedido(entity.getValorTotalDoPedido());
-		dto.setDataDoPedido(entity.getDataDoPedido());
-		
-		return dto;
 	}
 	
 	public PedidoDTOAll entityToAll(PedidoEntity entity) {
@@ -38,19 +27,20 @@ public class PedidoMapper {
 		dto.setDataDoPedido(entity.getDataDoPedido());
 		dto.setDataEntrega(entity.getDataEntrega());
 		dto.setStatus(entity.getStatus());
-		
 		return dto;
 	}
 
 	public PedidoDTOComp entityToDTOComp(PedidoEntity entity) {
 		var dto = new PedidoDTOComp();
 		dto.setNumeroDoPedido(entity.getNumeroDoPedido());
+		dto.setEndEntrega(entity.getEndEntrega());
+		dto.setFrete(entity.getFrete());
+		dto.setTotalProdutos(entity.getTotalProdutos());
 		dto.setValorTotalDoPedido(entity.getValorTotalDoPedido());
 		dto.setDataDoPedido(entity.getDataDoPedido());
 		dto.setDataEntrega(entity.getDataEntrega());
 		dto.setStatus(entity.getStatus());
 		dto.setCliente(mapper.entityToDTO(entity.getCliente()));
-		
 		return dto;
 	}
 	

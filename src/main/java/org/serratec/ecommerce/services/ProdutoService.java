@@ -1,5 +1,8 @@
 package org.serratec.ecommerce.services;
 
+import java.io.IOException;
+import java.net.URI;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +19,8 @@ import org.serratec.ecommerce.mapper.ProdutoMapper;
 import org.serratec.ecommerce.repositories.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Service
 public class ProdutoService {
@@ -26,6 +31,8 @@ public class ProdutoService {
 	ProdutoMapper mapper;
 	@Autowired
 	CategoriaService categoriaService;
+	@Autowired
+	ImagemService imagemService;
 
 	public List<ProdutoDTOUsuario> findAll() {
 		return repository.findAll().stream().map(mapper::entityToDTOUsuario).collect(Collectors.toList());
@@ -56,22 +63,21 @@ public class ProdutoService {
 		return repository.findAllByAtivoTrueAndCategoria(categoria);
 	}
 
-	public ProdutoDTOUsuario create(ProdutoDTOUsuario produto)throws CategoriaNotFoundException, ValorNegativoException, ProdutoNotFoundException {
-		if(findByNome(produto.getNome()) != null) {
-			update(produto);
-			return produto;
-		}else {
-		
-		CategoriaEntity categoria = categoriaService.findByNome(produto.getCategoria());
-		ProdutoEntity prodEntity = mapper.usuarioToEntity(produto);		
-		prodEntity.setCategoria(categoria);
-		prodEntity.setNome(prodEntity.getNome().toLowerCase());
-		repository.save(prodEntity);
-		return mapper.entityToDTOUsuario(prodEntity);
-		}
+	public ProdutoDTOUsuario create(ProdutoDTOUsuario produto, MultipartFile file) throws CategoriaNotFoundException, ValorNegativoException, ProdutoNotFoundException, IOException {
+
+			CategoriaEntity categoria = categoriaService.findByNome(produto.getCategoria());
+			ProdutoEntity prodEntity = mapper.usuarioToEntity(produto);
+			prodEntity.setCategoria(categoria);
+			prodEntity.setNome(prodEntity.getNome().toLowerCase());
+			prodEntity.setDataCadastro(LocalDate.now());
+			repository.save(prodEntity);
+			imagemService.create(prodEntity.getNome(), file);
+			return getImage(prodEntity);
 	}
 
-	public ProdutoDTOUsuario update(ProdutoDTOUsuario produtoTemp)throws ProdutoNotFoundException, ValorNegativoException, CategoriaNotFoundException {
+	public ProdutoDTOUsuario update(ProdutoDTOUsuario produtoTemp)
+			throws ProdutoNotFoundException, ValorNegativoException, CategoriaNotFoundException {
+		
 		ProdutoEntity produto = findByNome(produtoTemp.getNome());
 		produto.setAtivo(true);
 
@@ -85,14 +91,12 @@ public class ProdutoService {
 		if (produtoTemp.getDataCadastro() != null) {
 			produto.setDataCadastro(produtoTemp.getDataCadastro());
 		}
+
 		if (produtoTemp.getPreco() != null) {
 			produto.setPreco(produtoTemp.getPreco());
 		}
 		if (produtoTemp.getDescricao() != null) {
 			produto.setDescricao(produtoTemp.getDescricao());
-		}
-		if (produtoTemp.getImagem() != null) {
-			produto.setImagem(produtoTemp.getImagem());
 		}
 		if (produtoTemp.getQuantEstoque() != null) {
 			produto.setQuantEstoque(produtoTemp.getQuantEstoque());
@@ -132,5 +136,14 @@ public class ProdutoService {
 		if (findByNome.getNome() != null)
 			return findByNome;
 		throw new ProdutoNotFoundException("Produto não encontrado!");
+
+	}
+
+	public ProdutoDTOUsuario getImage(ProdutoEntity entity) {
+		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("produto/{produtoId}/imagem")
+				.buildAndExpand(entity.getId()).toUri();
+		ProdutoDTOUsuario prodDTO = mapper.entityToDTOUsuario(entity);
+		prodDTO.setUrl(uri.toString());
+		return prodDTO;
 	}
 }

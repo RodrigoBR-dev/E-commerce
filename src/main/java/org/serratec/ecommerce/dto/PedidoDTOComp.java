@@ -6,19 +6,25 @@ import java.util.List;
 import org.serratec.ecommerce.enums.StatusEnum;
 
 public class PedidoDTOComp {
-	
+
 	private Long numeroDoPedido;
-	
+
 	private List<ProdutosPedidosDTO> produto;
 
+	private Double totalProdutos;
+
+	private String endEntrega;
+
+	private Double frete;
+
 	private Double valorTotalDoPedido;
-	
+
 	private LocalDate dataDoPedido;
-	
+
 	private LocalDate dataEntrega;
-	
+
 	private StatusEnum status;
-	
+
 	private ClienteDTO cliente;
 
 	public Long getNumeroDoPedido() {
@@ -35,6 +41,30 @@ public class PedidoDTOComp {
 
 	public void setProduto(List<ProdutosPedidosDTO> produto) {
 		this.produto = produto;
+	}
+
+	public Double getTotalProdutos() {
+		return totalProdutos;
+	}
+
+	public void setTotalProdutos(Double totalProdutos) {
+		this.totalProdutos = totalProdutos;
+	}
+
+	public String getEndEntrega() {
+		return endEntrega;
+	}
+
+	public void setEndEntrega(String endEntrega) {
+		this.endEntrega = endEntrega;
+	}
+
+	public Double getFrete() {
+		return frete;
+	}
+
+	public void setFrete(Double frete) {
+		this.frete = frete;
 	}
 
 	public Double getValorTotalDoPedido() {

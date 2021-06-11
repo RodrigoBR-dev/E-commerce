@@ -15,17 +15,18 @@ import org.serratec.ecommerce.entities.PedidoEntity;
 import org.serratec.ecommerce.entities.ProdutosPedidosEntity;
 import org.serratec.ecommerce.enums.StatusEnum;
 import org.serratec.ecommerce.exceptions.ClienteNotFoundException;
+import org.serratec.ecommerce.exceptions.EnderecoNotFoundException;
 import org.serratec.ecommerce.exceptions.EstoqueInsuficienteException;
 import org.serratec.ecommerce.exceptions.PedidoFinalizadoException;
 import org.serratec.ecommerce.exceptions.PedidoNotFoundException;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
 import org.serratec.ecommerce.exceptions.StatusUnacceptableException;
-import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.serratec.ecommerce.mapper.PedidoMapper;
 import org.serratec.ecommerce.repositories.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class PedidoService {
@@ -45,6 +46,12 @@ public class PedidoService {
 	@Autowired
 	ClienteService clienteService;
 	
+	@Autowired
+	EmailSenderService emailSender;
+	
+	@Autowired
+	EnderecoService endService;
+	
 	public List<PedidoDTOAll> getAll() {
 		return repository.findAll(Sort.by("dataDoPedido")).stream().map(mapper::entityToAll).collect(Collectors.toList());
 	}
@@ -60,7 +67,7 @@ public class PedidoService {
 		
 		List<ProdutosPedidosEntity> produtosPedidos = produtosPedidosService.findByPedido(pedido.get());
 		for (ProdutosPedidosEntity produtosPedidosEntity : produtosPedidos) {
-			ProdutosPedidosDTO produtosPedidosDTO = new ProdutosPedidosDTO();
+			var produtosPedidosDTO = new ProdutosPedidosDTO();
 			produtosPedidosDTO.setNome(produtosPedidosEntity.getProduto().getNome());
 			produtosPedidosDTO.setImagem(produtosPedidosEntity.getProduto().getImagem());
 			produtosPedidosDTO.setValor(produtosPedidosEntity.getPreco());
@@ -80,7 +87,7 @@ public class PedidoService {
 		return pedido.get();
 	}
 	
-	public String create(PedidoDTO pedidoNovo) throws ProdutoNotFoundException, ClienteNotFoundException {
+	public String create(PedidoDTO pedidoNovo) throws ProdutoNotFoundException, ClienteNotFoundException, EnderecoNotFoundException {
 		PedidoEntity pedido = mapper.toEntity(pedidoNovo);
 		ClienteEntity cliente = clienteService.findByUserNameOrEmail(pedidoNovo.getCliente());
 		pedido.setCliente(cliente);
@@ -88,12 +95,12 @@ public class PedidoService {
 		pedido.setStatus(StatusEnum.RECEBIDO);
 		pedido = repository.save(pedido);
 		var produtosPedidos = produtosPedidosService.create(pedido, pedidoNovo);
-		pedido.setValorTotalDoPedido(produtosPedidos.getPreco() * produtosPedidos.getQuantidade());
-		repository.save(pedido);
+		pedido.setTotalProdutos(produtosPedidos.getPreco() * produtosPedidos.getQuantidade());
+		repository.save(this.sedex(pedido));
 		return "Criado com sucesso";
 	}
 	
-	public String update(PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, StatusUnacceptableException {
+	public String update(PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, StatusUnacceptableException, EnderecoNotFoundException {
 		var pedidoEntity = getByNumero(pedido.getNumeroDoPedido());
 		if (pedidoEntity.getStatus() == StatusEnum.RECEBIDO) {
 			var produtoEntity = produtoService.findByNome(pedido.getProduto());
@@ -102,13 +109,18 @@ public class PedidoService {
 				if (pedido.getQuantidade() <= produtoEntity.getQuantEstoque()) {
 					Integer quantidade = produtosPedidos.get().getQuantidade();
 					produtosPedidosService.update(produtosPedidos.get(), pedido.getQuantidade());
-					pedidoEntity.setValorTotalDoPedido(pedidoEntity.getValorTotalDoPedido() + ((produtosPedidos.get().getQuantidade() - quantidade) * produtosPedidos.get().getPreco()));
+					pedidoEntity.setTotalProdutos(pedidoEntity.getValorTotalDoPedido() + ((produtosPedidos.get().getQuantidade() - quantidade) * produtosPedidos.get().getPreco()));
 					repository.save(pedidoEntity);
 					return "Atualizado com sucesso!";
 				} else throw new EstoqueInsuficienteException("Estoque insuficiente!");
 			} else if (pedido.getQuantidade() <= produtoEntity.getQuantEstoque()) {
 				var produtosPedidosNovo = produtosPedidosService.create(pedidoEntity, pedido);
-				pedidoEntity.setValorTotalDoPedido(pedidoEntity.getValorTotalDoPedido() + produtosPedidosNovo.getPreco() * produtosPedidosNovo.getQuantidade());
+				pedidoEntity.setTotalProdutos(pedidoEntity.getValorTotalDoPedido() + produtosPedidosNovo.getPreco() * produtosPedidosNovo.getQuantidade());
+			}
+			if (pedido.getEndEntrega() != null) {
+				pedidoEntity.setEndEntrega(pedido.getEndEntrega());
+				pedidoEntity.setValorTotalDoPedido(pedidoEntity.getValorTotalDoPedido() - pedidoEntity.getFrete());
+				pedidoEntity = this.sedex(pedidoEntity);
 			}
 			repository.save(pedidoEntity);
 			return "Atualizado com sucesso!";
@@ -116,7 +128,7 @@ public class PedidoService {
 		throw new StatusUnacceptableException("Apenas pedidos recebidos podem ser editados.");
 	}
 	
-	public String fechar(long numeroPedido) throws PedidoNotFoundException, EstoqueInsuficienteException, ValorNegativoException, ProdutoNotFoundException, StatusUnacceptableException {
+	public String fechar(long numeroPedido) throws PedidoNotFoundException, EstoqueInsuficienteException, StatusUnacceptableException {
 		PedidoEntity pedido = this.getByNumero(numeroPedido);
 		if (pedido.getStatus() == StatusEnum.RECEBIDO) {
 			List<ProdutosPedidosEntity> listaProdutosPedidos = produtosPedidosService.findByPedido(pedido);
@@ -125,18 +137,19 @@ public class PedidoService {
 			}
 			pedido.setStatus(StatusEnum.FECHADO);
 			repository.save(pedido);
+			emailSender.sendSimpleMessage(pedido.getCliente().getEmail(), "Pedido " + pedido.getNumeroDoPedido() + " fechado com sucesso", "Testando email de fechamento de pedido");
 			return "Fechado com sucesso!";
 		}
 		throw new StatusUnacceptableException("Apenas pedidos recebidos podem ser fechados.");
 	}
 	
-	public String pagar(Long numeroDoPedido) throws PedidoNotFoundException, StatusUnacceptableException {
+	public String pagar(Long numeroDoPedido) throws PedidoNotFoundException, StatusUnacceptableException, EnderecoNotFoundException {
 		PedidoEntity pedido = this.getByNumero(numeroDoPedido);
 		if (pedido.getStatus() == StatusEnum.FECHADO) {
 			pedido.setDataDoPedido(LocalDate.now());
 			pedido.setStatus(StatusEnum.PAGO);
-			pedido.setDataEntrega(LocalDate.now().plusDays(3));
-			repository.save(pedido);
+			repository.save(this.sedexPrazo(pedido));
+			emailSender.sendSimpleMessage(pedido.getCliente().getEmail(), "Recebemos seu pagamento", "Recebemos seu pagamento, em breve seus produtos serão enviados à transportadora.");
 			return "Pagamento Recebido!";
 		}
 		throw new StatusUnacceptableException("Favor fechar o pedido antes de efetuar pagamento!"); 
@@ -147,6 +160,7 @@ public class PedidoService {
 		if (pedido.getStatus() == StatusEnum.PAGO) {
 			pedido.setStatus(StatusEnum.TRANSPORTE);
 			repository.save(pedido);
+			emailSender.sendSimpleMessage(pedido.getCliente().getEmail(), "Pedido " + pedido.getNumeroDoPedido() + " está a caminho", "Temos uma ótima notícia, seu produtos já estão em transporte!");
 			return "Pedido em transporte!";
 		}
 		throw new StatusUnacceptableException("Apenas pedidos pagos podem ser enviados para transporte.");
@@ -157,6 +171,7 @@ public class PedidoService {
 		if (pedido.getStatus() == StatusEnum.TRANSPORTE) {
 			pedido.setStatus(StatusEnum.ENTREGUE);
 			repository.save(pedido);
+			emailSender.sendSimpleMessage(pedido.getCliente().getEmail(), "Pedido " + pedido.getNumeroDoPedido() + " entregue com sucesso", "Recebemos a confirmação de que seus produtos foram entregues. Agradecemos a preferência!");
 			return "Pedido entregue!";
 		}
 		throw new StatusUnacceptableException("Apenas pedidos em transporte podem ser entregues.");
@@ -194,4 +209,27 @@ public class PedidoService {
 		return "Esse pedido esta cancelado e nao pode ser alterado!";
 	}
 	
+	public PedidoEntity sedex(PedidoEntity pedido) throws EnderecoNotFoundException {
+		var restTemplate = new RestTemplate();
+		String cepDestino = endService.findByNomeAndCliente(pedido.getEndEntrega(), pedido.getCliente()).getCep();
+		String sedex = restTemplate.getForObject("http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx?nCdEmpresa=08082650&sDsSenha=564321&sCepOrigem=25955050&sCepDestino="+cepDestino+"&nVlPeso=1&nCdFormato=1&nVlComprimento=20&nVlAltura=20&nVlLargura=20&sCdMaoPropria=n&nVlValorDeclarado=0&sCdAvisoRecebimento=n&nCdServico=40010&nVlDiametro=0&StrRetorno=xml&nIndicaCalculo=3", String.class);
+		int valorInicio = sedex.indexOf("Valor>") + 6;
+		int valorFim = sedex.indexOf("</Valor");
+		pedido.setFrete(Double.parseDouble(sedex.substring(valorInicio, valorFim).replace(',', '.')));
+		pedido.setValorTotalDoPedido(pedido.getTotalProdutos() + pedido.getFrete());
+		int prazoInicio = sedex.indexOf("PrazoEntrega>") + 13;
+		int prazoFim = sedex.indexOf("</PrazoEntrega>");
+		pedido.setDataEntrega(pedido.getDataDoPedido().plusDays(Long.parseLong(sedex.substring(prazoInicio, prazoFim)) + 1));
+		return pedido;
+	}
+	
+	public PedidoEntity sedexPrazo(PedidoEntity pedido) throws EnderecoNotFoundException {
+		var restTemplate = new RestTemplate();
+		String cepDestino = endService.findByNomeAndCliente(pedido.getEndEntrega(), pedido.getCliente()).getCep();
+		String sedex = restTemplate.getForObject("http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx?nCdEmpresa=08082650&sDsSenha=564321&sCepOrigem=25955050&sCepDestino="+cepDestino+"&nVlPeso=1&nCdFormato=1&nVlComprimento=20&nVlAltura=20&nVlLargura=20&sCdMaoPropria=n&nVlValorDeclarado=0&sCdAvisoRecebimento=n&nCdServico=40010&nVlDiametro=0&StrRetorno=xml&nIndicaCalculo=3", String.class);
+		int prazoInicio = sedex.indexOf("PrazoEntrega>") + 13;
+		int prazoFim = sedex.indexOf("</PrazoEntrega>");
+		pedido.setDataEntrega(pedido.getDataDoPedido().plusDays(Long.parseLong(sedex.substring(prazoInicio, prazoFim)) + 1));
+		return pedido;
+	}
 }

@@ -8,7 +8,7 @@ public class ProdutoDTOUsuario {
 	private Double preco;
 	private LocalDate dataCadastro;
 	private Integer quantEstoque;
-	private String imagem;
+	private String url;
 	private String categoria;
 	
 	public String getNome() {
@@ -41,11 +41,11 @@ public class ProdutoDTOUsuario {
 	public void setQuantEstoque(Integer quantEstoque) {
 		this.quantEstoque = quantEstoque;
 	}
-	public String getImagem() {
-		return imagem;
+	public String getUrl() {
+		return url;
 	}
-	public void setImagem(String imagem) {
-		this.imagem = imagem;
+	public void setUrl(String imagem) {
+		this.url = imagem;
 	}
 	public String getCategoria() {
 		return categoria;

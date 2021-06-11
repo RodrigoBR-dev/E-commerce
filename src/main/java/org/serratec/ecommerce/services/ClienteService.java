@@ -60,6 +60,10 @@ public class ClienteService {
 		if (novoCliente.getUserName() != null) {
 			cliente.setUserName(novoCliente.getUserName());
 		}
+		
+		if (novoCliente.getEmail() != null) {
+			cliente.setEmail(novoCliente.getEmail());
+		}
 		if (novoCliente.getNome() != null) {
 			cliente.setNome(novoCliente.getNome());
 		}

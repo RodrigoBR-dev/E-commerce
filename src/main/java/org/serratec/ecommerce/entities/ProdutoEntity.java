@@ -93,7 +93,7 @@ public class ProdutoEntity {
 	}
 
 	public void setDataCadastro(LocalDate dataCadastro) {
-		this.dataCadastro = LocalDate.now();
+		this.dataCadastro = dataCadastro;
 	}
 
 	public String getImagem() {
@@ -112,7 +112,6 @@ public class ProdutoEntity {
 		this.categoria = categoria;
 	}
 
-	// Exclusão lógica
 	public Boolean getAtivo() {
 		return ativo;
 	}
