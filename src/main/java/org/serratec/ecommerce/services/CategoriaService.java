@@ -57,7 +57,7 @@ public class CategoriaService {
 		return dto;
 	}
 	
-	public CategoriaDTOAll create(CategoriaDTO categoriaDto) throws CategoriaNotFoundException, CategoriaExistenteException {
+	public CategoriaDTOAll create(CategoriaDTO categoriaDto) throws CategoriaExistenteException {
 		Optional<CategoriaEntity> categoria = repository.findByNome(categoriaDto.getNome());
 		if (categoria.isEmpty()) {
 			return mapper.entityToDTOAll(repository.save(mapper.dtoToEntity(categoriaDto)));
