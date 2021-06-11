@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.serratec.ecommerce.dto.CategoriaDTO;
 import org.serratec.ecommerce.dto.CategoriaDTOAll;
+import org.serratec.ecommerce.exceptions.CategoriaExistenteException;
 import org.serratec.ecommerce.exceptions.CategoriaNotFoundException;
-import org.serratec.ecommerce.exceptions.UsedCategoriaException;
 import org.serratec.ecommerce.services.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,7 +37,7 @@ public class CategoriaController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<CategoriaDTOAll> create(@RequestBody CategoriaDTO categoria){
+	public ResponseEntity<CategoriaDTOAll> create(@RequestBody CategoriaDTO categoria) throws CategoriaNotFoundException, CategoriaExistenteException{
 		return new ResponseEntity<>(service.create(categoria), HttpStatus.CREATED);
 	}
 	
@@ -47,7 +47,7 @@ public class CategoriaController {
 	}
 	
 	@DeleteMapping("/{nome}")
-	public ResponseEntity<String> delete(@PathVariable String nome) throws CategoriaNotFoundException, UsedCategoriaException {
+	public ResponseEntity<String> delete(@PathVariable String nome) throws CategoriaNotFoundException {
 		return new ResponseEntity<>(service.delete(nome), HttpStatus.OK);
 	}
 }

@@ -1,8 +1,4 @@
 Finalizar envio de email para recuperação de senha
 resolver o get de imagem do produto;
 Sistema de login.
-CPF Unico e nome endereco unico por cliente.
-ajuste codigo dos erros
-erro ao deletar categoria.
 buscar pedido por cliente
-quantidade produto = 0, deleta proped

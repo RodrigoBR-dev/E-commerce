@@ -39,7 +39,7 @@ public class EnderecoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<EnderecoDTOComp> create(@RequestBody EnderecoDTONovo dto) throws ViaCEPUnreachableException, ClienteNotFoundException, EnderecoNotFoundException, NomeEnderecoExistenteException {
+	public ResponseEntity<EnderecoDTOComp> create(@RequestBody EnderecoDTONovo dto) throws ViaCEPUnreachableException, ClienteNotFoundException, NomeEnderecoExistenteException {
 		return new ResponseEntity<>(service.create(dto), HttpStatus.CREATED);
 	}
 	

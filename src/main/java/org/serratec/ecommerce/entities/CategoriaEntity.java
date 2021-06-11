@@ -28,6 +28,8 @@ public class CategoriaEntity {
 	
 	@OneToMany(mappedBy = "categoria")
 	private List<ProdutoEntity> produtos = new ArrayList<>();
+	
+	private boolean ativo;
 
 	public Long getId() {
 		return id;
@@ -59,5 +61,13 @@ public class CategoriaEntity {
 
 	public void setProdutos(List<ProdutoEntity> produtos) {
 		this.produtos = produtos;
+	}
+
+	public boolean isAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(boolean ativo) {
+		this.ativo = ativo;
 	}
 }
