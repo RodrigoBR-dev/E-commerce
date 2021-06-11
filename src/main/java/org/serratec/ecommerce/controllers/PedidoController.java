@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -35,6 +36,11 @@ public class PedidoController {
 	@GetMapping
 	public ResponseEntity<List<PedidoDTOAll>> findAll() {
 		return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/cliente/{userName}")
+	public ResponseEntity<List<PedidoDTOAll>> getByCliente(@PathVariable String userName) throws ClienteNotFoundException {
+		return new ResponseEntity<>(service.getByCliente(userName), HttpStatus.OK);
 	}
 	
 	@GetMapping("/{numeroDoPedido}")

@@ -56,6 +56,16 @@ public class PedidoService {
 		return repository.findAll(Sort.by("dataDoPedido")).stream().map(mapper::entityToAll).collect(Collectors.toList());
 	}
 	
+	public List<PedidoDTOAll> getByCliente(String userName) throws ClienteNotFoundException {
+		ClienteEntity cliente = clienteService.findByUserNameOrEmail(userName);
+		List<PedidoEntity> listaPedido = repository.findByCliente(cliente);
+		List<PedidoDTOAll> listaDTO = new ArrayList<>();
+		for (PedidoEntity pedidoEntity : listaPedido) {
+			listaDTO.add(mapper.entityToAll(pedidoEntity));
+		}
+		return listaDTO;
+	}
+	
 	public PedidoDTOComp getByNumeroDTO(Long numeroDoPedido) throws PedidoNotFoundException {
 		Optional<PedidoEntity> pedido = repository.findByNumeroDoPedido(numeroDoPedido);
 		if (pedido.isEmpty()) {
