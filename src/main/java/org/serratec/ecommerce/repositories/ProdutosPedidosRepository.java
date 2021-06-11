@@ -11,4 +11,5 @@ public interface ProdutosPedidosRepository extends JpaRepository<ProdutosPedidos
 
 	List<ProdutosPedidosEntity> findByPedido(PedidoEntity pedido);
 	ProdutosPedidosEntity findByPedidoAndProduto(PedidoEntity pedido, ProdutoEntity produto);
+	List<ProdutosPedidosEntity>findByProduto(ProdutoEntity prodEntity);
 }
