@@ -5,6 +5,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.serratec.ecommerce.dto.ProdutoDTOSimples;
@@ -48,9 +49,9 @@ public class ProdutoService {
 	}
 
 	public ProdutoEntity findByNome(String nome) throws ProdutoNotFoundException {
-		ProdutoEntity produto = repository.findByAtivoTrueAndNome(nome);
-		if (produto.getNome() != null)
-			return produto;
+		Optional<ProdutoEntity> produto = Optional.ofNullable(repository.findByAtivoTrueAndNome(nome));
+		if (produto.isPresent())
+			return produto.get();
 		throw new ProdutoNotFoundException("Produto não encontrado!");
 	}
 

@@ -103,19 +103,21 @@ public class PedidoService {
 	public String update(PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, StatusUnacceptableException, EnderecoNotFoundException {
 		var pedidoEntity = getByNumero(pedido.getNumeroDoPedido());
 		if (pedidoEntity.getStatus() == StatusEnum.RECEBIDO) {
-			var produtoEntity = produtoService.findByNome(pedido.getProduto());
-			Optional<ProdutosPedidosEntity> produtosPedidos = Optional.ofNullable(produtosPedidosService.findByPedidoAndProduto(pedidoEntity, produtoEntity));
-			if (produtosPedidos.isPresent()) {
-				if (pedido.getQuantidade() <= produtoEntity.getQuantEstoque()) {
-					Integer quantidade = produtosPedidos.get().getQuantidade();
-					produtosPedidosService.update(produtosPedidos.get(), pedido.getQuantidade());
-					pedidoEntity.setTotalProdutos(pedidoEntity.getValorTotalDoPedido() + ((produtosPedidos.get().getQuantidade() - quantidade) * produtosPedidos.get().getPreco()));
-					repository.save(pedidoEntity);
-					return "Atualizado com sucesso!";
-				} else throw new EstoqueInsuficienteException("Estoque insuficiente!");
-			} else if (pedido.getQuantidade() <= produtoEntity.getQuantEstoque()) {
-				var produtosPedidosNovo = produtosPedidosService.create(pedidoEntity, pedido);
-				pedidoEntity.setTotalProdutos(pedidoEntity.getValorTotalDoPedido() + produtosPedidosNovo.getPreco() * produtosPedidosNovo.getQuantidade());
+			if (pedido.getProduto() != null) {
+				var produtoEntity = produtoService.findByNome(pedido.getProduto());
+				Optional<ProdutosPedidosEntity> produtosPedidos = Optional.ofNullable(produtosPedidosService.findByPedidoAndProduto(pedidoEntity, produtoEntity));
+				if (produtosPedidos.isPresent()) {
+					if (pedido.getQuantidade() <= produtoEntity.getQuantEstoque()) {
+						Integer quantidade = produtosPedidos.get().getQuantidade();
+						produtosPedidosService.update(produtosPedidos.get(), pedido.getQuantidade());
+						pedidoEntity.setTotalProdutos(pedidoEntity.getTotalProdutos() + ((produtosPedidos.get().getQuantidade() - quantidade) * produtosPedidos.get().getPreco()));
+						repository.save(pedidoEntity);
+						return "Atualizado com sucesso!";
+					} else throw new EstoqueInsuficienteException("Estoque insuficiente!");
+				} else if (pedido.getQuantidade() <= produtoEntity.getQuantEstoque()) {
+					var produtosPedidosNovo = produtosPedidosService.create(pedidoEntity, pedido);
+					pedidoEntity.setTotalProdutos(pedidoEntity.getTotalProdutos() + produtosPedidosNovo.getPreco() * produtosPedidosNovo.getQuantidade());
+				}
 			}
 			if (pedido.getEndEntrega() != null) {
 				pedidoEntity.setEndEntrega(pedido.getEndEntrega());

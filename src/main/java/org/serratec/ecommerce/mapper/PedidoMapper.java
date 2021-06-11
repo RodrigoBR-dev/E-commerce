@@ -33,10 +33,10 @@ public class PedidoMapper {
 	public PedidoDTOComp entityToDTOComp(PedidoEntity entity) {
 		var dto = new PedidoDTOComp();
 		dto.setNumeroDoPedido(entity.getNumeroDoPedido());
-		dto.setEndEntrega(entity.getEndEntrega());
-		dto.setFrete(entity.getFrete());
+//		dto.setEndEntrega(entity.getEndEntrega());
+//		dto.setFrete(entity.getFrete());
 		dto.setTotalProdutos(entity.getTotalProdutos());
-		dto.setValorTotalDoPedido(entity.getValorTotalDoPedido());
+//		dto.setValorTotalDoPedido(entity.getValorTotalDoPedido());
 		dto.setDataDoPedido(entity.getDataDoPedido());
 		dto.setDataEntrega(entity.getDataEntrega());
 		dto.setStatus(entity.getStatus());

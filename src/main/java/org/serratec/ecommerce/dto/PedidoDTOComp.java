@@ -13,11 +13,11 @@ public class PedidoDTOComp {
 
 	private Double totalProdutos;
 
-	private String endEntrega;
-
-	private Double frete;
-
-	private Double valorTotalDoPedido;
+//	private String endEntrega;
+//
+//	private Double frete;
+//
+//	private Double valorTotalDoPedido;
 
 	private LocalDate dataDoPedido;
 
@@ -51,29 +51,29 @@ public class PedidoDTOComp {
 		this.totalProdutos = totalProdutos;
 	}
 
-	public String getEndEntrega() {
-		return endEntrega;
-	}
-
-	public void setEndEntrega(String endEntrega) {
-		this.endEntrega = endEntrega;
-	}
-
-	public Double getFrete() {
-		return frete;
-	}
-
-	public void setFrete(Double frete) {
-		this.frete = frete;
-	}
-
-	public Double getValorTotalDoPedido() {
-		return valorTotalDoPedido;
-	}
-
-	public void setValorTotalDoPedido(Double valorTotalDoPedido) {
-		this.valorTotalDoPedido = valorTotalDoPedido;
-	}
+//	public String getEndEntrega() {
+//		return endEntrega;
+//	}
+//
+//	public void setEndEntrega(String endEntrega) {
+//		this.endEntrega = endEntrega;
+//	}
+//
+//	public Double getFrete() {
+//		return frete;
+//	}
+//
+//	public void setFrete(Double frete) {
+//		this.frete = frete;
+//	}
+//
+//	public Double getValorTotalDoPedido() {
+//		return valorTotalDoPedido;
+//	}
+//
+//	public void setValorTotalDoPedido(Double valorTotalDoPedido) {
+//		this.valorTotalDoPedido = valorTotalDoPedido;
+//	}
 
 	public LocalDate getDataDoPedido() {
 		return dataDoPedido;
