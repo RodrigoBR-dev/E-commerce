@@ -5,6 +5,7 @@ import org.serratec.ecommerce.exceptions.ClienteNotFoundException;
 import org.serratec.ecommerce.exceptions.EnderecoClienteNotAssociatedException;
 import org.serratec.ecommerce.exceptions.EnderecoNotFoundException;
 import org.serratec.ecommerce.exceptions.EstoqueInsuficienteException;
+import org.serratec.ecommerce.exceptions.NomeEnderecoExistenteException;
 import org.serratec.ecommerce.exceptions.NotclosedPedidoException;
 import org.serratec.ecommerce.exceptions.PedidoFinalizadoException;
 import org.serratec.ecommerce.exceptions.PedidoNotFoundException;
@@ -115,6 +116,13 @@ public class ExceptionController {
 	
 	@ExceptionHandler(AtributoEncontradoException.class)
 	public ResponseEntity<String> tratarAtributoEncontradoException(AtributoEncontradoException exception) {
+		return ResponseEntity.badRequest()
+				.header(MSG, exception.getMessage())
+				.build();
+	}
+	
+	@ExceptionHandler(NomeEnderecoExistenteException.class)
+	public ResponseEntity<String> tratarNomeEnderecoExistenteException(NomeEnderecoExistenteException exception) {
 		return ResponseEntity.badRequest()
 				.header(MSG, exception.getMessage())
 				.build();

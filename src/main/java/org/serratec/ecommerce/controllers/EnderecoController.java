@@ -6,6 +6,7 @@ import org.serratec.ecommerce.dto.EnderecoDTOComp;
 import org.serratec.ecommerce.dto.EnderecoDTONovo;
 import org.serratec.ecommerce.exceptions.ClienteNotFoundException;
 import org.serratec.ecommerce.exceptions.EnderecoNotFoundException;
+import org.serratec.ecommerce.exceptions.NomeEnderecoExistenteException;
 import org.serratec.ecommerce.exceptions.ViaCEPUnreachableException;
 import org.serratec.ecommerce.services.EnderecoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +39,12 @@ public class EnderecoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<EnderecoDTOComp> create(@RequestBody EnderecoDTONovo dto) throws ViaCEPUnreachableException, ClienteNotFoundException {
+	public ResponseEntity<EnderecoDTOComp> create(@RequestBody EnderecoDTONovo dto) throws ViaCEPUnreachableException, ClienteNotFoundException, EnderecoNotFoundException, NomeEnderecoExistenteException {
 		return new ResponseEntity<>(service.create(dto), HttpStatus.CREATED);
 	}
 	
 	@PutMapping
-	public ResponseEntity<EnderecoDTOComp> update(@RequestBody EnderecoDTONovo dto) throws EnderecoNotFoundException, ViaCEPUnreachableException, ClienteNotFoundException {
+	public ResponseEntity<EnderecoDTOComp> update(@RequestBody EnderecoDTONovo dto) throws EnderecoNotFoundException, ViaCEPUnreachableException, ClienteNotFoundException, NomeEnderecoExistenteException {
 		return new ResponseEntity<>(service.update(dto), HttpStatus.OK);
 	}
 	

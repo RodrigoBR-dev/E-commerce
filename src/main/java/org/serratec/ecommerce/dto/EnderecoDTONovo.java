@@ -17,6 +17,8 @@ public class EnderecoDTONovo {
 	
 	@NotNull
 	private String nome;
+	
+	private String novoNome;
 
 	public String getCep() {
 		return cep;
@@ -56,5 +58,13 @@ public class EnderecoDTONovo {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public String getNovoNome() {
+		return novoNome;
+	}
+
+	public void setNovoNome(String novoNome) {
+		this.novoNome = novoNome;
 	}
 }
