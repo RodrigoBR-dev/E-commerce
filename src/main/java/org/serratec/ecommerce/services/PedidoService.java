@@ -109,6 +109,11 @@ public class PedidoService {
 					if (pedido.getQuantidade() <= produtoEntity.getQuantEstoque()) {
 						Integer quantidade = produtosPedidos.get().getQuantidade();
 						produtosPedidosService.update(produtosPedidos.get(), pedido.getQuantidade());
+						List<ProdutosPedidosEntity> listaPedProd = produtosPedidosService.findByPedido(pedidoEntity);
+						if(listaPedProd.isEmpty()){
+							repository.delete(pedidoEntity);
+							return "Pedido sem produtos. Pedido deletado!";
+						}
 						pedidoEntity.setTotalProdutos(pedidoEntity.getTotalProdutos() + ((produtosPedidos.get().getQuantidade() - quantidade) * produtosPedidos.get().getPreco()));
 						repository.save(pedidoEntity);
 						return "Atualizado com sucesso!";

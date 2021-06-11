@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class ProdutosPedidosService {
 
 	@Autowired
-	ProdutosPedidosRepository repository;	
+	ProdutosPedidosRepository repository;
 
 	@Autowired
 	ProdutoService produtoService;
@@ -49,15 +49,13 @@ public class ProdutosPedidosService {
 		return repository.save(produtosPedidos);
 	}
 
-	public ProdutosPedidosEntity update(ProdutosPedidosEntity entity, Integer quantidade) throws PedidoNotFoundException, PedidoFinalizadoException, EstoqueInsuficienteException, StatusUnacceptableException {
-		if(quantidade == 0) {			
-			PedidoEntity pedEntity = entity.getPedido();
-			pedidoService.delete(pedEntity.getNumeroDoPedido());
+	public void update(ProdutosPedidosEntity entity, Integer quantidade) throws PedidoNotFoundException,
+			PedidoFinalizadoException, EstoqueInsuficienteException, StatusUnacceptableException {
+		if (quantidade == 0) {
 			repository.delete(entity);
-			return null;
-		}else {
-		entity.setQuantidade(quantidade);
-		return repository.save(entity);
+		} else {
+			entity.setQuantidade(quantidade);
+			repository.save(entity);
 		}
 	}
 
