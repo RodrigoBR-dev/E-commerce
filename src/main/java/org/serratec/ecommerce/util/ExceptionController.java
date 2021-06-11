@@ -13,6 +13,7 @@ import org.serratec.ecommerce.exceptions.StatusUnacceptableException;
 import org.serratec.ecommerce.exceptions.UsedCategoriaException;
 import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.serratec.ecommerce.exceptions.ViaCEPUnreachableException;
+import org.serratec.ecommerce.exceptions.AtributoEncontradoException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -108,6 +109,13 @@ public class ExceptionController {
 	@ExceptionHandler(StatusUnacceptableException.class)
 	public ResponseEntity<String> tratarStatusUnacceptableException(StatusUnacceptableException exception) {
 		return ResponseEntity.notFound()
+				.header(MSG, exception.getMessage())
+				.build();
+	}
+	
+	@ExceptionHandler(AtributoEncontradoException.class)
+	public ResponseEntity<String> tratarAtributoEncontradoException(AtributoEncontradoException exception) {
+		return ResponseEntity.badRequest()
 				.header(MSG, exception.getMessage())
 				.build();
 	}
