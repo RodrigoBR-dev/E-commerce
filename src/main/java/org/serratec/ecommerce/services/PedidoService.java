@@ -99,7 +99,7 @@ public class PedidoService {
 		return "Criado com sucesso";
 	}
 	
-	public String update(PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, StatusUnacceptableException, EnderecoNotFoundException {
+	public String update(PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, StatusUnacceptableException, EnderecoNotFoundException, PedidoFinalizadoException {
 		var pedidoEntity = getByNumero(pedido.getNumeroDoPedido());
 		if (pedidoEntity.getStatus() == StatusEnum.RECEBIDO) {
 			if (pedido.getProduto() != null) {
@@ -109,6 +109,11 @@ public class PedidoService {
 					if (pedido.getQuantidade() <= produtoEntity.getQuantEstoque()) {
 						Integer quantidade = produtosPedidos.get().getQuantidade();
 						produtosPedidosService.update(produtosPedidos.get(), pedido.getQuantidade());
+						List<ProdutosPedidosEntity> listaPedProd = produtosPedidosService.findByPedido(pedidoEntity);
+						if(listaPedProd.isEmpty()){
+							repository.delete(pedidoEntity);
+							return "Pedido sem produtos. Pedido deletado!";
+						}
 						pedidoEntity.setTotalProdutos(pedidoEntity.getTotalProdutos() + ((produtosPedidos.get().getQuantidade() - quantidade) * produtosPedidos.get().getPreco()));
 						repository.save(pedidoEntity);
 						return "Atualizado com sucesso!";

@@ -48,7 +48,7 @@ public class PedidoController {
 	}
 	
 	@PutMapping
-	public ResponseEntity<String> update(@RequestBody PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, StatusUnacceptableException, EnderecoNotFoundException {
+	public ResponseEntity<String> update(@RequestBody PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, StatusUnacceptableException, EnderecoNotFoundException, PedidoFinalizadoException {
 		return new ResponseEntity<>(service.update(pedido),  HttpStatus.OK);
 	}
 	

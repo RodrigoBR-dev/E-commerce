@@ -3,7 +3,6 @@ package org.serratec.ecommerce.controllers;
 import java.io.IOException;
 import java.util.List;
 
-import org.serratec.ecommerce.dto.ProdutoDTOSimples;
 import org.serratec.ecommerce.dto.ProdutoDTOUsuario;
 import org.serratec.ecommerce.entities.ImagemEntity;
 import org.serratec.ecommerce.exceptions.CategoriaNotFoundException;
