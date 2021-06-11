@@ -3,6 +3,7 @@ package org.serratec.ecommerce.mapper;
 import org.serratec.ecommerce.dto.ProdutoDTOSimples;
 import org.serratec.ecommerce.dto.ProdutoDTOUsuario;
 import org.serratec.ecommerce.entities.ProdutoEntity;
+import org.serratec.ecommerce.exceptions.EstoqueInsuficienteException;
 import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -17,7 +18,7 @@ public class ProdutoMapper {
 		dto.setPreco(entity.getPreco());
 		return dto;
 	}
-	public ProdutoEntity dtoSimplesToEntity(ProdutoDTOSimples dto) throws ValorNegativoException {
+	public ProdutoEntity dtoSimplesToEntity(ProdutoDTOSimples dto) throws ValorNegativoException, EstoqueInsuficienteException {
 		var entity = new ProdutoEntity();
 		entity.setNome(dto.getNome());
 		entity.setPreco(dto.getPreco());
@@ -43,7 +44,7 @@ public class ProdutoMapper {
 		usuario.setCategoria(entity.getCategoria().getNome());
 		return usuario;
 	}
-	public ProdutoEntity usuarioToEntity(ProdutoDTOUsuario usuario) throws ValorNegativoException {
+	public ProdutoEntity usuarioToEntity(ProdutoDTOUsuario usuario) throws ValorNegativoException, EstoqueInsuficienteException {
 		var entity = new ProdutoEntity ();
 		entity.setNome(usuario.getNome());
 		entity.setDescricao(usuario.getDescricao());

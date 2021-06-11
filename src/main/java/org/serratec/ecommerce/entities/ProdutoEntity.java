@@ -12,9 +12,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.serratec.ecommerce.exceptions.EstoqueInsuficienteException;
 import org.serratec.ecommerce.exceptions.ValorNegativoException;
 
 @Entity
@@ -34,7 +36,6 @@ public class ProdutoEntity {
 	@NotNull
 	private Integer quantEstoque;
 	private LocalDate dataCadastro;
-	private String imagem;
 	
 	@OneToMany(mappedBy = "produto")
 	private List<ProdutosPedidosEntity> produtosPedidos = new ArrayList<>();
@@ -44,6 +45,9 @@ public class ProdutoEntity {
 	private CategoriaEntity categoria;
 
 	private Boolean ativo = true;
+	
+	@OneToOne
+	private ImagemEntity imagem;
 
 	public Long getId() {
 		return id;
@@ -84,7 +88,10 @@ public class ProdutoEntity {
 		return quantEstoque;
 	}
 
-	public void setQuantEstoque(Integer quantEstoque) {
+	public void setQuantEstoque(Integer quantEstoque) throws EstoqueInsuficienteException {
+		if(quantEstoque < 0) {
+			throw new EstoqueInsuficienteException("O valor de estoque não pode ser negativo!");
+		}
 		this.quantEstoque = quantEstoque;
 	}
 
@@ -96,11 +103,11 @@ public class ProdutoEntity {
 		this.dataCadastro = dataCadastro;
 	}
 
-	public String getImagem() {
+	public ImagemEntity getImagem() {
 		return imagem;
 	}
 
-	public void setImagem(String imagem) {
+	public void setImagem(ImagemEntity imagem) {
 		this.imagem = imagem;
 	}
 

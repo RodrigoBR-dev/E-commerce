@@ -43,5 +43,10 @@ public class ImagemService {
 //		ProdutoEntity produto = prodService.findByProdutoId(id);
 		return repository.findById(1);
 	}
+	@Transactional
+	public void delete(Long id) {
+		repository.delete(repository.findByProdutoId(id));
+	}
+	
 	
 }

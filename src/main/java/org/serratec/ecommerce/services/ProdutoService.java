@@ -3,21 +3,21 @@ package org.serratec.ecommerce.services;
 import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.serratec.ecommerce.dto.ProdutoDTOSimples;
 import org.serratec.ecommerce.dto.ProdutoDTOUsuario;
 import org.serratec.ecommerce.entities.CategoriaEntity;
 import org.serratec.ecommerce.entities.ProdutoEntity;
+import org.serratec.ecommerce.entities.ProdutosPedidosEntity;
 import org.serratec.ecommerce.exceptions.CategoriaNotFoundException;
 import org.serratec.ecommerce.exceptions.EstoqueInsuficienteException;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
 import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.serratec.ecommerce.mapper.ProdutoMapper;
 import org.serratec.ecommerce.repositories.ProdutoRepository;
+import org.serratec.ecommerce.repositories.ProdutosPedidosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +29,8 @@ public class ProdutoService {
 	@Autowired
 	ProdutoRepository repository;
 	@Autowired
+	ProdutosPedidosRepository prodPedidosRepository;
+	@Autowired
 	ProdutoMapper mapper;
 	@Autowired
 	CategoriaService categoriaService;
@@ -36,17 +38,17 @@ public class ProdutoService {
 	ImagemService imagemService;
 
 	public List<ProdutoDTOUsuario> findAll() {
-		return repository.findAll().stream().map(mapper::entityToDTOUsuario).collect(Collectors.toList());
+		return repository.findAllByAtivoTrue().stream().map(mapper::entityToDTOUsuario).collect(Collectors.toList());
 	}
-
-	public List<ProdutoDTOSimples> findAllDTO() {
-		List<ProdutoEntity> listaEntity = repository.findAllByAtivoTrue();
-		List<ProdutoDTOSimples> listaDTO = new ArrayList<>();
-		for (ProdutoEntity elemento : listaEntity) {
-			listaDTO.add(mapper.entityToProdDTOSimples(elemento));
-		}
-		return listaDTO;
-	}
+//
+//	public List<ProdutoDTOUsuario> findAllDTO() {
+//		List<ProdutoEntity> listaEntity = repository.findAllByAtivoTrue();
+//		List<ProdutoDTOUsuario> listaDTO = new ArrayList<>();
+//		for (ProdutoEntity elemento : listaEntity) {
+//			listaDTO.add(mapper.entityToDTOUsuario(elemento));
+//		}
+//		return listaDTO;
+//	}
 
 	public ProdutoEntity findByNome(String nome) throws ProdutoNotFoundException {
 		Optional<ProdutoEntity> produto = Optional.ofNullable(repository.findByAtivoTrueAndNome(nome));
@@ -56,7 +58,7 @@ public class ProdutoService {
 	}
 
 	public ProdutoDTOUsuario findByNomeDTO(String nome) {
-		ProdutoEntity produto = repository.findByAtivoTrueAndNome(nome.toLowerCase());
+		ProdutoEntity produto = repository.findByAtivoTrueAndNome(nome);
 		return mapper.entityToDTOUsuario(produto);
 	}
 
@@ -64,33 +66,52 @@ public class ProdutoService {
 		return repository.findAllByAtivoTrueAndCategoria(categoria);
 	}
 
-	public ProdutoDTOUsuario create(ProdutoDTOUsuario produto, MultipartFile file) throws CategoriaNotFoundException, ValorNegativoException, ProdutoNotFoundException, IOException {
-
-			CategoriaEntity categoria = categoriaService.findByNome(produto.getCategoria());
-			ProdutoEntity prodEntity = mapper.usuarioToEntity(produto);
-			prodEntity.setCategoria(categoria);
-			prodEntity.setNome(prodEntity.getNome().toLowerCase());
-			prodEntity.setDataCadastro(LocalDate.now());
-			repository.save(prodEntity);
-			imagemService.create(prodEntity.getNome(), file);
-			return getImage(prodEntity);
+	public List<ProdutoDTOUsuario> findAllByCategoriaDTO(String categoriaNome) throws CategoriaNotFoundException {
+		CategoriaEntity categoria = categoriaService.findByNome(categoriaNome);
+		return findAllByCategoria(categoria).stream().map(mapper::entityToDTOUsuario).collect(Collectors.toList());
 	}
 
+	public ProdutoEntity findByNomeAll(String nome) throws ProdutoNotFoundException {
+		ProdutoEntity findByNome = repository.findByNome(nome);
+		if (findByNome.getNome() != null)
+			return findByNome;
+		throw new ProdutoNotFoundException("Produto não encontrado!");
+
+	}
+
+	public ProdutoDTOUsuario create(ProdutoDTOUsuario produto, MultipartFile file)throws CategoriaNotFoundException, ValorNegativoException, ProdutoNotFoundException, IOException, EstoqueInsuficienteException {
+//	
+//		if (findByNome(produto.getNome()) != null) {
+//			update(produto);
+//			return produto;
+//		} else {
+//		
+		CategoriaEntity categoria = categoriaService.findByNome(produto.getCategoria());
+		ProdutoEntity prodEntity = mapper.usuarioToEntity(produto);
+		prodEntity.setCategoria(categoria);
+		prodEntity.setNome(prodEntity.getNome().toLowerCase());
+		prodEntity.setDataCadastro(LocalDate.now());
+		repository.save(prodEntity);
+		imagemService.create(prodEntity.getNome(), file);
+		return getImage(prodEntity);
+			}
+//	}
+
 	public ProdutoDTOUsuario update(ProdutoDTOUsuario produtoTemp)
-			throws ProdutoNotFoundException, ValorNegativoException, CategoriaNotFoundException {
-		
+			throws ProdutoNotFoundException, ValorNegativoException, CategoriaNotFoundException, EstoqueInsuficienteException {
+
 		ProdutoEntity produto = findByNome(produtoTemp.getNome());
 		produto.setAtivo(true);
 
-		if (produtoTemp.getNome() != null) {
-			produto.setNome(produtoTemp.getNome());
+		if (produtoTemp.getNovoNome() != null) {
+			produto.setNome(produtoTemp.getNovoNome());
 		}
 		if (produtoTemp.getCategoria() != null) {
 			CategoriaEntity categoria = categoriaService.findByNome(produtoTemp.getCategoria());
 			produto.setCategoria(categoria);
 		}
 		if (produtoTemp.getDataCadastro() != null) {
-			produto.setDataCadastro(produtoTemp.getDataCadastro());
+			produto.setDataCadastro(LocalDate.now());
 		}
 
 		if (produtoTemp.getPreco() != null) {
@@ -108,8 +129,15 @@ public class ProdutoService {
 
 	public String delete(String nome) throws ProdutoNotFoundException {
 		ProdutoEntity produto = findByNome(nome);
-		produto.setAtivo(false);
-		repository.save(produto);
+		List<ProdutosPedidosEntity> listaProdPedidos = prodPedidosRepository.findByProduto(produto);
+		if(listaProdPedidos.isEmpty()) {
+			imagemService.delete(produto.getId());
+			repository.delete(produto);
+			
+		}else {
+			produto.setAtivo(false);
+			repository.save(produto);
+		}		
 		return "Deletado com sucesso";
 	}
 
@@ -122,23 +150,11 @@ public class ProdutoService {
 		}
 	}
 
-	public void retornaEstoque(ProdutoEntity produto, Integer estoque) {
+	public void retornaEstoque(ProdutoEntity produto, Integer estoque) throws EstoqueInsuficienteException {
 		produto.setQuantEstoque(produto.getQuantEstoque() + estoque);
 		repository.save(produto);
 	}
 
-	public List<ProdutoDTOUsuario> findAllByCategoriaDTO(String categoriaNome) throws CategoriaNotFoundException {
-		CategoriaEntity categoria = categoriaService.findByNome(categoriaNome);
-		return findAllByCategoria(categoria).stream().map(mapper::entityToDTOUsuario).collect(Collectors.toList());
-	}
-
-	public ProdutoEntity findByNomeAll(String nome) throws ProdutoNotFoundException {
-		ProdutoEntity findByNome = repository.findByNome(nome);
-		if (findByNome.getNome() != null)
-			return findByNome;
-		throw new ProdutoNotFoundException("Produto não encontrado!");
-
-	}
 
 	public ProdutoDTOUsuario getImage(ProdutoEntity entity) {
 		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("produto/{produtoId}/imagem")
@@ -147,4 +163,5 @@ public class ProdutoService {
 		prodDTO.setUrl(uri.toString());
 		return prodDTO;
 	}
+	
 }

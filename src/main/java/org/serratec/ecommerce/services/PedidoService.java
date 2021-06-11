@@ -69,7 +69,6 @@ public class PedidoService {
 		for (ProdutosPedidosEntity produtosPedidosEntity : produtosPedidos) {
 			var produtosPedidosDTO = new ProdutosPedidosDTO();
 			produtosPedidosDTO.setNome(produtosPedidosEntity.getProduto().getNome());
-			produtosPedidosDTO.setImagem(produtosPedidosEntity.getProduto().getImagem());
 			produtosPedidosDTO.setValor(produtosPedidosEntity.getPreco());
 			produtosPedidosDTO.setQuantidade(produtosPedidosEntity.getQuantidade());
 			
@@ -179,7 +178,7 @@ public class PedidoService {
 		throw new StatusUnacceptableException("Apenas pedidos em transporte podem ser entregues.");
 	}
 	
-	public String delete(Long numeroDoPedido) throws PedidoNotFoundException, PedidoFinalizadoException {
+	public String delete(Long numeroDoPedido) throws PedidoNotFoundException, PedidoFinalizadoException, EstoqueInsuficienteException {
 		PedidoEntity pedido = this.getByNumero(numeroDoPedido);
 		if(pedido.getStatus() == StatusEnum.ENTREGUE) throw new PedidoFinalizadoException("Pedidos finalizados nao podem ser deletados");
 		if (pedido.getStatus() == StatusEnum.FECHADO) {
