@@ -6,12 +6,7 @@ import org.serratec.ecommerce.dto.PedidoDTO;
 import org.serratec.ecommerce.entities.PedidoEntity;
 import org.serratec.ecommerce.entities.ProdutoEntity;
 import org.serratec.ecommerce.entities.ProdutosPedidosEntity;
-import org.serratec.ecommerce.exceptions.EstoqueInsuficienteException;
-import org.serratec.ecommerce.exceptions.PedidoFinalizadoException;
-import org.serratec.ecommerce.exceptions.PedidoNotFoundException;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
-import org.serratec.ecommerce.exceptions.StatusUnacceptableException;
-import org.serratec.ecommerce.repositories.PedidoRepository;
 import org.serratec.ecommerce.repositories.ProdutosPedidosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,8 +44,7 @@ public class ProdutosPedidosService {
 		return repository.save(produtosPedidos);
 	}
 
-	public void update(ProdutosPedidosEntity entity, Integer quantidade) throws PedidoNotFoundException,
-			PedidoFinalizadoException, EstoqueInsuficienteException, StatusUnacceptableException {
+	public void update(ProdutosPedidosEntity entity, Integer quantidade) {
 		if (quantidade == 0) {
 			repository.delete(entity);
 		} else {
