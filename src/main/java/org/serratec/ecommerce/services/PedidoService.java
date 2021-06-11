@@ -99,7 +99,7 @@ public class PedidoService {
 		return "Criado com sucesso";
 	}
 	
-	public String update(PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, StatusUnacceptableException, EnderecoNotFoundException {
+	public String update(PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, StatusUnacceptableException, EnderecoNotFoundException, PedidoFinalizadoException {
 		var pedidoEntity = getByNumero(pedido.getNumeroDoPedido());
 		if (pedidoEntity.getStatus() == StatusEnum.RECEBIDO) {
 			if (pedido.getProduto() != null) {
