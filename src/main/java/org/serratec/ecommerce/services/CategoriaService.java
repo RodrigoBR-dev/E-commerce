@@ -60,7 +60,9 @@ public class CategoriaService {
 	public CategoriaDTOAll create(CategoriaDTO categoriaDto) throws CategoriaExistenteException {
 		Optional<CategoriaEntity> categoria = repository.findByNome(categoriaDto.getNome());
 		if (categoria.isEmpty()) {
-			return mapper.entityToDTOAll(repository.save(mapper.dtoToEntity(categoriaDto)));
+			CategoriaEntity categoriaEntity = mapper.dtoToEntity(categoriaDto);
+			categoriaEntity.setAtivo(true);
+			return mapper.entityToDTOAll(repository.save(categoriaEntity));
 		}
 		throw new CategoriaExistenteException("A categoria que está tentando criar já existe!");
 	}
