@@ -1,7 +1,6 @@
 package org.serratec.ecommerce.services;
 
 import java.io.IOException;
-import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -40,20 +39,10 @@ public class ProdutoService {
 	public List<ProdutoDTOUsuario> findAll() {
 		return repository.findAllByAtivoTrue().stream().map(mapper::entityToDTOUsuario).collect(Collectors.toList());
 	}
-//
-//	public List<ProdutoDTOUsuario> findAllDTO() {
-//		List<ProdutoEntity> listaEntity = repository.findAllByAtivoTrue();
-//		List<ProdutoDTOUsuario> listaDTO = new ArrayList<>();
-//		for (ProdutoEntity elemento : listaEntity) {
-//			listaDTO.add(mapper.entityToDTOUsuario(elemento));
-//		}
-//		return listaDTO;
-//	}
 
 	public ProdutoEntity findByNome(String nome) throws ProdutoNotFoundException {
 		Optional<ProdutoEntity> produto = Optional.ofNullable(repository.findByAtivoTrueAndNome(nome));
-		if (produto.isPresent())
-			return produto.get();
+		if (produto.isPresent())return produto.get();
 		throw new ProdutoNotFoundException("Produto não encontrado!");
 	}
 
@@ -80,25 +69,23 @@ public class ProdutoService {
 	}
 
 	public ProdutoDTOUsuario create(ProdutoDTOUsuario produto, MultipartFile file)throws CategoriaNotFoundException, ValorNegativoException, ProdutoNotFoundException, IOException, EstoqueInsuficienteException {
-//	
-//		if (findByNome(produto.getNome()) != null) {
-//			update(produto);
-//			return produto;
-//		} else {
-//		
-		CategoriaEntity categoria = categoriaService.findByNome(produto.getCategoria());
-		ProdutoEntity prodEntity = mapper.usuarioToEntity(produto);
-		prodEntity.setCategoria(categoria);
-		prodEntity.setNome(prodEntity.getNome().toLowerCase());
-		prodEntity.setDataCadastro(LocalDate.now());
-		repository.save(prodEntity);
-		imagemService.create(prodEntity.getNome(), file);
-		return getImage(prodEntity);
-			}
-//	}
+		Optional<ProdutoEntity> produtoEntity = Optional.ofNullable(repository.findByNome(produto.getNome()));
+		if (produtoEntity.isPresent()) {
+			update(produto, file);
+			return produto;
+		} else {
+			CategoriaEntity categoria = categoriaService.findByNome(produto.getCategoria());
+			ProdutoEntity prodEntity = mapper.usuarioToEntity(produto);
+			prodEntity.setCategoria(categoria);
+			prodEntity.setNome(prodEntity.getNome());
+			prodEntity.setDataCadastro(LocalDate.now());
+			repository.save(prodEntity);
+			imagemService.create(prodEntity, file);
+			return getImage(prodEntity);
+		}
+	}
 
-	public ProdutoDTOUsuario update(ProdutoDTOUsuario produtoTemp)
-			throws ProdutoNotFoundException, ValorNegativoException, CategoriaNotFoundException, EstoqueInsuficienteException {
+	public ProdutoDTOUsuario update(ProdutoDTOUsuario produtoTemp) throws ProdutoNotFoundException, ValorNegativoException, CategoriaNotFoundException, EstoqueInsuficienteException {
 
 		ProdutoEntity produto = findByNome(produtoTemp.getNome());
 		produto.setAtivo(true);
@@ -123,7 +110,36 @@ public class ProdutoService {
 		if (produtoTemp.getQuantEstoque() != null) {
 			produto.setQuantEstoque(produtoTemp.getQuantEstoque());
 		}
-
+		return mapper.entityToDTOUsuario(repository.save(produto));
+	}
+	
+	public ProdutoDTOUsuario update(ProdutoDTOUsuario produtoTemp, MultipartFile file) throws ProdutoNotFoundException, ValorNegativoException, CategoriaNotFoundException, EstoqueInsuficienteException, IOException {
+		
+		ProdutoEntity produto = findByNome(produtoTemp.getNome());
+		produto.setAtivo(true);
+		imagemService.delete(produto);
+		imagemService.create(produto, file);
+		
+		if (produtoTemp.getNovoNome() != null) {
+			produto.setNome(produtoTemp.getNovoNome());
+		}
+		if (produtoTemp.getCategoria() != null) {
+			CategoriaEntity categoria = categoriaService.findByNome(produtoTemp.getCategoria());
+			produto.setCategoria(categoria);
+		}
+		if (produtoTemp.getDataCadastro() != null) {
+			produto.setDataCadastro(LocalDate.now());
+		}
+		
+		if (produtoTemp.getPreco() != null) {
+			produto.setPreco(produtoTemp.getPreco());
+		}
+		if (produtoTemp.getDescricao() != null) {
+			produto.setDescricao(produtoTemp.getDescricao());
+		}
+		if (produtoTemp.getQuantEstoque() != null) {
+			produto.setQuantEstoque(produtoTemp.getQuantEstoque());
+		}
 		return mapper.entityToDTOUsuario(repository.save(produto));
 	}
 
@@ -131,9 +147,8 @@ public class ProdutoService {
 		ProdutoEntity produto = findByNome(nome);
 		List<ProdutosPedidosEntity> listaProdPedidos = prodPedidosRepository.findByProduto(produto);
 		if(listaProdPedidos.isEmpty()) {
-			imagemService.delete(produto.getId());
+			imagemService.delete(produto);
 			repository.delete(produto);
-			
 		}else {
 			produto.setAtivo(false);
 			repository.save(produto);
@@ -157,11 +172,10 @@ public class ProdutoService {
 
 
 	public ProdutoDTOUsuario getImage(ProdutoEntity entity) {
-		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("produto/{produtoId}/imagem")
-				.buildAndExpand(entity.getId()).toUri();
+		var uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("produto/{produtoNome}/imagem")
+				.buildAndExpand(entity.getNome()).toUri();
 		ProdutoDTOUsuario prodDTO = mapper.entityToDTOUsuario(entity);
 		prodDTO.setUrl(uri.toString());
 		return prodDTO;
 	}
-	
 }

@@ -29,20 +29,20 @@ public class ProdutoMapper {
 	}
 	
 	public ProdutoDTOUsuario entityToDTOUsuario(ProdutoEntity entity) {
-		var usuario = new ProdutoDTOUsuario();
+		var dto = new ProdutoDTOUsuario();
 		var uri = ServletUriComponentsBuilder
 				.fromCurrentContextPath()
-				.path("produto/{produtoId}/imagem")
-				.buildAndExpand(entity.getId())
+				.path("produto/{produtoNome}/imagem")
+				.buildAndExpand(entity.getNome())
 				.toUri();
-		usuario.setNome(entity.getNome());
-		usuario.setDescricao(entity.getDescricao());
-		usuario.setDataCadastro(entity.getDataCadastro());
-		usuario.setQuantEstoque(entity.getQuantEstoque());
-		usuario.setPreco(entity.getPreco());
-		usuario.setUrl(uri.toString());
-		usuario.setCategoria(entity.getCategoria().getNome());
-		return usuario;
+		dto.setNome(entity.getNome());
+		dto.setDescricao(entity.getDescricao());
+		dto.setDataCadastro(entity.getDataCadastro());
+		dto.setQuantEstoque(entity.getQuantEstoque());
+		dto.setPreco(entity.getPreco());
+		dto.setUrl(uri.toString());
+		dto.setCategoria(entity.getCategoria().getNome());
+		return dto;
 	}
 	public ProdutoEntity usuarioToEntity(ProdutoDTOUsuario usuario) throws ValorNegativoException, EstoqueInsuficienteException {
 		var entity = new ProdutoEntity ();

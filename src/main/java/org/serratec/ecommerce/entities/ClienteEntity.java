@@ -49,6 +49,8 @@ public class ClienteEntity {
 	@Past
 	private LocalDate dataNascimento;
 	
+	private String token;
+	
 	@OneToMany(mappedBy = "cliente")
 	private List<EnderecoEntity> endereco = new ArrayList<>();
 	
@@ -143,5 +145,13 @@ public class ClienteEntity {
 
 	public void setPedidos(List<PedidoEntity> pedidos) {
 		this.pedidos = pedidos;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 }

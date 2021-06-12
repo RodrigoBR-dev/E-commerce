@@ -13,6 +13,7 @@ import org.serratec.ecommerce.exceptions.ClienteNotFoundException;
 import org.serratec.ecommerce.mapper.ClienteMapper;
 import org.serratec.ecommerce.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,6 +25,9 @@ public class ClienteService {
 	@Autowired
 	ClienteMapper mapper;
 	
+	@Autowired
+	BCryptPasswordEncoder bCrypt;
+	
 	public List<ClienteDTO> getAll() {
 		List<ClienteEntity> listaCliente = repository.findAllByAtivoTrue();
 		List<ClienteDTO> listaDTO = new ArrayList<>();
@@ -32,7 +36,6 @@ public class ClienteService {
 		}
 		return listaDTO;
 	}
-	
 	
 	public ClienteEntity findByUserNameOrEmail(String userNameOrEmail) throws ClienteNotFoundException { 
 		Optional<ClienteEntity> cliente = repository.findByAtivoTrueAndUserNameOrEmailOrCpf(userNameOrEmail, userNameOrEmail, userNameOrEmail); 
@@ -59,7 +62,7 @@ public class ClienteService {
 		if (email.isPresent()) throw new AtributoEncontradoException("Email já cadastrado!");
 		if (cpf.isPresent()) throw new AtributoEncontradoException("CPF já cadastrado!");
 		entity.setAtivo(true);
-		return mapper.entityToDTO(repository.save(entity));
+		return mapper.entityToDTO(repository.save(this.hash(entity)));
 	}
 	
 	public ClienteDTO update(ClienteDTO novoCliente) throws ClienteNotFoundException {		
@@ -79,7 +82,7 @@ public class ClienteService {
 		if (novoCliente.getDataNascimento() != null) {
 			cliente.setDataNascimento(novoCliente.getDataNascimento());
 		}
-		return mapper.entityToDTO(repository.save(cliente));
+		return mapper.entityToDTO(repository.save(this.hash(cliente)));
 	}
 	
 	public String reativaCliente(String cpf) throws ClienteNotFoundException {
@@ -94,5 +97,10 @@ public class ClienteService {
 		cliente.setAtivo(false);
 		repository.save(cliente);
 		return "Cliente deletado com sucesso!";
+	}
+	
+	private ClienteEntity hash(ClienteEntity cliente) {
+		cliente.setToken(bCrypt.encode(cliente.getEmail() + cliente.getCpf() + cliente.getDataNascimento()));
+		return cliente;
 	}
 }

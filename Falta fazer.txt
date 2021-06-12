@@ -1,4 +1,3 @@
 Finalizar envio de email para recuperação de senha
-resolver o get de imagem do produto;
 Sistema de login.
-buscar pedido por cliente
+Reativar cliente pelo login.

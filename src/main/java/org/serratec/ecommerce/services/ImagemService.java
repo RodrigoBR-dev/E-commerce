@@ -1,7 +1,6 @@
 package org.serratec.ecommerce.services;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import org.serratec.ecommerce.entities.ImagemEntity;
 import org.serratec.ecommerce.entities.ProdutoEntity;
@@ -26,27 +25,23 @@ public class ImagemService {
 	ProdutoService prodService;
 	
 	@Transactional
-	public ImagemEntity create(String nome,MultipartFile file) throws IOException, ProdutoNotFoundException {
-		Optional<ProdutoEntity> produto = Optional.ofNullable(prodRepository.findByNome(nome));
-		if (produto.isEmpty()) {
-			throw new ProdutoNotFoundException("Não existe produto com esse nome.");
-		}		
-		ImagemEntity imagem = new ImagemEntity();
+	public ImagemEntity create(ProdutoEntity produto,MultipartFile file) throws IOException {
+		var imagem = new ImagemEntity();
 		imagem.setNome("Imagem");
 		imagem.setMimeType(file.getContentType());
 		imagem.setData(file.getBytes());
-		imagem.setProduto(produto.get());
+		imagem.setProduto(produto);
 		return repository.save(imagem);				
 	}
+	
 	@Transactional
-	public ImagemEntity getImagem(Long id) throws ProdutoNotFoundException {
-//		ProdutoEntity produto = prodService.findByProdutoId(id);
-		return repository.findById(1);
-	}
-	@Transactional
-	public void delete(Long id) {
-		repository.delete(repository.findByProdutoId(id));
+	public ImagemEntity getImagem(String nome) throws ProdutoNotFoundException {
+		ProdutoEntity produto = prodService.findByNome(nome);
+		return repository.findByProduto(produto);
 	}
 	
-	
+	@Transactional
+	public void delete(ProdutoEntity produto) {
+		repository.delete(repository.findByProduto(produto));
+	}
 }

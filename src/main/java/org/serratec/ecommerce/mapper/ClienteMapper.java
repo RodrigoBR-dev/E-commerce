@@ -3,11 +3,16 @@ package org.serratec.ecommerce.mapper;
 import org.serratec.ecommerce.dto.ClienteDTO;
 import org.serratec.ecommerce.dto.ClienteDTONovo;
 import org.serratec.ecommerce.entities.ClienteEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ClienteMapper {
 
+	@Autowired
+	BCryptPasswordEncoder bCrypt;
+	
 	public ClienteDTO entityToDTO(ClienteEntity entity) {
 		var dto = new ClienteDTO();
 		dto.setUserName(entity.getUserName());
@@ -33,7 +38,7 @@ public class ClienteMapper {
 	public ClienteEntity clienteDTOnovoToEntity(ClienteDTONovo dto) {
 		var entity = new ClienteEntity();
 		entity.setEmail(dto.getEmail());
-		entity.setSenha(dto.getSenha());
+		entity.setSenha(bCrypt.encode(dto.getSenha()));
 		entity.setUserName(dto.getUserName());
 		entity.setNome(dto.getNome());
 		entity.setCpf(dto.getCpf());
