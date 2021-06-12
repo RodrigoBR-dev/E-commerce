@@ -1,3 +1,0 @@
-Finalizar envio de email para recuperação de senha
-Sistema de login.
-Reativar cliente pelo login.

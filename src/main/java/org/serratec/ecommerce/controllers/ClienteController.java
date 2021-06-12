@@ -2,6 +2,8 @@ package org.serratec.ecommerce.controllers;
 
 import java.util.List;
 
+import javax.mail.MessagingException;
+
 import org.serratec.ecommerce.dto.ClienteDTO;
 import org.serratec.ecommerce.dto.ClienteDTONovo;
 import org.serratec.ecommerce.exceptions.AtributoEncontradoException;
@@ -37,12 +39,23 @@ public class ClienteController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ClienteDTO> create(@RequestBody ClienteDTONovo entity) throws AtributoEncontradoException {
+	public ResponseEntity<ClienteDTO> create(@RequestBody ClienteDTONovo entity) throws AtributoEncontradoException, MessagingException {
 		return new ResponseEntity<>(service.create(entity), HttpStatus.CREATED);
 	}
+	
+	@PostMapping("/recupera/{cpf}")
+	public ResponseEntity<String> recupera(@PathVariable String cpf) throws ClienteNotFoundException, MessagingException {
+		return new ResponseEntity<>(service.recuperarSenha(cpf), HttpStatus.OK);
+	}
+	
+	@PutMapping("/recupera/token/{token}")
+	public ResponseEntity<String> recuperarSenha(@PathVariable String token, @RequestBody ClienteDTONovo entity) throws ClienteNotFoundException, MessagingException {
+		return new ResponseEntity<>(service.updateSenha(token, entity), HttpStatus.OK);
+	}
+	
 
 	@PutMapping
-	public ResponseEntity<ClienteDTO> update(@RequestBody ClienteDTO entity) throws ClienteNotFoundException {
+	public ResponseEntity<ClienteDTO> update(@RequestBody ClienteDTO entity) throws ClienteNotFoundException, MessagingException {
 		return new ResponseEntity<>(service.update(entity), HttpStatus.OK);
 	}
 	

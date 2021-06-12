@@ -1,22 +1,25 @@
 package org.serratec.ecommerce.services;
 
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 
 @Configuration
 public class EmailSenderService {
 	
 	@Autowired
-	private JavaMailSender mailSender;
+	JavaMailSender javaMail;
 	
-	public void sendSimpleMessage(String destinatario, String assunto, String texto) {
-		SimpleMailMessage mensagem = new SimpleMailMessage();
-		mensagem.setFrom("grupo6apirest@gmail.com");
-		mensagem.setTo(destinatario);
-		mensagem.setSubject(assunto);
-		mensagem.setText(texto);
-		mailSender.send(mensagem);
+	public void sendSimpleMessage(String destinatario, String assunto, String texto) throws MessagingException {
+		var mail = javaMail.createMimeMessage();
+		mail.setSubject(assunto);
+		var helper = new MimeMessageHelper(mail, true);
+		helper.setFrom("grupo6apirest@gmail.com");
+		helper.setTo(destinatario);
+		helper.setText(texto,true);
+		javaMail.send(mail);
 	}
 }

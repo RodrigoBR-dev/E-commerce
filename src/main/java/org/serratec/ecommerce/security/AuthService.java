@@ -18,7 +18,7 @@ public class AuthService implements UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<ClienteEntity> cliente = repository.findByUserNameOrEmailOrCpf(username, username, username);
+		Optional<ClienteEntity> cliente = repository.findByAtivoTrueAndUserNameOrEmailOrCpf(username, username, username);
 		if (cliente.isEmpty()) {
 			return null;
 		}

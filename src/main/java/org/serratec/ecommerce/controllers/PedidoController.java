@@ -2,6 +2,8 @@ package org.serratec.ecommerce.controllers;
 
 import java.util.List;
 
+import javax.mail.MessagingException;
+
 import org.serratec.ecommerce.dto.PedidoDTO;
 import org.serratec.ecommerce.dto.PedidoDTOAll;
 import org.serratec.ecommerce.dto.PedidoDTOComp;
@@ -58,22 +60,22 @@ public class PedidoController {
 	}
 	
 	@PutMapping("/pagamento/{numeroDoPedido}")
-	public ResponseEntity<String> payment(@PathVariable Long numeroDoPedido) throws PedidoNotFoundException, StatusUnacceptableException, EnderecoNotFoundException {
+	public ResponseEntity<String> payment(@PathVariable Long numeroDoPedido) throws PedidoNotFoundException, StatusUnacceptableException, EnderecoNotFoundException, MessagingException {
 		return new ResponseEntity<>(service.pagar(numeroDoPedido), HttpStatus.OK);
 	}
 	
 	@PutMapping("/fechamento/{numeroDoPedido}")
-	public ResponseEntity<String> close(@PathVariable Long numeroDoPedido) throws PedidoNotFoundException, EstoqueInsuficienteException,  StatusUnacceptableException {
+	public ResponseEntity<String> close(@PathVariable Long numeroDoPedido) throws PedidoNotFoundException, EstoqueInsuficienteException,  StatusUnacceptableException, MessagingException {
 		return new ResponseEntity<>(service.fechar(numeroDoPedido), HttpStatus.OK);
 	}
 	
 	@PutMapping("/transporte/{numeroDoPedido}")
-	public ResponseEntity<String> delivery(@PathVariable Long numeroDoPedido) throws PedidoNotFoundException, StatusUnacceptableException {
+	public ResponseEntity<String> delivery(@PathVariable Long numeroDoPedido) throws PedidoNotFoundException, StatusUnacceptableException, MessagingException {
 		return new ResponseEntity<>(service.transportar(numeroDoPedido), HttpStatus.OK);
 	}
 	
 	@PutMapping("/finalizado/{numeroDoPedido}")
-	public ResponseEntity<String> done(@PathVariable Long numeroDoPedido) throws PedidoNotFoundException, StatusUnacceptableException {
+	public ResponseEntity<String> done(@PathVariable Long numeroDoPedido) throws PedidoNotFoundException, StatusUnacceptableException, MessagingException {
 		return new ResponseEntity<>(service.entregar(numeroDoPedido), HttpStatus.OK);
 	}
 	

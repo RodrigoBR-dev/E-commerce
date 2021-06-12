@@ -4,6 +4,7 @@ import org.serratec.ecommerce.exceptions.AtributoEncontradoException;
 import org.serratec.ecommerce.exceptions.CategoriaExistenteException;
 import org.serratec.ecommerce.exceptions.CategoriaNotFoundException;
 import org.serratec.ecommerce.exceptions.ClienteNotFoundException;
+import org.serratec.ecommerce.exceptions.DisabledClienteException;
 import org.serratec.ecommerce.exceptions.EnderecoClienteNotAssociatedException;
 import org.serratec.ecommerce.exceptions.EnderecoNotFoundException;
 import org.serratec.ecommerce.exceptions.EstoqueInsuficienteException;
@@ -15,6 +16,7 @@ import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
 import org.serratec.ecommerce.exceptions.StatusUnacceptableException;
 import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.serratec.ecommerce.exceptions.ViaCEPUnreachableException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -124,6 +126,13 @@ public class ExceptionController {
 	@ExceptionHandler(CategoriaExistenteException.class)
 	public ResponseEntity<String> tratarCategoriaExistenteException(CategoriaExistenteException exception) {
 		return ResponseEntity.badRequest()
+				.header(MSG, exception.getMessage())
+				.build();
+	}
+	
+	@ExceptionHandler(DisabledClienteException.class)
+	public ResponseEntity<String> tratarDisabledClienteException(DisabledClienteException exception) {
+		return ResponseEntity.status(HttpStatus.UPGRADE_REQUIRED)
 				.header(MSG, exception.getMessage())
 				.build();
 	}

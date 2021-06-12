@@ -15,7 +15,7 @@ public class UserSS implements UserDetails {
 	
 	public UserSS(Long id, String userName, String password) {
 		super();
-		this.id = id;
+		this.setId(id);
 		this.userName = userName;
 		this.password = password;
 	}
@@ -53,5 +53,13 @@ public class UserSS implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 }
