@@ -1,8 +1,8 @@
 package org.serratec.ecommerce.config;
 
-import org.serratec.ecommerce.security.JWTAuthorizationFilter;
 import org.serratec.ecommerce.security.AuthService;
 import org.serratec.ecommerce.security.JWTAuthenticationFilter;
+import org.serratec.ecommerce.security.JWTAuthorizationFilter;
 import org.serratec.ecommerce.security.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +20,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private static final String[] AUTH_WHITELIST = {"/cliente"};
+	private static final String[] CLIENTE_WHITELIST = {"/cliente"};
+	private static final String[] PRODUTO_WHITELIST = {"/produto/**"};
+	private static final String[] CATEGORIA_WHITELIST = {"/categoria/**"};
+	private static final String[] UTIL_WHITELIST = {"/swagger-ui/**", "/v3/api-docs/**"};
+
+	
 	
 	@Autowired
 	AuthService service;
@@ -31,7 +36,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
-		http.authorizeRequests().antMatchers(HttpMethod.POST, AUTH_WHITELIST).permitAll().anyRequest().authenticated();
+		http.authorizeRequests()
+			.antMatchers(CATEGORIA_WHITELIST).permitAll()
+			.antMatchers(HttpMethod.POST, CLIENTE_WHITELIST).permitAll()
+			.antMatchers(PRODUTO_WHITELIST).permitAll()
+			.antMatchers(UTIL_WHITELIST).permitAll()
+		.anyRequest().authenticated();		
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(new JWTAuthenticationFilter(authenticationManager(), jwtUtil),
 				UsernamePasswordAuthenticationFilter.class);
