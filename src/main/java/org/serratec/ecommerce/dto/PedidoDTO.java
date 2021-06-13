@@ -9,7 +9,7 @@ public class PedidoDTO {
 	private String endEntrega;
 
 	private String cliente;
-
+	
 	private Integer quantidade;
 
 	public Long getNumeroDoPedido() {

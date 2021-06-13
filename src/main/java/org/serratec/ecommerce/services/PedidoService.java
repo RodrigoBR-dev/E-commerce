@@ -106,6 +106,7 @@ public class PedidoService {
 	}
 	
 	public String create(PedidoDTO pedidoNovo) throws ProdutoNotFoundException, ClienteNotFoundException, EnderecoNotFoundException, ValorNegativoException {
+		this.verificaQuantidade(pedidoNovo.getQuantidade());
 		PedidoEntity pedido = mapper.toEntity(pedidoNovo);
 		ClienteEntity cliente = clienteService.findByUserNameOrEmail(pedidoNovo.getCliente());
 		pedido.setCliente(cliente);
@@ -119,6 +120,7 @@ public class PedidoService {
 	}
 	
 	public String update(PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, StatusUnacceptableException, EnderecoNotFoundException, PedidoFinalizadoException, ValorNegativoException {
+		this.verificaQuantidade(pedido.getQuantidade());
 		var pedidoEntity = getByNumero(pedido.getNumeroDoPedido());
 		if (pedidoEntity.getStatus() == StatusEnum.RECEBIDO) {
 			if (pedido.getProduto() != null) {
@@ -294,5 +296,11 @@ public class PedidoService {
 		int prazoFim = sedex.indexOf("</PrazoEntrega>");
 		pedido.setDataEntrega(pedido.getDataDoPedido().plusDays(Long.parseLong(sedex.substring(prazoInicio, prazoFim)) + 1));
 		return pedido;
+	}
+	private void verificaQuantidade(Integer quantidade) throws ValorNegativoException {
+		if(quantidade < 0 ) {
+			throw new ValorNegativoException("Não é possível inserir uma quantidade negativa!");
+		}
+		
 	}
 }
