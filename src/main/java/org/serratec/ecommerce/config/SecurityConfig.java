@@ -21,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final String[] CLIENTE_WHITELIST = {"/cliente"};
+	private static final String[] CLIENTE_SENHA_WHITELIST = {"/cliente/recupera/**"};
 	private static final String[] PRODUTO_WHITELIST = {"/produto/**"};
 	private static final String[] CATEGORIA_WHITELIST = {"/categoria/**"};
 	private static final String[] PEDIDO_WHITELIST = {"/pedido"};
@@ -40,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 			.antMatchers(PRODUTO_WHITELIST).permitAll()
 			.antMatchers(CATEGORIA_WHITELIST).permitAll()
+			.antMatchers(CLIENTE_SENHA_WHITELIST).permitAll()
 			.antMatchers(HttpMethod.POST, CLIENTE_WHITELIST).permitAll()
 			.antMatchers(HttpMethod.DELETE, PEDIDO_WHITELIST).permitAll()
 			.antMatchers(HttpMethod.GET, PEDIDO_WHITELIST).permitAll()

@@ -14,14 +14,13 @@ import org.serratec.ecommerce.exceptions.PedidoFinalizadoException;
 import org.serratec.ecommerce.exceptions.PedidoNotFoundException;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
 import org.serratec.ecommerce.exceptions.StatusUnacceptableException;
+import org.serratec.ecommerce.exceptions.TokeExpiredException;
 import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.serratec.ecommerce.exceptions.ViaCEPUnreachableException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import io.jsonwebtoken.ExpiredJwtException;
 
 @RestControllerAdvice
 public class ExceptionController {
@@ -139,8 +138,8 @@ public class ExceptionController {
 				.build();
 	}
 	
-	@ExceptionHandler(ExpiredJwtException.class)
-	public ResponseEntity<String> tratarExpiredJwtException(ExpiredJwtException exception) {
+	@ExceptionHandler(TokeExpiredException.class)
+	public ResponseEntity<String> tratarTokeExpiredException(TokeExpiredException exception) {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 				.header(MSG, exception.getMessage())
 				.build();

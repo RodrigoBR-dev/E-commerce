@@ -80,7 +80,7 @@ public class PedidoController {
 	}
 	
 	@DeleteMapping("/{numeroDoPedido}")
-	public ResponseEntity<String> delete(@PathVariable  Long numeroDoPedido) throws PedidoNotFoundException, PedidoFinalizadoException, EstoqueInsuficienteException {
+	public ResponseEntity<String> delete(@PathVariable  Long numeroDoPedido) throws PedidoNotFoundException, PedidoFinalizadoException, EstoqueInsuficienteException, MessagingException {
 		return new ResponseEntity<>(service.delete(numeroDoPedido), HttpStatus.OK);
 	}
 }
