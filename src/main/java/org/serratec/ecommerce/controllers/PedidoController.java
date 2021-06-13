@@ -12,6 +12,7 @@ import org.serratec.ecommerce.exceptions.PedidoFinalizadoException;
 import org.serratec.ecommerce.exceptions.PedidoNotFoundException;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
 import org.serratec.ecommerce.exceptions.StatusUnacceptableException;
+import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.serratec.ecommerce.services.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,12 +49,12 @@ public class PedidoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<String> create(@RequestBody PedidoDTO pedido) throws ProdutoNotFoundException, ClienteNotFoundException, EnderecoNotFoundException {
+	public ResponseEntity<String> create(@RequestBody PedidoDTO pedido) throws ProdutoNotFoundException, ClienteNotFoundException, EnderecoNotFoundException, ValorNegativoException {
 		return new ResponseEntity<>(service.create(pedido), HttpStatus.CREATED);
 	}
 	
 	@PutMapping
-	public ResponseEntity<String> update(@RequestBody PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, StatusUnacceptableException, EnderecoNotFoundException, PedidoFinalizadoException {
+	public ResponseEntity<String> update(@RequestBody PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, StatusUnacceptableException, EnderecoNotFoundException, PedidoFinalizadoException, ValorNegativoException {
 		return new ResponseEntity<>(service.update(pedido),  HttpStatus.OK);
 	}
 	

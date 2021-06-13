@@ -7,6 +7,7 @@ import org.serratec.ecommerce.entities.PedidoEntity;
 import org.serratec.ecommerce.entities.ProdutoEntity;
 import org.serratec.ecommerce.entities.ProdutosPedidosEntity;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
+import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.serratec.ecommerce.repositories.ProdutosPedidosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class ProdutosPedidosService {
 		return repository.findByPedidoAndProduto(pedido, produto);
 	}
 
-	public ProdutosPedidosEntity create(PedidoEntity pedido, PedidoDTO dto) throws ProdutoNotFoundException {
+	public ProdutosPedidosEntity create(PedidoEntity pedido, PedidoDTO dto) throws ProdutoNotFoundException, ValorNegativoException {
 		var produtosPedidos = new ProdutosPedidosEntity();
 		produtosPedidos.setPedido(pedido);
 		produtosPedidos.setQuantidade(dto.getQuantidade());
@@ -44,7 +45,7 @@ public class ProdutosPedidosService {
 		return repository.save(produtosPedidos);
 	}
 
-	public void update(ProdutosPedidosEntity entity, Integer quantidade) {
+	public void update(ProdutosPedidosEntity entity, Integer quantidade) throws ValorNegativoException {
 		if (quantidade == 0) {
 			repository.delete(entity);
 		} else {

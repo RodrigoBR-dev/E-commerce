@@ -8,6 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.serratec.ecommerce.exceptions.ValorNegativoException;
+
 @Entity
 @Table(name = "produtos_pedidos")
 public class ProdutosPedidosEntity {
@@ -47,7 +49,7 @@ public class ProdutosPedidosEntity {
 	public Integer getQuantidade() {
 		return quantidade;
 	}
-	public void setQuantidade(Integer quantidade) {
+	public void setQuantidade(Integer quantidade){
 		this.quantidade = quantidade;
 	}
 	public Double getPreco() {
