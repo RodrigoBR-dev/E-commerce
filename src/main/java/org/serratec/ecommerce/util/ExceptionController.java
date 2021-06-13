@@ -21,6 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import io.jsonwebtoken.ExpiredJwtException;
+
 @RestControllerAdvice
 public class ExceptionController {
 
@@ -133,6 +135,13 @@ public class ExceptionController {
 	@ExceptionHandler(DisabledClienteException.class)
 	public ResponseEntity<String> tratarDisabledClienteException(DisabledClienteException exception) {
 		return ResponseEntity.status(HttpStatus.UPGRADE_REQUIRED)
+				.header(MSG, exception.getMessage())
+				.build();
+	}
+	
+	@ExceptionHandler(ExpiredJwtException.class)
+	public ResponseEntity<String> tratarExpiredJwtException(ExpiredJwtException exception) {
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 				.header(MSG, exception.getMessage())
 				.build();
 	}
