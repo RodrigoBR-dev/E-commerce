@@ -24,6 +24,7 @@ import org.serratec.ecommerce.exceptions.PedidoFinalizadoException;
 import org.serratec.ecommerce.exceptions.PedidoNotFoundException;
 import org.serratec.ecommerce.exceptions.ProdutoNotFoundException;
 import org.serratec.ecommerce.exceptions.StatusUnacceptableException;
+import org.serratec.ecommerce.exceptions.ValorNegativoException;
 import org.serratec.ecommerce.mapper.PedidoMapper;
 import org.serratec.ecommerce.mapper.ProdutoMapper;
 import org.serratec.ecommerce.repositories.PedidoRepository;
@@ -104,7 +105,7 @@ public class PedidoService {
 		return pedido.get();
 	}
 	
-	public String create(PedidoDTO pedidoNovo) throws ProdutoNotFoundException, ClienteNotFoundException, EnderecoNotFoundException {
+	public String create(PedidoDTO pedidoNovo) throws ProdutoNotFoundException, ClienteNotFoundException, EnderecoNotFoundException, ValorNegativoException {
 		PedidoEntity pedido = mapper.toEntity(pedidoNovo);
 		ClienteEntity cliente = clienteService.findByUserNameOrEmail(pedidoNovo.getCliente());
 		pedido.setCliente(cliente);
@@ -117,7 +118,7 @@ public class PedidoService {
 		return "Criado com sucesso";
 	}
 	
-	public String update(PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, StatusUnacceptableException, EnderecoNotFoundException, PedidoFinalizadoException {
+	public String update(PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, StatusUnacceptableException, EnderecoNotFoundException, PedidoFinalizadoException, ValorNegativoException {
 		var pedidoEntity = getByNumero(pedido.getNumeroDoPedido());
 		if (pedidoEntity.getStatus() == StatusEnum.RECEBIDO) {
 			if (pedido.getProduto() != null) {
