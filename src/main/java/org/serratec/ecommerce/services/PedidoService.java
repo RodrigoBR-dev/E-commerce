@@ -15,6 +15,7 @@ import org.serratec.ecommerce.dto.ProdutoDTOUsuario;
 import org.serratec.ecommerce.dto.ProdutosPedidosDTO;
 import org.serratec.ecommerce.entities.ClienteEntity;
 import org.serratec.ecommerce.entities.PedidoEntity;
+import org.serratec.ecommerce.entities.ProdutoEntity;
 import org.serratec.ecommerce.entities.ProdutosPedidosEntity;
 import org.serratec.ecommerce.enums.StatusEnum;
 import org.serratec.ecommerce.exceptions.ClienteNotFoundException;
@@ -105,10 +106,12 @@ public class PedidoService {
 		return pedido.get();
 	}
 	
-	public String create(PedidoDTO pedidoNovo) throws ProdutoNotFoundException, ClienteNotFoundException, EnderecoNotFoundException, ValorNegativoException {
+	public PedidoDTOComp create(PedidoDTO pedidoNovo) throws ProdutoNotFoundException, ClienteNotFoundException, EnderecoNotFoundException, ValorNegativoException, EstoqueInsuficienteException, PedidoNotFoundException {
 		this.verificaQuantidade(pedidoNovo.getQuantidade());
 		PedidoEntity pedido = mapper.toEntity(pedidoNovo);
 		ClienteEntity cliente = clienteService.findByUserNameOrEmail(pedidoNovo.getCliente());
+		ProdutoEntity produto = produtoService.findByNome(pedidoNovo.getProduto());
+		if (pedidoNovo.getQuantidade() > produto.getQuantEstoque()) throw new EstoqueInsuficienteException("Estoque insuficiente!");
 		pedido.setCliente(cliente);
 		pedido.setDataDoPedido(LocalDate.now());
 		pedido.setStatus(StatusEnum.RECEBIDO);
@@ -116,10 +119,11 @@ public class PedidoService {
 		var produtosPedidos = produtosPedidosService.create(pedido, pedidoNovo);
 		pedido.setTotalProdutos(produtosPedidos.getPreco() * produtosPedidos.getQuantidade());
 		repository.save(this.sedex(pedido));
-		return "Criado com sucesso";
+		
+		return this.getByNumeroDTO(pedido.getNumeroDoPedido());
 	}
 	
-	public String update(PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, StatusUnacceptableException, EnderecoNotFoundException, PedidoFinalizadoException, ValorNegativoException {
+	public PedidoDTOComp update(PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, StatusUnacceptableException, EnderecoNotFoundException, PedidoFinalizadoException, ValorNegativoException {
 		this.verificaQuantidade(pedido.getQuantidade());
 		var pedidoEntity = getByNumero(pedido.getNumeroDoPedido());
 		if (pedidoEntity.getStatus() == StatusEnum.RECEBIDO) {
@@ -134,10 +138,10 @@ public class PedidoService {
 						List<ProdutosPedidosEntity> listaPedProd = produtosPedidosService.findByPedido(pedidoEntity);
 						if(listaPedProd.isEmpty()){
 							repository.delete(pedidoEntity);
-							return "Pedido sem produtos. Pedido deletado!";
+							throw new PedidoFinalizadoException("Pedido não tem mais produtos. Pedido excluído!");
 						}
 						repository.save(pedidoEntity);
-						return "Atualizado com sucesso!";
+						return this.getByNumeroDTO(pedidoEntity.getNumeroDoPedido());
 					} else throw new EstoqueInsuficienteException("Estoque insuficiente!");
 				} else if (pedido.getQuantidade() <= produtoEntity.getQuantEstoque()) {
 					var produtosPedidosNovo = produtosPedidosService.create(pedidoEntity, pedido);
@@ -151,7 +155,7 @@ public class PedidoService {
 				pedidoEntity = this.sedex(pedidoEntity);
 			}
 			repository.save(pedidoEntity);
-			return "Atualizado com sucesso!";
+			return this.getByNumeroDTO(pedidoEntity.getNumeroDoPedido());
 		}
 		throw new StatusUnacceptableException("Apenas pedidos recebidos podem ser editados.");
 	}

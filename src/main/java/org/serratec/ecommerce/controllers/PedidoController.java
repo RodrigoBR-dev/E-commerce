@@ -51,12 +51,12 @@ public class PedidoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<String> create(@RequestBody PedidoDTO pedido) throws ProdutoNotFoundException, ClienteNotFoundException, EnderecoNotFoundException, ValorNegativoException {
+	public ResponseEntity<PedidoDTOComp> create(@RequestBody PedidoDTO pedido) throws ProdutoNotFoundException, ClienteNotFoundException, EnderecoNotFoundException, ValorNegativoException, EstoqueInsuficienteException, PedidoNotFoundException {
 		return new ResponseEntity<>(service.create(pedido), HttpStatus.CREATED);
 	}
 	
 	@PutMapping
-	public ResponseEntity<String> update(@RequestBody PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, StatusUnacceptableException, EnderecoNotFoundException, PedidoFinalizadoException, ValorNegativoException {
+	public ResponseEntity<PedidoDTOComp> update(@RequestBody PedidoDTO pedido) throws PedidoNotFoundException, ProdutoNotFoundException, EstoqueInsuficienteException, StatusUnacceptableException, EnderecoNotFoundException, PedidoFinalizadoException, ValorNegativoException {
 		return new ResponseEntity<>(service.update(pedido),  HttpStatus.OK);
 	}
 	
