@@ -8,6 +8,7 @@ import org.serratec.ecommerce.exceptions.DisabledClienteException;
 import org.serratec.ecommerce.exceptions.EnderecoClienteNotAssociatedException;
 import org.serratec.ecommerce.exceptions.EnderecoNotFoundException;
 import org.serratec.ecommerce.exceptions.EstoqueInsuficienteException;
+import org.serratec.ecommerce.exceptions.InvalidTokenException;
 import org.serratec.ecommerce.exceptions.NomeEnderecoExistenteException;
 import org.serratec.ecommerce.exceptions.NotclosedPedidoException;
 import org.serratec.ecommerce.exceptions.PedidoFinalizadoException;
@@ -30,6 +31,13 @@ public class ExceptionController {
 	@ExceptionHandler(EnderecoNotFoundException.class)
 	public ResponseEntity<String> tratarEnderecoNotFoundException(EnderecoNotFoundException exception) {
 		return ResponseEntity.notFound()
+				.header(MSG, exception.getMessage())
+				.build();
+	}
+
+	@ExceptionHandler(InvalidTokenException.class)
+	public ResponseEntity<String> tratarInvalidTokenException(InvalidTokenException exception) {
+		return ResponseEntity.badRequest()
 				.header(MSG, exception.getMessage())
 				.build();
 	}

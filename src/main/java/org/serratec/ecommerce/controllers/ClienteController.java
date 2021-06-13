@@ -8,6 +8,7 @@ import org.serratec.ecommerce.dto.ClienteDTO;
 import org.serratec.ecommerce.dto.ClienteDTONovo;
 import org.serratec.ecommerce.exceptions.AtributoEncontradoException;
 import org.serratec.ecommerce.exceptions.ClienteNotFoundException;
+import org.serratec.ecommerce.exceptions.InvalidTokenException;
 import org.serratec.ecommerce.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -48,12 +50,11 @@ public class ClienteController {
 		return new ResponseEntity<>(service.recuperarSenha(cpf), HttpStatus.OK);
 	}
 	
-	@PutMapping("/recupera/token/{token}")
-	public ResponseEntity<String> recuperarSenha(@PathVariable String token, @RequestBody ClienteDTONovo entity) throws ClienteNotFoundException, MessagingException {
+	@PutMapping("/recupera")
+	public ResponseEntity<String> recuperarSenha(@RequestParam("token") String token, @RequestBody ClienteDTONovo entity) throws ClienteNotFoundException, InvalidTokenException {
 		return new ResponseEntity<>(service.updateSenha(token, entity), HttpStatus.OK);
 	}
 	
-
 	@PutMapping
 	public ResponseEntity<ClienteDTO> update(@RequestBody ClienteDTO entity) throws ClienteNotFoundException, MessagingException {
 		return new ResponseEntity<>(service.update(entity), HttpStatus.OK);

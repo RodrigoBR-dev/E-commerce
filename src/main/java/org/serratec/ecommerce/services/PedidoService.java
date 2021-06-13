@@ -175,7 +175,7 @@ public class PedidoService {
 			for (ProdutosPedidosEntity produtosPedidosEntity : listaProdutosPedidos) {
 				produtoService.vender(produtosPedidosEntity.getProduto(), produtosPedidosEntity.getQuantidade());
 				ProdutoDTOUsuario produto = prodMapper.entityToDTOUsuario(produtosPedidosEntity.getProduto());
-				tabelaProdutos.append(tableImage1 + prodMapper.geraUrl(produto.getNome()) + tableImage2 + produto.getNome() + tableImage3 + produtosPedidosEntity.getPreco() + tableImage4 + produtosPedidosEntity.getQuantidade() + tableImage5);
+				tabelaProdutos.append(tableImage1 + prodMapper.geraUrl(produto.getNome()) + tableImage2 + produto.getNome() + tableImage3 + produtosPedidosEntity.getQuantidade() + tableImage4 + produtosPedidosEntity.getPreco() + tableImage5);
 			}
 			pedido.setStatus(StatusEnum.FECHADO);
 			repository.save(pedido);
