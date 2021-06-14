@@ -148,7 +148,8 @@ public class ClienteService {
 	public String updateSenha(String token, ClienteDTONovo dto) throws ClienteNotFoundException, InvalidTokenException {
 		ClienteEntity cliente = this.findByUserNameOrEmail(dto.getCpf());
 		if (token.equals(cliente.getToken())) {
-			cliente.setSenha(dto.getSenha());
+			cliente.setSenha(bCrypt.encode(dto.getSenha()));
+			repository.save(cliente);
 			return "Senha atualizada com sucesso!";
 		}
 		throw new InvalidTokenException("Token inválido!");
