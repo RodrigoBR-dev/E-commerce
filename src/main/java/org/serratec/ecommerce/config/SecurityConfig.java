@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private static final String[] CLIENTE_SENHA_WHITELIST = {"/cliente/recupera/**"};
 	private static final String[] PRODUTO_WHITELIST = {"/produto/**"};
 	private static final String[] CATEGORIA_WHITELIST = {"/categoria/**"};
-	private static final String[] PEDIDO_WHITELIST = {"/pedido"};
+	private static final String[] PEDIDO_WHITELIST = {"/pedido/**"};
 	private static final String[] PEDIDO_PUT_WHITELIST = {"/pedido/finalizado/**"};
 	private static final String[] UTIL_WHITELIST = {"/swagger-ui/**", "/v3/api-docs/**"};
 
