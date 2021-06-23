@@ -39,7 +39,7 @@ public class CategoriaController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<CategoriaDTOAll> create(@RequestBody CategoriaDTO categoria) throws CategoriaNotFoundException, CategoriaExistenteException{
+	public ResponseEntity<CategoriaDTOAll> create(@RequestBody CategoriaDTO categoria) throws CategoriaExistenteException{
 		return new ResponseEntity<>(service.create(categoria), HttpStatus.CREATED);
 	}
 	

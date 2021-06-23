@@ -42,7 +42,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(PRODUTO_WHITELIST).permitAll()
 			.antMatchers(CATEGORIA_WHITELIST).permitAll()
 			.antMatchers(HttpMethod.POST, CLIENTE_WHITELIST).permitAll()
-			.antMatchers(HttpMethod.DELETE, PEDIDO_WHITELIST).permitAll()
+		/*	.antMatchers(HttpMethod.DELETE, PEDIDO_WHITELIST).permitAll()
+			quando retornar os limites de acesso aos pedido, deletar a linha debaixo*/
+			.antMatchers(PEDIDO_WHITELIST).permitAll()
 			.antMatchers(HttpMethod.PUT, PEDIDO_PUT_WHITELIST).permitAll()
 			.antMatchers(HttpMethod.GET, PEDIDO_WHITELIST).permitAll()
 			.antMatchers(UTIL_WHITELIST).permitAll()
