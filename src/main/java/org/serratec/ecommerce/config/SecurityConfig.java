@@ -27,6 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private static final String[] PEDIDO_WHITELIST = {"/pedido/**"};
 	private static final String[] PEDIDO_PUT_WHITELIST = {"/pedido/finalizado/**"};
 	private static final String[] UTIL_WHITELIST = {"/swagger-ui/**", "/v3/api-docs/**"};
+	private static final String[] WHITELIST = {"/cliente/**", "/endereco/**"};
 
 	@Autowired
 	AuthService service;
@@ -42,12 +43,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(PRODUTO_WHITELIST).permitAll()
 			.antMatchers(CATEGORIA_WHITELIST).permitAll()
 			.antMatchers(HttpMethod.POST, CLIENTE_WHITELIST).permitAll()
-		/*	.antMatchers(HttpMethod.DELETE, PEDIDO_WHITELIST).permitAll()
-			quando retornar os limites de acesso aos pedido, deletar a linha debaixo*/
-			.antMatchers(PEDIDO_WHITELIST).permitAll()
 			.antMatchers(HttpMethod.PUT, PEDIDO_PUT_WHITELIST).permitAll()
 			.antMatchers(HttpMethod.GET, PEDIDO_WHITELIST).permitAll()
 			.antMatchers(UTIL_WHITELIST).permitAll()
+		/*	.antMatchers(HttpMethod.DELETE, PEDIDO_WHITELIST).permitAll()
+			quando retornar os limites de acesso aos pedido, clientes e endereços deletar as 2 linhas debaixo*/
+			.antMatchers(PEDIDO_WHITELIST).permitAll()
+			.antMatchers(WHITELIST).permitAll()
 		.anyRequest().authenticated();		
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(new JWTAuthenticationFilter(authenticationManager(), jwtUtil),
