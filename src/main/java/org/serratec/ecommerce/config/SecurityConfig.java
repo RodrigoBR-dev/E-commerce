@@ -37,18 +37,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
+		http.cors().and().csrf().disable()
+			.authorizeRequests()
 			.antMatchers(CLIENTE_SENHA_WHITELIST).permitAll()
 			.antMatchers(PRODUTO_WHITELIST).permitAll()
 			.antMatchers(CATEGORIA_WHITELIST).permitAll()
 			.antMatchers(HttpMethod.POST, CLIENTE_WHITELIST).permitAll()
 			.antMatchers(HttpMethod.PUT, PEDIDO_PUT_WHITELIST).permitAll()
 			.antMatchers(HttpMethod.GET, PEDIDO_WHITELIST).permitAll()
-			.antMatchers(UTIL_WHITELIST).permitAll().and().csrf().disable().cors().and().sessionManagement();
+			.antMatchers(UTIL_WHITELIST).permitAll()
 		/*	.antMatchers(HttpMethod.DELETE, PEDIDO_WHITELIST).permitAll()
 			quando retornar os limites de acesso aos pedido, clientes e endereços deletar as 2 linhas debaixo
 			.antMatchers(PEDIDO_WHITELIST).permitAll()
 			.antMatchers(WHITELIST).permitAll()*/
+			.anyRequest().authenticated();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(new JWTAuthenticationFilter(authenticationManager(), jwtUtil),
 				UsernamePasswordAuthenticationFilter.class);
