@@ -51,6 +51,11 @@ public class ProdutoController {
 	public ResponseEntity<List<ProdutoDTOUsuario>> findByCategoria(@PathVariable String categoria) throws CategoriaNotFoundException{
 		return new ResponseEntity<>(service.findAllByCategoriaDTO(categoria),HttpStatus.OK);
 	}
+	
+	@GetMapping("/busca/{search}")
+	public ResponseEntity<List<ProdutoDTOUsuario>> findByBusca(@PathVariable String search) {
+		return new ResponseEntity<>(service.findAllBysearchDTO(search),HttpStatus.OK);
+	}
 
 	@GetMapping(path = "/{nome}/imagem")
 	public ResponseEntity<byte[]> getImagem(@PathVariable String nome) throws ProdutoNotFoundException{

@@ -2,6 +2,7 @@ package org.serratec.ecommerce.services;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -60,6 +61,15 @@ public class ProdutoService {
 		return findAllByCategoria(categoria).stream().map(mapper::entityToDTOUsuario).collect(Collectors.toList());
 	}
 
+	public List<ProdutoDTOUsuario> findAllBysearchDTO(String search) {
+		List<ProdutoEntity> listaEntity = repository.findByDescricaoIgnoreCaseContaining(search);
+		List<ProdutoDTOUsuario> listaDTO = new ArrayList<>();
+		for (ProdutoEntity produtoEntity : listaEntity) {
+			listaDTO.add(mapper.entityToDTOUsuario(produtoEntity));
+		}
+		return listaDTO;
+	}
+	
 	public ProdutoEntity findByNomeAll(String nome) throws ProdutoNotFoundException {
 		ProdutoEntity findByNome = repository.findByNome(nome);
 		if (findByNome.getNome() != null)
