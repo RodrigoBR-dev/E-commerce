@@ -1,5 +1,7 @@
 package org.serratec.ecommerce.config;
 
+import java.util.Arrays;
+
 import org.serratec.ecommerce.security.AuthService;
 import org.serratec.ecommerce.security.JWTAuthenticationFilter;
 import org.serratec.ecommerce.security.JWTAuthorizationFilter;
@@ -35,7 +37,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
+		var configuration = new CorsConfiguration().applyPermitDefaultValues();
+		configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
+		configuration.setAllowedHeaders(Arrays.asList("X-Requested-With","Origin","Content-Type","Accept","Authorization"));
+	    configuration.setExposedHeaders(Arrays.asList("Access-Control-Allow-Headers", "Authorization, x-xsrf-token, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, "));
+		http.cors().configurationSource(request -> configuration);
 		http.csrf().disable()
 			.authorizeRequests()
 			.antMatchers(CLIENTE_SENHA_WHITELIST).permitAll()
